@@ -48,7 +48,7 @@ export default function ThematicAreasSection() {
               </div>
               <div className="absolute inset-x-0 bottom-0 p-5 text-white">
                 <h3 className="mb-2 text-lg font-bold">{area.title}</h3>
-                <p className="text-sm leading-relaxed text-white/85">{area.description}</p>
+                {/* <p className="text-sm leading-relaxed text-white/85">{area.description}</p> */}
                 <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-brand">
                   Learn more <ChevronRight className="h-3.5 w-3.5" />
                 </span>
