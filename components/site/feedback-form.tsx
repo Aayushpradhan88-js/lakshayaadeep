@@ -1,18 +1,22 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { FaPaperPlane } from "react-icons/fa";
 import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/supabase";
 
 function fieldClass(hasError: boolean) {
-  return `w-full rounded-lg border bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 ${
+  return `w-full rounded-md border bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:ring-2 ${
     hasError
       ? "border-red-400 focus:border-red-400 focus:ring-red-100"
-      : "border-slate-300 focus:border-emerald-500 focus:ring-emerald-100"
+      : "border-slate-200 focus:border-brand focus:ring-brand-light"
   }`;
 }
 
-export function FeedbackForm({ heading = "Send your feedback", id = "feedback" }: { heading?: string; id?: string }) {
+type FeedbackFormProps = {
+  id?: string;
+  showContactInfo?: boolean;
+};
+
+export function FeedbackForm({ id = "feedback", showContactInfo = true }: FeedbackFormProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -66,27 +70,41 @@ export function FeedbackForm({ heading = "Send your feedback", id = "feedback" }
       setMessage("");
     } catch (err: unknown) {
       const msg =
-        err && typeof err === "object" && "message" in err ? String((err as { message: string }).message) : "Something went wrong.";
+        err && typeof err === "object" && "message" in err
+          ? String((err as { message: string }).message)
+          : "Something went wrong.";
       setFormError(msg);
       setStatus("error");
     }
   };
 
   return (
-    <section id={id} className="scroll-mt-24 rounded-[18px] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-      <h2 className="mb-2 text-2xl font-bold text-slate-900">{heading}</h2>
-      <p className="mb-6 text-slate-600">Share your thoughts and we’ll respond as soon as possible.</p>
+    <section id={id} className="scroll-mt-24">
+      {showContactInfo ? (
+        <div className="mb-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-black">
+          <a href="mailto:lakhshyadeep@gmail.com" className="hover:text-brand">
+            lakhshyadeep@gmail.com
+          </a>
+          <a href="tel:9819091454" className="hover:text-brand">
+            9819091454
+          </a>
+          <span>Itahari, Sunsari</span>
+        </div>
+      ) : null}
 
       {status === "success" ? (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+        <div className="rounded-md border border-brand/30 bg-brand-light px-4 py-3 text-sm text-black">
           Thank you — your message was received.
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-          <div className="grid gap-4 sm:grid-cols-2">
+        <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+          <div className="grid gap-5 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Full name *</label>
+              <label htmlFor="feedback-name" className="mb-1.5 block text-sm font-medium text-slate-900">
+                Name *
+              </label>
               <input
+                id="feedback-name"
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value);
@@ -99,8 +117,11 @@ export function FeedbackForm({ heading = "Send your feedback", id = "feedback" }
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Email *</label>
+              <label htmlFor="feedback-email" className="mb-1.5 block text-sm font-medium text-slate-900">
+                Email *
+              </label>
               <input
+                id="feedback-email"
                 type="email"
                 value={email}
                 onChange={(e) => {
@@ -112,48 +133,51 @@ export function FeedbackForm({ heading = "Send your feedback", id = "feedback" }
               />
               {fieldErrors.email ? <p className="mt-1 text-xs text-red-600">{fieldErrors.email}</p> : null}
             </div>
-
-            <div className="sm:col-span-1">
-              <label className="mb-1 block text-sm font-medium text-slate-700">Phone (optional)</label>
-              <input
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+977 ..."
-                className={fieldClass(false)}
-              />
-            </div>
-
-            <div className="sm:col-span-1">
-              <label className="mb-1 block text-sm font-medium text-slate-700">Subject</label>
-              <input value="Feedback" disabled className="w-full cursor-not-allowed rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600" />
-            </div>
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-slate-700">Message *</label>
+            <label htmlFor="feedback-phone" className="mb-1.5 block text-sm font-medium text-slate-900">
+              Phone <span className="font-normal text-slate-500">(optional)</span>
+            </label>
+            <input
+              id="feedback-phone"
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="+977 ..."
+              className={fieldClass(false)}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="feedback-message" className="mb-1.5 block text-sm font-medium text-slate-900">
+              Message *
+            </label>
             <textarea
+              id="feedback-message"
               value={message}
               onChange={(e) => {
                 setMessage(e.target.value);
                 if (fieldErrors.message) setFieldErrors((prev) => ({ ...prev, message: "" }));
               }}
-              rows={6}
+              rows={5}
+              placeholder="How can we help?"
               aria-invalid={Boolean(fieldErrors.message)}
               className={fieldClass(Boolean(fieldErrors.message))}
             />
             {fieldErrors.message ? <p className="mt-1 text-xs text-red-600">{fieldErrors.message}</p> : null}
           </div>
 
-          {formError ? <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{formError}</p> : null}
+          {formError ? (
+            <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{formError}</p>
+          ) : null}
 
           <button
             type="submit"
             disabled={status === "submitting"}
-            className="inline-flex items-center gap-2 rounded-2xl bg-emerald-800 px-6 py-3 text-sm font-semibold text-white shadow hover:bg-emerald-900 disabled:opacity-60"
+            className="w-full rounded-md bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-hover disabled:opacity-60 sm:w-auto"
           >
-            <FaPaperPlane className="h-4 w-4" />
-            {status === "submitting" ? "Sending..." : "Send feedback"}
+            {status === "submitting" ? "Sending..." : "Send message"}
           </button>
         </form>
       )}

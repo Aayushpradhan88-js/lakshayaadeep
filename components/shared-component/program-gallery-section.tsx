@@ -44,7 +44,7 @@ export default function ProgramGallerySection({
             {title} <span className="font-light text-brand">{titleAccent}</span>
           </h2>
           {subtitle ? (
-            <p className="mx-auto mt-4 max-w-2xl text-sm text-gray-500 md:text-base">{subtitle}</p>
+            <p className="mx-auto mt-4 max-w-2xl text-sm text-black md:text-base">{subtitle}</p>
           ) : null}
         </div>
 
@@ -53,7 +53,7 @@ export default function ProgramGallerySection({
             <div className="h-10 w-10 animate-spin rounded-full border-2 border-brand border-t-transparent" />
           </div>
         ) : images.length === 0 ? (
-          <div className="rounded-2xl border border-gray-100 bg-slate-50 px-6 py-16 text-center text-gray-500">
+          <div className="rounded-2xl border border-gray-100 bg-slate-50 px-6 py-16 text-center text-black">
             {emptyMessage}
           </div>
         ) : (

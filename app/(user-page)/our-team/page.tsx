@@ -6,7 +6,7 @@ import TeamSectionHero from "@/components/homepage/TeamSection/hero"
 import Header from "@/components/homepage/Header/header"
 import Footer from "@/components/shared-component/footer/page"
 import LeadershipSection from "@/components/homepage/TeamSection/leadership"
-import JoinSection from "@/components/homepage/TeamSection/join"
+// import JoinSection from "@/components/homepage/TeamSection/join"
 
 type TeamMember = {
   id: string
@@ -72,7 +72,7 @@ export default function OurTeamPage() {
       <div className="animate-reveal-up">
         <TeamSectionHero />
         <LeadershipSection members={members} />
-        <JoinSection />
+        {/* <JoinSection /> */}
       </div>
       <Footer />
     </>

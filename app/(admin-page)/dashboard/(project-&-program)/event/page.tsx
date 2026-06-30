@@ -14,6 +14,7 @@ import {
 } from "react-icons/fa"
 import { getSupabaseClient } from "@/lib/supabase/supabase"
 import Link from "next/link"
+import { useAdminFeedback } from "@/components/shared-component/admin-feedback"
 
 interface Event {
   id: string
@@ -42,6 +43,7 @@ export default function EventPage() {
   const [categoryFilter, setCategoryFilter] = useState<string>("all")
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
   const [showDetailModal, setShowDetailModal] = useState(false)
+  const { showToast, askConfirm } = useAdminFeedback()
 
   useEffect(() => {
     fetchevent()
@@ -72,26 +74,28 @@ export default function EventPage() {
     }
   }
 
-  const deleteEvent = async (eventId: string) => {
-    if (!confirm('Are you sure you want to delete this event?')) return
+  const deleteEvent = (eventId: string) => {
+    askConfirm('Are you sure you want to delete this event?', async () => {
+      try {
+        const supabase = getSupabaseClient()
+        const { error } = await supabase
+          .from('event')
+          .delete()
+          .eq('id', eventId)
 
-    try {
-      const supabase = getSupabaseClient()
-      const { error } = await supabase
-        .from('event')
-        .delete()
-        .eq('id', eventId)
+        if (error) throw error
 
-      if (error) throw error
-
-      setEvents(prev => prev.filter(event => event.id !== eventId))
-      if (selectedEvent?.id === eventId) {
-        setSelectedEvent(null)
-        setShowDetailModal(false)
+        setEvents(prev => prev.filter(event => event.id !== eventId))
+        if (selectedEvent?.id === eventId) {
+          setSelectedEvent(null)
+          setShowDetailModal(false)
+        }
+        showToast('Event deleted successfully', 'success')
+      } catch (error) {
+        console.error('Error deleting event:', error)
+        showToast('Failed to delete event', 'error')
       }
-    } catch (error) {
-      console.error('Error deleting event:', error)
-    }
+    })
   }
 
   const updateEventStatus = async (eventId: string, newStatus: string) => {
@@ -103,11 +107,12 @@ export default function EventPage() {
         .eq('id', eventId)
 
       if (error) throw error
-      alert('Status updated successfully')
+      showToast('Status updated successfully', 'success')
 
       setEvents(prev => prev.map(event => event.id === eventId ? { ...event, status: newStatus } : event))
     } catch (error) {
       console.error('Error updating event status:', error)
+      showToast('Failed to update event status', 'error')
     }
   }
 
@@ -150,7 +155,7 @@ export default function EventPage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div className="mb-4 sm:mb-0">
             <h1 className="text-3xl font-bold text-slate-900 mb-2">Events Management</h1>
-            <p className="text-slate-600">Manage and publish events for your audience</p>
+            <p className="text-black">Manage and publish events for your audience</p>
           </div>
           <div className="flex items-center space-x-3">
             <Link
@@ -285,34 +290,16 @@ export default function EventPage() {
               <thead className="bg-linear-to-r from-slate-50 to-slate-100 border-b border-slate-200">
                 <tr>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      {/* <FaBlog className="h-4 w-4" /> */}
-                      Event Name
-                    </div>
+                    Event Name
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      {/* <FaUser className="h-4 w-4" /> */}
-                      Organizer
-                    </div>
-                  </th>
-                  {/* <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaTag className="h-4 w-4" />
-                      Category
-                    </div>
-                  </th> */}
-                  <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      {/* <FaClock className="h-4 w-4" /> */}
-                      Status
-                    </div>
+                    Organizer
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      {/* <FaCalendarAlt className="h-4 w-4" /> */}
-                      Date
-                    </div>
+                    Status
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                    Date
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
                     Actions
@@ -407,7 +394,7 @@ export default function EventPage() {
             <div className="p-6 space-y-4">
               {selectedEvent.cover_event_image_url && (
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Cover Image</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Cover Image</label>
                   <div className="mt-2 w-full h-48 overflow-hidden rounded-lg">
                     <Image
                       src={selectedEvent.cover_event_image_url}
@@ -422,26 +409,26 @@ export default function EventPage() {
               )}
 
               <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Title</label>
+                <label className="text-xs font-semibold text-black uppercase tracking-wider">Title</label>
                 <h3 className="text-lg font-bold text-slate-900 mt-1">{selectedEvent.event_title}</h3>
               </div>
 
               <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Description</label>
+                <label className="text-xs font-semibold text-black uppercase tracking-wider">Description</label>
                 <p className="text-slate-900 font-medium mt-1">{selectedEvent.description || 'No description'}</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Organizer</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Organizer</label>
                   <p className="text-slate-900 font-medium mt-1">{selectedEvent.organizer || 'N/A'}</p>
                 </div>
                 {/* <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Category</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Category</label>
                   <p className="text-slate-900 font-medium mt-1">{selectedEvent.category || 'N/A'}</p>
                 </div> */}
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Status</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Status</label>
                   <span className={`inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-full border mt-1 ${getStatusColor(selectedEvent.status)}`}>
                     {selectedEvent.status}
                   </span>
@@ -450,13 +437,13 @@ export default function EventPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Start Date</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Start Date</label>
                   <p className="text-slate-900 font-medium mt-1">
                     {selectedEvent.start_date ? new Date(selectedEvent.start_date).toLocaleDateString() : 'N/A'}
                   </p>
                 </div>
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">End Date</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">End Date</label>
                   <p className="text-slate-900 font-medium mt-1">
                     {selectedEvent.end_date ? new Date(selectedEvent.end_date).toLocaleDateString() : 'N/A'}
                   </p>
@@ -464,7 +451,7 @@ export default function EventPage() {
               </div>
 
               <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Location</label>
+                <label className="text-xs font-semibold text-black uppercase tracking-wider">Location</label>
                 <p className="text-slate-900 font-medium mt-1">
                   {selectedEvent.event_location ? (
                     `${selectedEvent.event_location.municipality}, ${selectedEvent.event_location.district}, ${selectedEvent.event_location.province}`

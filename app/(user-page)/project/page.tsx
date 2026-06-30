@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { getSupabaseClient } from "@/lib/supabase/supabase";
 import Footer from "@/components/shared-component/footer/page";
 import Header from "@/components/homepage/Header/header";
+import PageImageHeroSection from "@/components/shared-component/page-image-hero-section";
+import { PAGE_HERO_CONTENT } from "@/components/shared-component/page-hero-content";
 import UpcomingProjects from "@/components/homepage/Project/UpCommingProjects";
 import CompletedProjects from "@/components/homepage/Project/CompletedProjects";
 import OngoingProjects from "@/components/homepage/Project/Project";
@@ -20,7 +21,7 @@ function StatCard({ number, label }: { number: string | number; label: string })
       <p className="text-3xl font-bold text-gray-900 leading-none mb-1.5">
         {number}
       </p>
-      <p className="text-[11px] font-medium text-gray-400 tracking-widest uppercase">
+      <p className="text-[11px] font-medium text-black tracking-widest uppercase">
         {label}
       </p>
     </div>
@@ -100,24 +101,7 @@ export default function ProjectPage() {
       <Header />
 
       <main className="min-h-screen bg-white font-sans animate-reveal-up">
-        {/* Hero Section */}
-        <section className="relative h-52 overflow-hidden">
-          <Image
-            fill
-            src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1200&q=80"
-            alt="Programs hero"
-            className="object-cover object-top"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent" />
-          <div className="absolute bottom-6 left-6">
-            <p className="text-xs font-semibold text-teal-300 uppercase tracking-widest mb-1">
-              Get Involved
-            </p>
-            <h1 className="text-3xl font-bold text-white">
-              Lakshaydeep <span className="text-brand font-serif">Projects</span>
-            </h1>
-          </div>
-        </section>
+        <PageImageHeroSection {...PAGE_HERO_CONTENT.projects} />
 
         <div className="max-w-5xl mx-auto px-4 py-10 space-y-16">
           {/* Stats Row */}
@@ -137,7 +121,7 @@ export default function ProjectPage() {
           <section className="bg-amber-50 border border-amber-100 rounded-3xl px-6 py-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm font-semibold text-gray-900">Want to follow our upcoming events?</p>
-              <p className="text-xs text-gray-500">Visit the event page to see the latest admin-created event listings.</p>
+              <p className="text-xs text-black">Visit the event page to see the latest admin-created event listings.</p>
             </div>
             <Link
               href="/event"

@@ -20,7 +20,7 @@ function StatCard({ number, label }: { number: string | number; label: string })
       <p className="text-3xl font-bold text-gray-900 leading-none mb-1.5">
         {number}
       </p>
-      <p className="text-[11px] font-medium text-gray-400 tracking-widest uppercase">
+      <p className="text-[11px] font-medium text-black tracking-widest uppercase">
         {label}
       </p>
     </div>
@@ -142,10 +142,10 @@ export default function EventsPage() {
                 </svg>
               </div>
               <div>
-                <p className="text-base font-semibold text-gray-800">
+                <p className="text-base font-semibold text-black">
                   Want to see our impact projects?
                 </p>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-black">
                   Explore our signature projects transforming communities worldwide
                 </p>
               </div>

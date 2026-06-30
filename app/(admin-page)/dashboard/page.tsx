@@ -108,7 +108,7 @@ function StatusScreen({ title, message }: { title: string; message: string }) {
     <main className="device-responsive-page min-h-screen bg-slate-100 px-4 py-8 sm:px-6">
       <section className="mx-auto max-w-2xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
         <h1 className="text-2xl font-semibold tracking-tight text-slate-900">{title}</h1>
-        <p className="mt-3 text-sm text-slate-600">{message}</p>
+        <p className="mt-3 text-sm text-black">{message}</p>
       </section>
     </main>
   );
@@ -207,7 +207,7 @@ export default function DashboardPage() {
     async function fetchData() {
       try {
         const supabase = getSupabaseClient();
-        
+
         // Fetch Counts
         const [
           { count: projectCount },
@@ -347,7 +347,7 @@ export default function DashboardPage() {
           <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
             Access Denied
           </h1>
-          <p className="mt-3 text-sm text-slate-600">
+          <p className="mt-3 text-sm text-black">
             This dashboard is restricted to the configured super admin account only.
           </p>
           <p className="mt-1 text-sm text-slate-500">

@@ -25,7 +25,7 @@ function MoneyGoesSection() {
           <span className="text-brand">Where Your Money</span>{" "}
           <span className="text-cyan-400">Goes</span>
         </h2>
-        <p className="mx-auto mt-3 max-w-lg text-sm text-gray-500 leading-relaxed">
+        <p className="mx-auto mt-3 max-w-lg text-sm text-black leading-relaxed">
           We believe in complete transparency. Every rupee donated is tracked,
           reported, and used for maximum impact.
         </p>
@@ -35,7 +35,7 @@ function MoneyGoesSection() {
         {/* Left — Legend */}
         <div className="flex items-center gap-8">
           {/* Big % */}
-          <span className="text-5xl font-black text-gray-800">88%</span>
+          <span className="text-5xl font-black text-black">88%</span>
 
           {/* Breakdown list */}
           <div className="flex flex-col gap-5 flex-1">

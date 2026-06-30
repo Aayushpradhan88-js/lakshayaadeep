@@ -337,7 +337,7 @@ export default function DashboardTeamPage() {
         <div className="flex items-start justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-slate-900">Team Members Management</h1>
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="mt-1 text-sm text-black">
               This controls the public <strong>Our Team</strong> page. Only super admin dashboard users can update it.
             </p>
             {schemaWarning && (
@@ -479,9 +479,9 @@ export default function DashboardTeamPage() {
           </p>
         </div>
         {loading ? (
-          <p className="text-sm text-slate-600">Loading team members...</p>
+          <p className="text-sm text-black">Loading team members...</p>
         ) : sortedMembers.length === 0 ? (
-          <p className="text-sm text-slate-600">No members yet. Add the first one above.</p>
+          <p className="text-sm text-black">No members yet. Add the first one above.</p>
         ) : (
           <ul className="grid gap-4 md:grid-cols-2">
             {sortedMembers.map((member) => (
@@ -506,7 +506,7 @@ export default function DashboardTeamPage() {
                       e.dataTransfer.setData("text/plain", member.id);
                     }}
                     onDragEnd={() => setDragId(null)}
-                    className="mt-1 inline-flex h-10 w-10 shrink-0 cursor-grab items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 active:cursor-grabbing"
+                    className="mt-1 inline-flex h-10 w-10 shrink-0 cursor-grab items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-black hover:bg-slate-100 active:cursor-grabbing"
                     title="Drag to reorder"
                   >
                     <FaGripVertical className="h-4 w-4" />
@@ -528,7 +528,7 @@ export default function DashboardTeamPage() {
                       Order: {member.display_order} · {member.is_active ? "Active" : "Inactive"}
                     </p>
                     {member.bio ? (
-                      <p className="mt-1 line-clamp-2 text-sm text-slate-600">{member.bio}</p>
+                      <p className="mt-1 line-clamp-2 text-sm text-black">{member.bio}</p>
                     ) : (
                       <p className="mt-1 text-sm text-slate-400 italic">No bio added.</p>
                     )}

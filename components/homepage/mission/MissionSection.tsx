@@ -32,14 +32,14 @@ const MissionSection = () => {
                     <div>
                         <p className="text-brand font-semibold uppercase tracking-wide mb-3">Our Mission</p>
                         <h2 className="text-3xl md:text-4xl font-bold leading-tight mb-6">
-                            <span className="text-gray-800">WE Exist to</span>{" "} <br />
+                            <span className="text-black">WE Exist to</span>{" "} <br />
                             <span className="text-brand font-light">UPlift Humanity</span>
                         </h2>
-                        <p className="text-gray-600 leading-relaxed mb-4">
+                        <p className="text-black leading-relaxed mb-4">
                             We believe dignity and opportunity should reach every person, especially those left at the margins.
                             Through transparent event and deep local partnerships, we turn generosity into lasting change.
                         </p>
-                        <p className="text-gray-600 leading-relaxed">
+                        <p className="text-black leading-relaxed">
                             From classrooms to villages, we listen first—then build solutions that communities own, sustain, and grow.
                         </p>
                     </div>
@@ -54,7 +54,7 @@ const MissionSection = () => {
                             className="rounded-2xl w-full h-auto"
                         />
                         <div className="absolute bottom-4 left-4 bg-white px-4 py-2 rounded-lg shadow-lg">
-                            <p className="text-sm font-semibold text-gray-800">32+ People Reached</p>
+                            <p className="text-sm font-semibold text-black">32+ People Reached</p>
                         </div>
                     </div>
                 </div>

@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { 
-  FaImages, 
-  FaPlus, 
-  FaEdit, 
-  FaTrash, 
-  FaSearch, 
-  FaFilter, 
-  FaEye, 
+import {
+  FaImages,
+  FaPlus,
+  FaEdit,
+  FaTrash,
+  FaSearch,
+  FaFilter,
+  FaEye,
   FaDownload,
   FaUpload,
   FaFileImage,
@@ -22,6 +22,7 @@ import {
 } from "react-icons/fa";
 import { getSupabaseClient } from "@/lib/supabase/supabase";
 import { useRouter } from "next/navigation";
+import { useAdminFeedback } from "@/components/shared-component/admin-feedback";
 
 interface MediaItem {
   id: string;
@@ -48,6 +49,7 @@ export default function MediaPage() {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const { showToast, askConfirm } = useAdminFeedback();
 
   useEffect(() => {
     fetchMediaItems();
@@ -77,15 +79,15 @@ export default function MediaPage() {
     if (files.length === 0) return;
 
     const imageFiles = files.filter(file => file.type.startsWith('image/'));
-    
+
     if (imageFiles.length === 0) {
-      alert("Please select valid image files. Videos or documents are not allowed.");
+      showToast("Please select valid image files. Videos or documents are not allowed.", "error");
       event.target.value = '';
       return;
     }
 
     if (imageFiles.length !== files.length) {
-      alert("Some files were skipped because only images are allowed.");
+      showToast("Some files were skipped because only images are allowed.", "error");
     }
 
     setUploading(true);
@@ -138,47 +140,50 @@ export default function MediaPage() {
 
       if (newItems.length > 0) {
         setMediaItems(prev => [...newItems, ...prev]);
+        showToast(`${newItems.length} file(s) uploaded successfully`, "success");
       }
-      
+
       setShowUploadModal(false);
     } catch (error) {
       console.error('Error uploading files:', error);
-      alert('Failed to upload files');
+      showToast('Failed to upload files', 'error');
     } finally {
       setUploading(false);
       event.target.value = '';
     }
   };
 
-  const deleteMediaItem = async (itemId: string) => {
-    if (!confirm('Are you sure you want to delete this media item?')) return;
+  const deleteMediaItem = (itemId: string) => {
+    askConfirm('Are you sure you want to delete this media item?', async () => {
+      try {
+        const supabase = getSupabaseClient();
+        const { error } = await supabase
+          .from('gallery')
+          .delete()
+          .eq('id', itemId);
 
-    try {
-      const supabase = getSupabaseClient();
-      const { error } = await supabase
-        .from('gallery')
-        .delete()
-        .eq('id', itemId);
+        if (error) throw error;
 
-      if (error) throw error;
-
-      setMediaItems(prev => prev.filter(item => item.id !== itemId));
-      if (selectedItem?.id === itemId) {
-        setSelectedItem(null);
+        setMediaItems(prev => prev.filter(item => item.id !== itemId));
+        if (selectedItem?.id === itemId) {
+          setSelectedItem(null);
+        }
+        showToast('Media item deleted successfully', 'success');
+      } catch (error) {
+        console.error('Error deleting media item:', error);
+        showToast('Failed to delete media item', 'error');
       }
-    } catch (error) {
-      console.error('Error deleting media item:', error);
-    }
+    });
   };
 
   const filteredMediaItems = mediaItems.filter(item => {
     const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (item.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())));
-    
+      (item.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())));
+
     const matchesCategory = categoryFilter === "all" || item.category === categoryFilter;
     const matchesType = typeFilter === "all" || item.file_type === typeFilter;
-    
+
     return matchesSearch && matchesCategory && matchesType;
   });
 
@@ -226,7 +231,7 @@ export default function MediaPage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div className="mb-4 sm:mb-0">
             <h1 className="text-3xl font-bold text-slate-900 mb-2">Media Library</h1>
-            <p className="text-slate-600">Manage and organize your media files including images, videos, and documents</p>
+            <p className="text-black">Manage and organize your media files including images, videos, and documents</p>
           </div>
           <div className="flex items-center space-x-3">
             <button
@@ -253,7 +258,7 @@ export default function MediaPage() {
             </div>
           </div>
         </div>
-        
+
         <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl border border-green-200 p-4 text-white shadow-lg">
           <div className="flex items-center justify-between">
             <div>
@@ -282,10 +287,10 @@ export default function MediaPage() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-r from-blue-500 to-cyan-600 rounded-xl border border-blue-200 p-4 text-white shadow-lg">
+        <div className="bg-gradient-to-r from-yellow-500 to-orange-600 rounded-xl border border-yellow-200 p-4 text-white shadow-lg">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-blue-100">Documents</p>
+              <p className="text-sm text-yellow-100">Documents</p>
               <p className="text-2xl font-bold text-white">
                 {mediaItems.filter(item => item.file_type === 'document').length}
               </p>
@@ -312,7 +317,7 @@ export default function MediaPage() {
               />
             </div>
           </div>
-          
+
           <div className="flex gap-3">
             <select
               value={typeFilter}
@@ -324,7 +329,7 @@ export default function MediaPage() {
               <option value="video">Videos</option>
               <option value="document">Documents</option>
             </select>
-            
+
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
@@ -339,13 +344,13 @@ export default function MediaPage() {
             <div className="flex items-center border border-slate-300 rounded-lg bg-slate-50">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`px-3 py-2 rounded-l-lg ${viewMode === 'grid' ? 'bg-emerald-500 text-white' : 'text-slate-600 hover:bg-slate-200'}`}
+                className={`px-3 py-2 rounded-l-lg ${viewMode === 'grid' ? 'bg-emerald-500 text-white' : 'text-black hover:bg-slate-200'}`}
               >
                 <FaTh className="h-4 w-4" />
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`px-3 py-2 rounded-r-lg ${viewMode === 'list' ? 'bg-emerald-500 text-white' : 'text-slate-600 hover:bg-slate-200'}`}
+                className={`px-3 py-2 rounded-r-lg ${viewMode === 'list' ? 'bg-emerald-500 text-white' : 'text-black hover:bg-slate-200'}`}
               >
                 <FaList className="h-4 w-4" />
               </button>
@@ -376,8 +381,8 @@ export default function MediaPage() {
               <div key={item.id} className="group relative bg-slate-50 rounded-lg overflow-hidden border border-slate-200 hover:border-emerald-300 transition-all duration-200">
                 <div className="aspect-square bg-slate-100 flex items-center justify-center relative">
                   {item.file_type === 'image' ? (
-                    <img 
-                      src={item.file_path} 
+                    <img
+                      src={item.file_path}
                       alt={item.title}
                       className="w-full h-full object-cover"
                       loading="lazy"
@@ -389,18 +394,18 @@ export default function MediaPage() {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="p-4">
                   <h3 className="font-semibold text-slate-900 truncate mb-1">{item.title}</h3>
                   <p className="text-xs text-slate-500 truncate mb-2">{item.description}</p>
-                  
+
                   <div className="flex items-center justify-between mb-2">
                     <span className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full border ${getTypeColor(item.file_type)}`}>
                       {item.file_type}
                     </span>
                     <span className="text-xs text-slate-500">{formatFileSize(item.file_size)}</span>
                   </div>
-                  
+
                   <div className="flex flex-wrap gap-1 mb-3">
                     {item.tags.slice(0, 2).map((tag, index) => (
                       <span key={index} className="text-xs bg-slate-200 text-slate-700 px-2 py-1 rounded">
@@ -411,7 +416,7 @@ export default function MediaPage() {
                       <span className="text-xs text-slate-500">+{item.tags.length - 2}</span>
                     )}
                   </div>
-                  
+
                   <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => {
@@ -440,22 +445,13 @@ export default function MediaPage() {
               <thead className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
                 <tr>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaFileImage className="h-4 w-4" />
-                      File
-                    </div>
+                    File
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaTag className="h-4 w-4" />
-                      Category
-                    </div>
+                    Category
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaCalendarAlt className="h-4 w-4" />
-                      Date
-                    </div>
+                    Date
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
                     Actions
@@ -530,12 +526,12 @@ export default function MediaPage() {
                 </button>
               </div>
             </div>
-            
+
             <div className="p-6 space-y-4">
               <div className="bg-slate-50 rounded-lg p-4">
                 {selectedItem.file_type === 'image' ? (
-                  <img 
-                    src={selectedItem.file_path} 
+                  <img
+                    src={selectedItem.file_path}
                     alt={selectedItem.title}
                     className="w-full h-64 object-cover rounded-lg mb-4"
                   />
@@ -548,18 +544,18 @@ export default function MediaPage() {
                   </div>
                 )}
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Title</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Title</label>
                   <p className="text-slate-900 font-medium mt-1">{selectedItem.title}</p>
                 </div>
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Category</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Category</label>
                   <p className="text-slate-900 font-medium mt-1">{selectedItem.category}</p>
                 </div>
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">File Type</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">File Type</label>
                   <div className="mt-1">
                     <span className={`inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-full border ${getTypeColor(selectedItem.file_type)}`}>
                       {selectedItem.file_type}
@@ -567,20 +563,20 @@ export default function MediaPage() {
                   </div>
                 </div>
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">File Size</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">File Size</label>
                   <p className="text-slate-900 font-medium mt-1">{formatFileSize(selectedItem.file_size)}</p>
                 </div>
               </div>
-              
+
               {selectedItem.description && (
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Description</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Description</label>
                   <p className="text-slate-900 font-medium mt-1">{selectedItem.description}</p>
                 </div>
               )}
-              
+
               <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Tags</label>
+                <label className="text-xs font-semibold text-black uppercase tracking-wider">Tags</label>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {selectedItem.tags.map((tag, index) => (
                     <span key={index} className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs font-medium">
@@ -589,18 +585,18 @@ export default function MediaPage() {
                   ))}
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Created</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Created</label>
                   <p className="text-slate-900 font-medium mt-1">{new Date(selectedItem.created_at).toLocaleString()}</p>
                 </div>
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Last Updated</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Last Updated</label>
                   <p className="text-slate-900 font-medium mt-1">{new Date(selectedItem.updated_at).toLocaleString()}</p>
                 </div>
               </div>
-              
+
               <div className="flex gap-3 pt-4">
                 <button
                   onClick={() => setShowDetailModal(false)}
@@ -631,11 +627,11 @@ export default function MediaPage() {
                 </button>
               </div>
             </div>
-            
+
             <div className="p-6 space-y-4">
               <div className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center relative hover:bg-slate-50 transition-colors">
-                <input 
-                  type="file" 
+                <input
+                  type="file"
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   onChange={handleFileUpload}
                   disabled={uploading}
@@ -645,12 +641,12 @@ export default function MediaPage() {
                 {uploading ? (
                   <div className="flex flex-col items-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mb-4"></div>
-                    <p className="text-slate-600">Uploading photos...</p>
+                    <p className="text-black">Uploading photos...</p>
                   </div>
                 ) : (
                   <>
                     <FaUpload className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-                    <p className="text-slate-600 mb-2">Drag and drop your photos here</p>
+                    <p className="text-black mb-2">Drag and drop your photos here</p>
                     <p className="text-sm text-slate-500 mb-4">or</p>
                     <button className="bg-emerald-500 text-white px-4 py-2 rounded-lg hover:bg-emerald-600">
                       Browse Files
@@ -658,7 +654,7 @@ export default function MediaPage() {
                   </>
                 )}
               </div>
-              
+
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowUploadModal(false)}

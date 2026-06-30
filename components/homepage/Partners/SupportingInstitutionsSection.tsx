@@ -26,7 +26,7 @@ export default function SupportingInstitutionsSection() {
           <h2 className="mt-4 text-4xl font-bold tracking-tight text-grey-900 sm:text-5xl lg:text-6xl">
             Supporting <span className="font-light text-brand">Institutions</span>
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-sm text-gray-500 md:text-base">
+          <p className="mx-auto mt-4 max-w-2xl text-sm text-black md:text-base">
             We collaborate with municipalities, schools, volunteer networks, and allied organizations across Nepal.
           </p>
         </div>

@@ -88,7 +88,7 @@ export default function CreateArticlePage() {
                 <div className="flex items-center justify-between mb-8">
                     <div>
                         <h1 className="text-3xl font-bold text-slate-900">Create Article</h1>
-                        <p className="text-slate-600 mt-2">Publish a new article and make it visible on the marketing home page.</p>
+                        <p className="text-black mt-2">Publish a new article and make it visible on the marketing home page.</p>
                     </div>
                     <Link href="/dashboard/article" className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
                         <FaArrowLeft /> Back to Article List
@@ -202,7 +202,7 @@ export default function CreateArticlePage() {
 
                     <div>
                         <span className="text-sm font-medium text-slate-700">Article Image</span>
-                        <label className="mt-2 flex items-center gap-3 rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-4 py-5 text-sm text-slate-600 cursor-pointer hover:border-blue-500 hover:bg-slate-100">
+                        <label className="mt-2 flex items-center gap-3 rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-4 py-5 text-sm text-black cursor-pointer hover:border-blue-500 hover:bg-slate-100">
                             <FaUpload className="h-4 w-4" />
                             <span>{imageFile ? imageFile.name : 'Choose an image to upload'}</span>
                             <input

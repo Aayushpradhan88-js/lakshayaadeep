@@ -47,7 +47,7 @@ export default function MissionVisionSection() {
           <h2 className="mt-4 text-4xl font-bold tracking-tight text-grey-900 sm:text-5xl lg:text-6xl">
             Mission, Vision <span className="font-light text-brand">&amp; Objectives</span>
           </h2>
-          {/* <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-gray-500 md:text-base">
+          {/* <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-black md:text-base">
             Our purpose guides every project, event, and partnership — from classrooms to villages across Nepal.
           </p> */}
         </div>
@@ -62,7 +62,7 @@ export default function MissionVisionSection() {
                 <span className="text-sm font-bold text-brand">{item.title.charAt(0)}</span>
               </div>
               <h3 className="mb-3 text-lg font-bold text-gray-900">{item.title}</h3>
-              <p className="text-sm leading-relaxed text-gray-600">{item.body}</p>
+              <p className="text-sm leading-relaxed text-black">{item.body}</p>
             </div>
           ))}
         </div> */}
@@ -79,9 +79,9 @@ export default function MissionVisionSection() {
                   <div className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl ${p.iconBg}`}>
                     <Icon className={`h-6 w-6 ${p.iconColor}`} aria-hidden />
                   </div>
-                  <h3 className="text-lg font-bold text-gray-800 md:text-xl">{p.title}</h3>
+                  <h3 className="text-lg font-bold text-black md:text-xl">{p.title}</h3>
                 </div>
-                <p className="text-sm leading-relaxed text-gray-500 md:text-base">{p.body}</p>
+                <p className="text-sm leading-relaxed text-black md:text-base">{p.body}</p>
               </div>
             )
           })}

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 import Header from "@/components/homepage/Header/header";
 import Footer from "@/components/shared-component/footer/page";
+import PageImageHeroSection from "@/components/shared-component/page-image-hero-section";
+import { PAGE_HERO_CONTENT } from "@/components/shared-component/page-hero-content";
 
 // ─── Supabase client ──────────────────────────────────────────────────────────
 const supabase = createClient(
@@ -115,8 +117,8 @@ const ArticleCard = ({ article }: { article: Article }) => {
         {article.status && (
           <span
             className={`absolute top-3 right-3 text-[10px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full ${article.status === "published"
-                ? "bg-teal-500 text-white"
-                : "bg-gray-200 text-gray-600"
+              ? "bg-teal-500 text-white"
+              : "bg-gray-200 text-black"
               }`}
           >
             {article.status}
@@ -126,11 +128,11 @@ const ArticleCard = ({ article }: { article: Article }) => {
 
       {/* Body */}
       <div className="p-4 flex flex-col flex-1">
-        <p className="text-[11px] text-gray-400 mb-1.5">{date}</p>
+        <p className="text-[11px] text-black mb-1.5">{date}</p>
         <h3 className="text-sm font-semibold text-gray-900 leading-snug mb-2 group-hover:text-amber-600 transition-colors duration-200">
           {article.title}
         </h3>
-        <p className="text-xs text-gray-500 leading-relaxed flex-1 line-clamp-2">{excerpt}</p>
+        <p className="text-xs text-black leading-relaxed flex-1 line-clamp-2">{excerpt}</p>
 
         {/* Author row */}
         <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
@@ -138,7 +140,7 @@ const ArticleCard = ({ article }: { article: Article }) => {
             <div className="w-6 h-6 rounded-full bg-amber-100 flex items-center justify-center text-[10px] font-bold text-amber-700 shrink-0">
               {initials}
             </div>
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-black">
               {article.author ?? "NGO Team"}
             </span>
           </div>
@@ -210,25 +212,7 @@ export default function ArticlePage() {
     <>
       <Header />
       <main className="min-h-screen bg-stone-50 animate-reveal-up">
-
-        {/* ── Hero ── */}
-        <section className="relative h-48 overflow-hidden">
-          <img
-            src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80"
-            alt="Articles hero"
-            className="w-full h-full object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/20" />
-          <div className="absolute bottom-6 left-6">
-            <p className="text-xs font-semibold text-amber-300 uppercase tracking-widest mb-1">
-              Knowledge Hub
-            </p>
-            <h1 className="text-3xl font-bold text-white">
-              Articles &amp;{" "}
-              <span className="text-teal-300 italic font-serif">Stories</span>
-            </h1>
-          </div>
-        </section>
+        <PageImageHeroSection {...PAGE_HERO_CONTENT.article} />
 
         <div className="max-w-5xl mx-auto px-4 py-8">
 
@@ -242,8 +226,8 @@ export default function ArticlePage() {
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
                   className={`text-xs font-medium px-4 py-1.5 rounded-full border transition-all duration-200 ${activeCategory === cat
-                      ? "bg-amber-500 text-white border-amber-500"
-                      : "bg-white text-gray-600 border-gray-200 hover:border-amber-300 hover:text-amber-600"
+                    ? "bg-amber-500 text-white border-amber-500"
+                    : "bg-white text-black border-gray-200 hover:border-amber-300 hover:text-amber-600"
                     }`}
                 >
                   {cat}
@@ -254,7 +238,7 @@ export default function ArticlePage() {
             {/* Search */}
             <div className="relative w-full sm:w-56">
               <svg
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400"
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-black"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -278,7 +262,7 @@ export default function ArticlePage() {
 
           {/* ── Results count ── */}
           {!loading && (
-            <p className="text-xs text-gray-400 mb-5">
+            <p className="text-xs text-black mb-5">
               {filtered.length}{" "}
               {filtered.length === 1 ? "article" : "articles"} found
             </p>
@@ -302,7 +286,7 @@ export default function ArticlePage() {
             <div className="flex flex-col items-center justify-center py-20 text-center">
               <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center mb-4">
                 <svg
-                  className="w-6 h-6 text-gray-300"
+                  className="w-6 h-6 text-black"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -315,8 +299,8 @@ export default function ArticlePage() {
                   />
                 </svg>
               </div>
-              <p className="text-sm font-medium text-gray-500">No articles found</p>
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-sm font-medium text-black">No articles found</p>
+              <p className="text-xs text-black mt-1">
                 Try a different category or search term
               </p>
             </div>

@@ -36,7 +36,7 @@ export default function LeadershipSection({ members }: Props) {
                     Guiding the <span className="text-brand font-light ">Mission</span> Forward
                 </h2>
                 {/* <div className="mt-6 mx-auto w-24 h-1 bg-[#e8885a] rounded-full opacity-20" /> */}
-                <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-gray-500">
+                <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-black">
                     Our Executive brings decades of experience in global development,
                     operation, and social impact.
                 </p>
@@ -79,12 +79,12 @@ export default function LeadershipSection({ members }: Props) {
                                     <h3 className="text-2xl font-bold text-gray-900 group-hover:text-brand transition-colors">
                                         {member.name}
                                     </h3>
-                                    <p className="text-base font-medium text-gray-500">
+                                    <p className="text-base font-medium text-black">
                                         {member.role || "Team Member"}
                                     </p>
                                     {/* <a 
                                         href={`mailto:${email}`}
-                                        className="inline-block text-sm text-gray-400 hover:text-brand transition-colors mt-2"
+                                        className="inline-block text-sm text-black hover:text-brand transition-colors mt-2"
                                     >
                                         {email}
                                     </a> */}
@@ -98,7 +98,7 @@ export default function LeadershipSection({ members }: Props) {
 
                 {members.length === 0 && (
                     <div className="text-center py-20 bg-white rounded-[2rem] border-2 border-dashed border-slate-100">
-                        <p className="text-gray-400">Our team is growing. Check back soon for updates.</p>
+                        <p className="text-black">Our team is growing. Check back soon for updates.</p>
                     </div>
                 )}
             </div>

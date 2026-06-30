@@ -45,7 +45,7 @@ export default function ValuesSection() {
   return (
     <section className="w-full bg-white px-6 py-16">
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 lg:grid-cols-2">
-        
+
         {/* Left Column */}
         <div className="flex flex-col justify-between">
           {/* Text */}
@@ -59,7 +59,7 @@ export default function ValuesSection() {
             <h2 className="text-4xl font-bold text-brand">
               Our Global Team
             </h2>
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-gray-500">
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-black">
               Across every office, every time zone, and every cultural content—
               these six values guide how we work, lead and serve
             </p>
@@ -102,10 +102,10 @@ export default function ValuesSection() {
                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                   </svg>
                 </div>
-                <h3 className="text-sm font-semibold text-gray-800">
+                <h3 className="text-sm font-semibold text-black">
                   {value.title}
                 </h3>
-                <p className="text-xs leading-relaxed text-gray-500">
+                <p className="text-xs leading-relaxed text-black">
                   {value.description}
                 </p>
               </div>

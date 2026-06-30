@@ -93,14 +93,14 @@ export default function DonorReportsModal({ onClose }: { onClose: () => void }) 
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
           <div>
-            <h2 className="text-lg font-bold text-gray-800">Impact Reports</h2>
-            <p className="text-xs text-gray-400">
+            <h2 className="text-lg font-bold text-black">Impact Reports</h2>
+            <p className="text-xs text-black">
               Transparency in every rupee donated
             </p>
           </div>
           <button
             onClick={onClose}
-            className="rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition"
+            className="rounded-full p-2 text-black hover:bg-gray-100 hover:text-black transition"
           >
             ✕
           </button>
@@ -116,16 +116,15 @@ export default function DonorReportsModal({ onClose }: { onClose: () => void }) 
               <button
                 key={r.id}
                 onClick={() => setSelected(r)}
-                className={`flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-gray-50 ${
-                  selected?.id === r.id ? "bg-cyan-50 border-l-4 border-cyan-400" : "border-l-4 border-transparent"
-                }`}
+                className={`flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-gray-50 ${selected?.id === r.id ? "bg-cyan-50 border-l-4 border-cyan-400" : "border-l-4 border-transparent"
+                  }`}
               >
                 <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl">
                   <Image src={r.image} alt={r.title} fill className="object-cover" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="truncate text-sm font-semibold text-gray-800">{r.title}</p>
-                  <p className="text-xs text-gray-400">{r.date} · {r.category}</p>
+                  <p className="truncate text-sm font-semibold text-black">{r.title}</p>
+                  <p className="text-xs text-black">{r.date} · {r.category}</p>
                   <div className="mt-1 flex items-center gap-2">
                     <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${r.tagColor}`}>
                       {r.tag}
@@ -143,7 +142,7 @@ export default function DonorReportsModal({ onClose }: { onClose: () => void }) 
               {/* Back on mobile */}
               <button
                 onClick={() => setSelected(null)}
-                className="flex items-center gap-1 px-4 pt-4 text-xs font-medium text-gray-500 hover:text-gray-800 md:hidden"
+                className="flex items-center gap-1 px-4 pt-4 text-xs font-medium text-black hover:text-black md:hidden"
               >
                 ← Back
               </button>
@@ -166,28 +165,28 @@ export default function DonorReportsModal({ onClose }: { onClose: () => void }) 
 
               {/* Info */}
               <div className="p-5">
-                <p className="mb-1 text-xs text-gray-400">{selected.date} · {selected.category}</p>
-                <h3 className="mb-3 text-xl font-bold text-gray-800">{selected.title}</h3>
-                <p className="mb-5 text-sm leading-relaxed text-gray-600">{selected.summary}</p>
+                <p className="mb-1 text-xs text-black">{selected.date} · {selected.category}</p>
+                <h3 className="mb-3 text-xl font-bold text-black">{selected.title}</h3>
+                <p className="mb-5 text-sm leading-relaxed text-black">{selected.summary}</p>
 
                 {/* Stats */}
                 <div className="mb-5 grid grid-cols-2 gap-3">
                   <div className="rounded-xl bg-cyan-50 p-4 text-center">
                     <p className="text-xl font-bold text-cyan-500">{selected.raised}</p>
-                    <p className="mt-1 text-xs text-gray-500">Total Raised</p>
+                    <p className="mt-1 text-xs text-black">Total Raised</p>
                   </div>
                   <div className="rounded-xl bg-orange-50 p-4 text-center">
                     <p className="text-xl font-bold text-brand">{selected.beneficiaries}+</p>
-                    <p className="mt-1 text-xs text-gray-500">Beneficiaries</p>
+                    <p className="mt-1 text-xs text-black">Beneficiaries</p>
                   </div>
                 </div>
 
                 {/* Progress bar */}
-                <p className="mb-1 text-xs font-semibold text-gray-500">Fund Utilization</p>
+                <p className="mb-1 text-xs font-semibold text-black">Fund Utilization</p>
                 <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
                   <div className="h-full rounded-full bg-cyan-400" style={{ width: "88%" }} />
                 </div>
-                <p className="mt-1 text-right text-xs text-gray-400">88% directly to programs</p>
+                <p className="mt-1 text-right text-xs text-black">88% directly to programs</p>
 
                 <button className="mt-5 w-full rounded-xl bg-orange-500 py-3 text-sm font-bold text-white hover:bg-orange-600 transition">
                   Donate to This Cause
@@ -199,7 +198,7 @@ export default function DonorReportsModal({ onClose }: { onClose: () => void }) 
           {/* Empty state on desktop when nothing selected */}
           {!selected && (
             <div className="hidden flex-1 items-center justify-center md:flex">
-              <p className="text-sm text-gray-400">Select a report to view details</p>
+              <p className="text-sm text-black">Select a report to view details</p>
             </div>
           )}
         </div>

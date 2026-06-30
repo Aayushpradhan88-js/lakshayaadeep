@@ -25,7 +25,7 @@ const categoryColors: Record<string, string> = {
   'Nutrition': 'text-[#4ab870]',
   'Environment': 'text-[#4ab870]',
   'Social': 'text-[#6080e0]',
-  'Other': 'text-gray-500',
+  'Other': 'text-black',
 };
 
 // Unified Project Card

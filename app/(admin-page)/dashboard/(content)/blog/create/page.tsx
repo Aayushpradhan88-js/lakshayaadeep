@@ -87,7 +87,7 @@ export default function CreateBlogPage() {
                 <div className="flex items-center justify-between mb-8">
                     <div>
                         <h1 className="text-3xl font-bold text-slate-900">Create Blog Post</h1>
-                        <p className="text-slate-600 mt-2">Add a new blog post and publish it to the public marketing home page.</p>
+                        <p className="text-black mt-2">Add a new blog post and publish it to the public marketing home page.</p>
                     </div>
                     <Link href="/dashboard/blog" className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
                         <FaArrowLeft /> Back to Blog List
@@ -202,7 +202,7 @@ export default function CreateBlogPage() {
 
                     <div>
                         <span className="text-sm font-medium text-slate-700">Blog Image</span>
-                        <label className="mt-2 flex items-center gap-3 rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-4 py-5 text-sm text-slate-600 cursor-pointer hover:border-cyan-500 hover:bg-slate-100">
+                        <label className="mt-2 flex items-center gap-3 rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-4 py-5 text-sm text-black cursor-pointer hover:border-cyan-500 hover:bg-slate-100">
                             <FaUpload className="h-4 w-4" />
                             <span>{imageFile ? imageFile.name : 'Choose an image to upload'}</span>
                             <input

@@ -33,7 +33,7 @@ export default function MediaPage() {
       subtitle="Videos, press, and stories—central place for journalists and supporters."
     >
       {process.env.NODE_ENV === 'development' && (
-        <p className="mb-10 leading-relaxed text-slate-600">
+        <p className="mb-10 leading-relaxed text-black">
           Maintain the <code className="rounded bg-slate-100 px-1.5 py-0.5 text-sm">items</code> array in{" "}
           <code className="rounded bg-slate-100 px-1.5 py-0.5 text-sm">app/media/page.tsx</code> to add releases,
           video titles, and short descriptions. You can later split into components or fetch from a CMS.
@@ -52,7 +52,7 @@ export default function MediaPage() {
               </span>
               <h2 className="text-lg font-bold text-slate-900">{item.title}</h2>
             </div>
-            <p className="mt-2 text-slate-600">{item.description}</p>
+            <p className="mt-2 text-black">{item.description}</p>
             {item.href ? (
               <a
                 href={item.href}

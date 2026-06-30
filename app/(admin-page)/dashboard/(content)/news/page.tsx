@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { 
-  FaNewspaper, 
-  FaPlus, 
-  FaEdit, 
-  FaTrash, 
-  FaSearch, 
+import {
+  FaNewspaper,
+  FaPlus,
+  FaEdit,
+  FaTrash,
+  FaSearch,
   FaCalendarAlt,
   FaEye,
   FaTag,
@@ -14,6 +14,7 @@ import {
   FaClock
 } from "react-icons/fa";
 import { getSupabaseClient } from "@/lib/supabase/supabase";
+import { useAdminFeedback } from "@/components/shared-component/admin-feedback";
 
 interface NewsItem {
   id: string;
@@ -37,6 +38,7 @@ export default function NewsPage() {
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const { showToast, askConfirm } = useAdminFeedback();
 
   useEffect(() => {
     fetchNewsItems();
@@ -59,36 +61,38 @@ export default function NewsPage() {
     }
   };
 
-  const deleteNewsItem = async (itemId: string) => {
-    if (!confirm('Are you sure you want to delete this news item?')) return;
+  const deleteNewsItem = (itemId: string) => {
+    askConfirm('Are you sure you want to delete this news item?', async () => {
+      try {
+        const supabase = getSupabaseClient();
+        const { error } = await supabase
+          .from('news')
+          .delete()
+          .eq('id', itemId);
 
-    try {
-      const supabase = getSupabaseClient();
-      const { error } = await supabase
-        .from('news')
-        .delete()
-        .eq('id', itemId);
+        if (error) throw error;
 
-      if (error) throw error;
-
-      setNewsItems(prev => prev.filter(item => item.id !== itemId));
-      if (selectedNews?.id === itemId) {
-        setSelectedNews(null);
-        setShowDetailModal(false);
+        setNewsItems(prev => prev.filter(item => item.id !== itemId));
+        if (selectedNews?.id === itemId) {
+          setSelectedNews(null);
+          setShowDetailModal(false);
+        }
+        showToast('News item deleted successfully', 'success');
+      } catch (error) {
+        console.error('Error deleting news item:', error);
+        showToast('Failed to delete news item', 'error');
       }
-    } catch (error) {
-      console.error('Error deleting news item:', error);
-    }
+    });
   };
 
   const filteredNewsItems = newsItems.filter(item => {
     const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.author.toLowerCase().includes(searchTerm.toLowerCase());
-    
+      item.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.author.toLowerCase().includes(searchTerm.toLowerCase());
+
     const matchesStatus = statusFilter === "all" || item.status === statusFilter;
     const matchesCategory = categoryFilter === "all" || item.category === categoryFilter;
-    
+
     return matchesSearch && matchesStatus && matchesCategory;
   });
 
@@ -114,7 +118,7 @@ export default function NewsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div className="mb-4 sm:mb-0">
             <h1 className="text-3xl font-bold text-slate-900 mb-2">News Management</h1>
-            <p className="text-slate-600">Manage and publish news articles for your website visitors</p>
+            <p className="text-black">Manage and publish news articles for your website visitors</p>
           </div>
           <div className="flex items-center space-x-3">
             <button className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-lg hover:from-emerald-600 hover:to-emerald-700 flex items-center gap-2 shadow-lg">
@@ -138,7 +142,7 @@ export default function NewsPage() {
             </div>
           </div>
         </div>
-        
+
         <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl border border-green-200 p-4 text-white shadow-lg">
           <div className="flex items-center justify-between">
             <div>
@@ -197,7 +201,7 @@ export default function NewsPage() {
               />
             </div>
           </div>
-          
+
           <div className="flex gap-3">
             <select
               value={statusFilter}
@@ -209,7 +213,7 @@ export default function NewsPage() {
               <option value="draft">Draft</option>
               <option value="archived">Archived</option>
             </select>
-            
+
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
@@ -246,34 +250,19 @@ export default function NewsPage() {
               <thead className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
                 <tr>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaNewspaper className="h-4 w-4" />
-                      Article
-                    </div>
+                    Article
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaUser className="h-4 w-4" />
-                      Author
-                    </div>
+                    Author
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaTag className="h-4 w-4" />
-                      Category
-                    </div>
+                    Category
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaClock className="h-4 w-4" />
-                      Status
-                    </div>
+                    Status
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaCalendarAlt className="h-4 w-4" />
-                      Date
-                    </div>
+                    Date
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
                     Actions
@@ -351,24 +340,24 @@ export default function NewsPage() {
                 </button>
               </div>
             </div>
-            
+
             <div className="p-6 space-y-4">
               <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Title</label>
+                <label className="text-xs font-semibold text-black uppercase tracking-wider">Title</label>
                 <h3 className="text-lg font-bold text-slate-900 mt-1">{selectedNews.title}</h3>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Author</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Author</label>
                   <p className="text-slate-900 font-medium mt-1">{selectedNews.author}</p>
                 </div>
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Category</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Category</label>
                   <p className="text-slate-900 font-medium mt-1">{selectedNews.category}</p>
                 </div>
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Status</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Status</label>
                   <div className="mt-1">
                     <span className={`inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-full border ${getStatusColor(selectedNews.status)}`}>
                       {selectedNews.status}
@@ -376,20 +365,20 @@ export default function NewsPage() {
                   </div>
                 </div>
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Published Date</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Published Date</label>
                   <p className="text-slate-900 font-medium mt-1">
                     {selectedNews.published_at ? new Date(selectedNews.published_at).toLocaleString() : 'Not published'}
                   </p>
                 </div>
               </div>
-              
+
               <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Content</label>
+                <label className="text-xs font-semibold text-black uppercase tracking-wider">Content</label>
                 <div className="text-slate-900 mt-1 whitespace-pre-wrap">{selectedNews.content}</div>
               </div>
-              
+
               <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Tags</label>
+                <label className="text-xs font-semibold text-black uppercase tracking-wider">Tags</label>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {selectedNews.tags.map((tag, index) => (
                     <span key={index} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium">
@@ -398,18 +387,18 @@ export default function NewsPage() {
                   ))}
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Created</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Created</label>
                   <p className="text-slate-900 font-medium mt-1">{new Date(selectedNews.created_at).toLocaleString()}</p>
                 </div>
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Last Updated</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Last Updated</label>
                   <p className="text-slate-900 font-medium mt-1">{new Date(selectedNews.updated_at).toLocaleString()}</p>
                 </div>
               </div>
-              
+
               <div className="flex gap-3 pt-4">
                 <button
                   onClick={() => setShowDetailModal(false)}

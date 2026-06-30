@@ -51,11 +51,10 @@ function TestimonialCard({
     <div className={`flex flex-col ${align === "right" ? "items-end" : align === "center" ? "items-center" : "items-start"}`}>
       {/* Quote bubble */}
       <div
-        className={`rounded-2xl border border-gray-200 bg-white p-5 shadow-sm ${
-          isCenter ? "max-w-sm" : "max-w-xs"
-        }`}
+        className={`rounded-2xl border border-gray-200 bg-white p-5 shadow-sm ${isCenter ? "max-w-sm" : "max-w-xs"
+          }`}
       >
-        <p className={`leading-relaxed text-gray-600 ${isCenter ? "text-sm" : "text-xs"}`}>
+        <p className={`leading-relaxed text-black ${isCenter ? "text-sm" : "text-xs"}`}>
           {quote}
         </p>
       </div>
@@ -65,15 +64,14 @@ function TestimonialCard({
 
       {/* Avatar + name */}
       <div
-        className={`flex items-end gap-3 ${
-          align === "right" ? "flex-row-reverse" : "flex-row"
-        }`}
+        className={`flex items-end gap-3 ${align === "right" ? "flex-row-reverse" : "flex-row"
+          }`}
       >
         <div>
-          <p className="text-xs font-bold uppercase tracking-wide text-gray-800">
+          <p className="text-xs font-bold uppercase tracking-wide text-black">
             {name}
           </p>
-          <p className="text-xs text-gray-400">{role}</p>
+          <p className="text-xs text-black">{role}</p>
         </div>
         <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-xl border border-gray-200">
           <Image src={image} alt={name} fill className="object-cover" />
@@ -86,7 +84,7 @@ function TestimonialCard({
 function DonorTestimonialsSection() {
   return (
     <section className="w-full bg-white px-6 py-16">
-      <h2 className="mb-14 text-center text-2xl font-bold text-gray-800">
+      <h2 className="mb-14 text-center text-2xl font-bold text-black">
         Donor Testimonials
       </h2>
 

@@ -128,7 +128,7 @@ export default function TestimonialsCarousel({
             {title} <span className="font-light text-brand">{titleAccent}</span>
           </h2>
           {subtitle ? (
-            <p className="mx-auto mt-4 max-w-2xl text-base text-gray-500 md:text-lg">{subtitle}</p>
+            <p className="mx-auto mt-4 max-w-2xl text-base text-black md:text-lg">{subtitle}</p>
           ) : null}
         </div>
 
@@ -154,7 +154,7 @@ export default function TestimonialsCarousel({
                   style={{ width: `${slideWidth}%` }}
                 >
                   <div className="flex h-full flex-col rounded-2xl border border-gray-100 bg-white p-8 shadow-md md:p-10">
-                    <p className="flex-1 text-base leading-relaxed text-gray-600 md:text-lg">
+                    <p className="flex-1 text-base leading-relaxed text-black md:text-lg">
                       &ldquo;{item.quote}&rdquo;
                     </p>
                     <div className="mt-8 flex items-center gap-4 border-t border-gray-100 pt-6">
@@ -163,7 +163,7 @@ export default function TestimonialsCarousel({
                       </div>
                       <div>
                         <p className="text-base font-bold text-gray-900 md:text-lg">{item.name}</p>
-                        <p className="text-sm text-gray-500 md:text-base">{item.role}</p>
+                        <p className="text-sm text-black md:text-base">{item.role}</p>
                       </div>
                     </div>
                   </div>
@@ -189,9 +189,8 @@ export default function TestimonialsCarousel({
               type="button"
               aria-label={`Go to slide ${i + 1}`}
               onClick={() => goToDot(i)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                i === activeDotClamped ? "w-8 bg-brand" : "w-2 bg-gray-300 hover:bg-gray-400"
-              }`}
+              className={`h-2 rounded-full transition-all duration-300 ${i === activeDotClamped ? "w-8 bg-brand" : "w-2 bg-gray-300 hover:bg-gray-400"
+                }`}
             />
           ))}
         </div>

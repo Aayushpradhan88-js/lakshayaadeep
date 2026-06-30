@@ -30,7 +30,7 @@ const VolunteerForm = () => {
                         <h2 className="text-4xl md:text-5xl font-bold text-gray-700 mb-4">
                             Become a <span className="text-brand">Volunteer</span>
                         </h2>
-                        <p className="text-gray-500 text-base leading-relaxed mb-8">
+                        <p className="text-blackxt-base leading-relaxed mb-8">
                             Whether you have a weekend or a lifetime, your skills and passion can change the world. Fill out the forms below and we&apos;ll matcdh you with the perfect opportunity.
                         </p>
 

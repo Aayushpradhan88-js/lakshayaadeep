@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import { BookOpen, Globe2, HandHeart, Users } from "lucide-react";
+import { typography } from "@/lib/typography";
 
 const photos = [
   { src: "https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&q=80", alt: "Aid work", className: "row-span-2" },
@@ -9,45 +11,84 @@ const photos = [
   { src: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&q=80", alt: "Volunteers" },
 ];
 
+const milestones = [
+  { value: "2003", label: "Founded with one mission" },
+  { value: "32+", label: "Communities reached" },
+  { value: "2.4M+", label: "Lives touched" },
+];
+
+const highlights = [
+  {
+    icon: HandHeart,
+    title: "Listen first",
+    text: "We partner with local leaders to co-design programs that communities own.",
+  },
+  {
+    icon: Globe2,
+    title: "Rooted in Nepal",
+    text: "Context-grounded work across education, health, and sustainable development.",
+  },
+  {
+    icon: Users,
+    title: "Youth-led change",
+    text: "A passionate team building dignity, opportunity, and hope together.",
+  },
+];
+
 function OurStorySection() {
   return (
     <section className="w-full bg-white px-6 py-16">
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 lg:grid-cols-2">
-        {/* Left */}
         <div>
-          <div className="mb-4 flex items-center gap-2">
-            <span className="text-sm font-semibold text-cyan-400">Our Story</span>
-            <div className="h-0.5 w-6 bg-cyan-400" />
+          <p className={`mb-4 ${typography.overline} text-brand-accent`}>Our Story</p>
+
+          <p className={`mb-6 ${typography.body} text-black`}>
+            Lakshyadeep was born from a simple conviction — that every person deserves dignity,
+            opportunity, and the chance to flourish.
+          </p>
+
+          <div className="mb-8 grid grid-cols-3 gap-3">
+            {milestones.map((item) => (
+              <div
+                key={item.label}
+                className="rounded-2xl border border-brand-accent/15 bg-brand-accent-light/40 px-3 py-4 text-center"
+              >
+                <p className="text-xl font-bold text-brand-accent sm:text-2xl">{item.value}</p>
+                <p className={`mt-1 ${typography.caption} text-black`}>{item.label}</p>
+              </div>
+            ))}
           </div>
-          <p className="mb-4 text-sm leading-relaxed text-gray-600">
-            HopeForward was born in 2003 from a simple conviction — that every
-            human being deserves dignity, opportunity, and the chance to flourish.
-            Five people. One rented office in Manhattan. One relentless idea. Today
-            we operate across 32 countries, touching over 2.4 million lives.
-          </p>
-          <p className="mb-8 text-sm leading-relaxed text-gray-600">
-            We don't parachute in with pre-built solutions. We listen first. We
-            partner with local communities and grassroots leaders to co-design
-            programs that are contextually grounded and sustainably owned. Our model
-            has been recognized by the UN and independently verified by GiveWell and
-            Charity Navigator.
-          </p>
-          <button className="rounded-lg border border-gray-300 px-6 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition">
+
+          <ul className="mb-8 space-y-4">
+            {highlights.map((item) => {
+              const Icon = item.icon;
+              return (
+                <li key={item.title} className="flex gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-light text-brand">
+                    <Icon className="h-5 w-5" aria-hidden />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">{item.title}</p>
+                    <p className={`mt-0.5 ${typography.bodySm} text-black`}>{item.text}</p>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+
+          <button className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-6 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-50">
+            <BookOpen className="h-4 w-4" aria-hidden />
             Read Our Story
           </button>
         </div>
 
-        {/* Right — photo grid */}
         <div className="grid grid-cols-2 grid-rows-2 gap-3">
-          {/* Tall left image */}
-          <div className="relative row-span-2 overflow-hidden rounded-2xl min-h-[280px]">
+          <div className="relative row-span-2 min-h-[280px] overflow-hidden rounded-2xl">
             <Image src={photos[0].src} alt={photos[0].alt} fill className="object-cover" />
           </div>
-          {/* Top right */}
           <div className="relative h-[134px] overflow-hidden rounded-2xl">
             <Image src={photos[1].src} alt={photos[1].alt} fill className="object-cover" />
           </div>
-          {/* Bottom right — 2 stacked */}
           <div className="grid grid-cols-2 gap-3">
             <div className="relative h-[134px] overflow-hidden rounded-2xl">
               <Image src={photos[2].src} alt={photos[2].alt} fill className="object-cover" />
@@ -62,5 +103,4 @@ function OurStorySection() {
   );
 }
 
-
-export default OurStorySection
+export default OurStorySection;

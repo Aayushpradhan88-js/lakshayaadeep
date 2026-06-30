@@ -1,17 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { 
-  FaBell, 
-  FaPlus, 
-  FaEdit, 
-  FaTrash, 
-  FaSearch, 
-  FaCalendarAlt,
+import {
+  FaBell,
+  FaPlus,
+  FaEdit,
+  FaTrash,
+  FaSearch,
   FaEye,
   FaToggleOn,
   FaToggleOff,
-  FaClock,
   FaCheckCircle,
   FaExclamationTriangle,
   FaImage,
@@ -19,6 +17,7 @@ import {
   FaTimes
 } from "react-icons/fa";
 import { getSupabaseClient } from "@/lib/supabase/supabase";
+import { useAdminFeedback } from "@/components/shared-component/admin-feedback";
 
 interface Notice {
   id: string;
@@ -41,7 +40,7 @@ export default function NoticePage() {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   // Form state
   const [formData, setFormData] = useState({
     title: "",
@@ -51,6 +50,7 @@ export default function NoticePage() {
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const { showToast, askConfirm } = useAdminFeedback();
 
   useEffect(() => {
     fetchNotices();
@@ -83,46 +83,53 @@ export default function NoticePage() {
 
       if (error) throw error;
 
-      setNotices(prev => prev.map(notice => 
-        notice.id === noticeId 
+      setNotices(prev => prev.map(notice =>
+        notice.id === noticeId
           ? { ...notice, is_active: !currentStatus }
           : notice
       ));
+      showToast(
+        !currentStatus ? "Notice activated successfully" : "Notice deactivated successfully",
+        "success"
+      );
     } catch (error) {
       console.error('Error toggling notice status:', error);
+      showToast("Failed to update notice status", "error");
     }
   };
 
-  const deleteNotice = async (noticeId: string) => {
-    if (!confirm('Are you sure you want to delete this notice?')) return;
+  const deleteNotice = (noticeId: string) => {
+    askConfirm("Are you sure you want to delete this notice?", async () => {
+      try {
+        const supabase = getSupabaseClient();
+        const { error } = await supabase
+          .from('notices')
+          .delete()
+          .eq('id', noticeId);
 
-    try {
-      const supabase = getSupabaseClient();
-      const { error } = await supabase
-        .from('notices')
-        .delete()
-        .eq('id', noticeId);
+        if (error) throw error;
 
-      if (error) throw error;
-
-      setNotices(prev => prev.filter(notice => notice.id !== noticeId));
-      if (selectedNotice?.id === noticeId) {
-        setSelectedNotice(null);
-        setShowDetailModal(false);
+        setNotices(prev => prev.filter(notice => notice.id !== noticeId));
+        if (selectedNotice?.id === noticeId) {
+          setSelectedNotice(null);
+          setShowDetailModal(false);
+        }
+        showToast("Notice deleted successfully", "success");
+      } catch (error) {
+        console.error('Error deleting notice:', error);
+        showToast("Failed to delete notice", "error");
       }
-    } catch (error) {
-      console.error('Error deleting notice:', error);
-    }
+    });
   };
 
   const filteredNotices = notices.filter(notice => {
     const matchesSearch = notice.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         notice.description?.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesStatus = statusFilter === "all" || 
-                          (statusFilter === "active" && notice.is_active) ||
-                          (statusFilter === "inactive" && !notice.is_active);
-    
+      notice.description?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesStatus = statusFilter === "all" ||
+      (statusFilter === "active" && notice.is_active) ||
+      (statusFilter === "inactive" && !notice.is_active);
+
     return matchesSearch && matchesStatus;
   });
 
@@ -157,7 +164,7 @@ export default function NoticePage() {
         const { data: { publicUrl } } = supabase.storage
           .from('gallery')
           .getPublicUrl(`notices/${fileName}`);
-        
+
         image_url = publicUrl;
       }
 
@@ -178,9 +185,10 @@ export default function NoticePage() {
       setNotices([data, ...notices]);
       setShowCreateModal(false);
       resetForm();
+      showToast("Notice created successfully", "success");
     } catch (error) {
       console.error('Error creating notice:', error);
-      alert('Failed to create notice');
+      showToast("Failed to create notice", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -202,15 +210,16 @@ export default function NoticePage() {
 
   return (
     <div className="p-6 space-y-6">
+
       {/* Header Section */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div className="mb-4 sm:mb-0">
             <h1 className="text-3xl font-bold text-slate-900 mb-2">Notice Pop-up Messages</h1>
-            <p className="text-slate-600">Manage pop-up notices and announcements for website visitors</p>
+            <p className="text-black">Manage pop-up notices and announcements for website visitors</p>
           </div>
           <div className="flex items-center space-x-3">
-            <button 
+            <button
               onClick={() => setShowCreateModal(true)}
               className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-lg hover:from-emerald-600 hover:to-emerald-700 flex items-center gap-2 shadow-lg"
             >
@@ -234,7 +243,7 @@ export default function NoticePage() {
             </div>
           </div>
         </div>
-        
+
         <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl border border-green-200 p-4 text-white shadow-lg">
           <div className="flex items-center justify-between">
             <div>
@@ -293,10 +302,10 @@ export default function NoticePage() {
               />
             </div>
           </div>
-          
+
           <div className="flex gap-3">
             {/* Type filter removed as we simplified notice types */}
-            
+
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
@@ -332,34 +341,19 @@ export default function NoticePage() {
               <thead className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
                 <tr>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaBell className="h-4 w-4" />
-                      Notice
-                    </div>
+                    Notice
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaClock className="h-4 w-4" />
-                      Duration
-                    </div>
+                    Duration
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaImage className="h-4 w-4" />
-                      Media
-                    </div>
+                    Media
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaToggleOn className="h-4 w-4" />
-                      Status
-                    </div>
+                    Status
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaCalendarAlt className="h-4 w-4" />
-                      Date
-                    </div>
+                    Date
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
                     Actions
@@ -392,11 +386,10 @@ export default function NoticePage() {
                     <td className="px-6 py-4">
                       <button
                         onClick={() => toggleNoticeStatus(notice.id, notice.is_active)}
-                        className={`flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-full border transition-colors ${
-                          notice.is_active 
-                            ? 'bg-green-100 text-green-800 border-green-200 hover:bg-green-200' 
+                        className={`flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-full border transition-colors ${notice.is_active
+                            ? 'bg-green-100 text-green-800 border-green-200 hover:bg-green-200'
                             : 'bg-slate-100 text-slate-800 border-slate-200 hover:bg-slate-200'
-                        }`}
+                          }`}
                       >
                         {notice.is_active ? <FaToggleOn className="h-3 w-3" /> : <FaToggleOff className="h-3 w-3" />}
                         {notice.is_active ? 'Active' : 'Inactive'}
@@ -436,76 +429,77 @@ export default function NoticePage() {
 
       {/* Notice Detail Modal */}
       {showDetailModal && selectedNotice && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-2xl">
-            <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 px-6 py-4 rounded-t-2xl">
-              <div className="flex justify-between items-center">
-                <h2 className="text-xl font-bold text-white">Notice Details</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-xl bg-white shadow-2xl">
+            <div className="rounded-t-xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-4 py-3">
+              <div className="flex items-center justify-between">
+                <h2 className="text-base font-bold text-white">Notice Details</h2>
                 <button
                   onClick={() => setShowDetailModal(false)}
-                  className="text-white/80 hover:text-white transition-colors"
+                  className="text-white/80 transition-colors hover:text-white"
                 >
-                  <FaTimes />
+                  <FaTimes className="h-4 w-4" />
                 </button>
               </div>
             </div>
-            
-            <div className="p-6 space-y-4">
+
+            <div className="space-y-3 p-4">
               {selectedNotice.image_url && (
-                <div className="w-full h-48 rounded-xl overflow-hidden border border-slate-200">
-                  <img src={selectedNotice.image_url} alt="" className="w-full h-full object-cover" />
+                <div className="rounded-lg border border-slate-200 bg-slate-50 p-1">
+                  <img
+                    src={selectedNotice.image_url}
+                    alt=""
+                    className="mx-auto block max-h-52 w-full rounded-md object-contain"
+                  />
                 </div>
               )}
 
-              <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Title</label>
-                <h3 className="text-lg font-bold text-slate-900 mt-1">{selectedNotice.title || "Untitled"}</h3>
+              <div className="rounded-lg bg-slate-50 p-3">
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-black">Title</label>
+                <h3 className="mt-0.5 text-sm font-bold text-slate-900">{selectedNotice.title || "Untitled"}</h3>
               </div>
-              
-              <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Description</label>
-                <div className="text-slate-900 mt-1 whitespace-pre-wrap">{selectedNotice.description}</div>
+
+              <div className="rounded-lg bg-slate-50 p-3">
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-black">Description</label>
+                <div className="mt-0.5 line-clamp-3 text-sm text-slate-900">{selectedNotice.description}</div>
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Status</label>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-lg bg-slate-50 p-3">
+                  <label className="text-[10px] font-semibold uppercase tracking-wider text-black">Status</label>
                   <div className="mt-1">
-                    <span className={`inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-full border ${
-                      selectedNotice.is_active 
-                        ? 'bg-green-100 text-green-800 border-green-200' 
+                    <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold ${selectedNotice.is_active
+                        ? 'bg-green-100 text-green-800 border-green-200'
                         : 'bg-slate-100 text-slate-800 border-slate-200'
-                    }`}>
+                      }`}>
                       {selectedNotice.is_active ? <FaToggleOn className="h-3 w-3" /> : <FaToggleOff className="h-3 w-3" />}
                       {selectedNotice.is_active ? 'Active' : 'Inactive'}
                     </span>
                   </div>
                 </div>
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Display Duration</label>
-                  <p className="text-slate-900 font-medium mt-1">{selectedNotice.display_duration} seconds</p>
+                <div className="rounded-lg bg-slate-50 p-3">
+                  <label className="text-[10px] font-semibold uppercase tracking-wider text-black">Display Duration</label>
+                  <p className="mt-0.5 text-sm font-medium text-slate-900">{selectedNotice.display_duration} seconds</p>
                 </div>
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Created</label>
-                  <p className="text-slate-900 font-medium mt-1">{new Date(selectedNotice.created_at).toLocaleString()}</p>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="rounded-lg bg-slate-50 p-3">
+                  <label className="text-[10px] font-semibold uppercase tracking-wider text-black">Created</label>
+                  <p className="mt-0.5 text-xs font-medium text-slate-900">{new Date(selectedNotice.created_at).toLocaleString()}</p>
                 </div>
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Last Updated</label>
-                  <p className="text-slate-900 font-medium mt-1">{new Date(selectedNotice.updated_at).toLocaleString()}</p>
+                <div className="rounded-lg bg-slate-50 p-3">
+                  <label className="text-[10px] font-semibold uppercase tracking-wider text-black">Last Updated</label>
+                  <p className="mt-0.5 text-xs font-medium text-slate-900">{new Date(selectedNotice.updated_at).toLocaleString()}</p>
                 </div>
               </div>
-              
-              <div className="flex gap-3 pt-4">
-                <button
-                  onClick={() => setShowDetailModal(false)}
-                  className="flex-1 bg-slate-200 text-slate-800 px-4 py-3 rounded-lg hover:bg-slate-300 font-medium"
-                >
-                  Close
-                </button>
-              </div>
+
+              <button
+                onClick={() => setShowDetailModal(false)}
+                className="w-full rounded-lg bg-slate-200 px-4 py-2 text-sm font-medium text-slate-800 hover:bg-slate-300"
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>
@@ -513,11 +507,11 @@ export default function NoticePage() {
 
       {/* Create Notice Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-            <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 px-6 py-4 rounded-t-2xl">
-              <div className="flex justify-between items-center">
-                <h2 className="text-xl font-bold text-white">Create New Notice</h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
+          <div className="thin-scrollbar max-h-[90vh] w-full max-w-md overflow-y-auto rounded-xl bg-white shadow-2xl">
+            <div className="rounded-t-xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-4 py-3">
+              <div className="flex items-center justify-between">
+                <h2 className="text-base font-bold text-white">Create New Notice</h2>
                 <button
                   onClick={() => {
                     setShowCreateModal(false);
@@ -529,8 +523,8 @@ export default function NoticePage() {
                 </button>
               </div>
             </div>
-            
-            <form onSubmit={handleCreateNotice} className="p-6 space-y-4">
+
+            <form onSubmit={handleCreateNotice} className="space-y-3 p-4">
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700">Title (Optional)</label>
                 <input
@@ -554,7 +548,7 @@ export default function NoticePage() {
 
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700">Notice Image (Optional)</label>
-                <div 
+                <div
                   className="border-2 border-dashed border-slate-300 rounded-xl p-4 text-center cursor-pointer hover:bg-slate-50 transition-colors relative"
                   onClick={() => document.getElementById('notice-image')?.click()}
                 >

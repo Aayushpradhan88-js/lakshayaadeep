@@ -18,15 +18,15 @@ const Newsletter = () => {
                     {/* Right Form */}
                     <div className="md:w-1/2 w-full flex justify-end">
                         <form className="relative w-full max-w-lg flex items-center">
-                            <input 
-                                type="email" 
+                            <input
+                                type="email"
                                 placeholder="Email"
                                 className="w-full py-4 pl-6 pr-36 rounded-full focus:outline-none focus:ring-2 focus:ring-[#75ced9] border-none text-gray-700 placeholder-gray-500 shadow-sm"
                                 required
                             />
-                            <button 
+                            <button
                                 type="submit"
-                                className="absolute right-0 top-0 bottom-0 bg-[#ef9a58] hover:bg-[#e08945] text-gray-800 font-medium px-8 py-4 rounded-full transition-colors shadow-sm"
+                                className="absolute right-0 top-0 bottom-0 bg-[#ef9a58] hover:bg-[#e08945] text-black font-medium px-8 py-4 rounded-full transition-colors shadow-sm"
                             >
                                 Subscribe
                             </button>

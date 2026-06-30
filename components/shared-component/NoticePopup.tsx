@@ -78,7 +78,7 @@ export default function NoticePopup() {
         {/* Close Button */}
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 z-10 bg-white/80 hover:bg-white backdrop-blur-sm p-2 rounded-full shadow-lg text-slate-600 hover:text-red-500 transition-all"
+          className="absolute top-4 right-4 z-10 bg-white/80 hover:bg-white backdrop-blur-sm p-2 rounded-full shadow-lg text-black hover:text-red-500 transition-all"
         >
           <FaTimes size={18} />
         </button>
@@ -102,7 +102,7 @@ export default function NoticePopup() {
               </h2>
             )}
             {notice.description && (
-              <p className="text-slate-600 leading-relaxed text-lg">
+              <p className="text-black leading-relaxed text-lg">
                 {notice.description}
               </p>
             )}

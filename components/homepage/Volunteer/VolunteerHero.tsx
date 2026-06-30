@@ -28,10 +28,10 @@ const VolunteerHero = () => {
 
                     {/* Right Content */}
                     <div className="text-center lg:text-left">
-                        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
+                        <h2 className="text-3xl md:text-4xl font-bold text-black mb-6">
                             Join Our Volunteer Community
                         </h2>
-                        <p className="text-gray-600 leading-relaxed text-lg mb-8">
+                        <p className="text-black leading-relaxed text-lg mb-8">
                             Make a real difference in your community. Connect with like-minded individuals and contribute to causes that matter. Your time and skills can create lasting change.
                         </p>
                         <button className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-lg">

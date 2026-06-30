@@ -19,6 +19,7 @@ import {
 } from "react-icons/fa";
 import { getSupabaseClient } from "@/lib/supabase/supabase";
 import { Article } from "@/lib/database/types";
+import { useAdminFeedback } from "@/components/shared-component/admin-feedback";
 
 export default function ArticlesPage() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -28,6 +29,7 @@ export default function ArticlesPage() {
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const { showToast, askConfirm } = useAdminFeedback();
 
   useEffect(() => {
     fetchArticles();
@@ -50,26 +52,28 @@ export default function ArticlesPage() {
     }
   };
 
-  const deleteArticle = async (articleId: string) => {
-    if (!confirm('Are you sure you want to delete this article?')) return;
+  const deleteArticle = (articleId: string) => {
+    askConfirm('Are you sure you want to delete this article?', async () => {
+      try {
+        const supabase = getSupabaseClient();
+        const { error } = await supabase
+          .from('articles')
+          .delete()
+          .eq('id', articleId);
 
-    try {
-      const supabase = getSupabaseClient();
-      const { error } = await supabase
-        .from('articles')
-        .delete()
-        .eq('id', articleId);
+        if (error) throw error;
 
-      if (error) throw error;
-
-      setArticles(prev => prev.filter(article => article.id !== articleId));
-      if (selectedArticle?.id === articleId) {
-        setSelectedArticle(null);
-        setShowDetailModal(false);
+        setArticles(prev => prev.filter(article => article.id !== articleId));
+        if (selectedArticle?.id === articleId) {
+          setSelectedArticle(null);
+          setShowDetailModal(false);
+        }
+        showToast('Article deleted successfully', 'success');
+      } catch (error) {
+        console.error('Error deleting article:', error);
+        showToast('Failed to delete article', 'error');
       }
-    } catch (error) {
-      console.error('Error deleting article:', error);
-    }
+    });
   };
 
   const filteredArticles = articles.filter(article => {
@@ -113,7 +117,7 @@ export default function ArticlesPage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div className="mb-4 sm:mb-0">
             <h1 className="text-3xl font-bold text-slate-900 mb-2">Articles Management</h1>
-            <p className="text-slate-600">Manage and publish articles for your audience</p>
+            <p className="text-black">Manage and publish articles for your audience</p>
           </div>
           <div className="flex items-center space-x-3">
             <Link href="/dashboard/article/create">
@@ -287,7 +291,7 @@ export default function ArticlesPage() {
                       >
                         <FaEye className="h-4 w-4" />
                       </button>
-                      <button className="text-slate-600 hover:text-slate-900 p-1" title="Edit">
+                      <button className="text-black hover:text-slate-900 p-1" title="Edit">
                         <FaEdit className="h-4 w-4" />
                       </button>
                       <button
@@ -327,7 +331,7 @@ export default function ArticlesPage() {
                 <h2 className="text-2xl font-bold text-slate-900">Article Details</h2>
                 <button
                   onClick={() => setShowDetailModal(false)}
-                  className="text-slate-400 hover:text-slate-600"
+                  className="text-slate-400 hover:text-black"
                 >
                   <FaTimes className="h-6 w-6" />
                 </button>
@@ -352,7 +356,7 @@ export default function ArticlesPage() {
                 {selectedArticle.excerpt && (
                   <div>
                     <h4 className="font-semibold text-slate-900 mb-2">Excerpt</h4>
-                    <p className="text-slate-600">{selectedArticle.excerpt}</p>
+                    <p className="text-black">{selectedArticle.excerpt}</p>
                   </div>
                 )}
 

@@ -2,21 +2,34 @@
 
 import { useEffect, useState, useMemo } from 'react'
 import { getSupabaseClient } from '@/lib/supabase/supabase'
-import { 
-  FaVideo, 
-  FaPlus, 
-  FaTrash, 
-  FaEdit, 
-  FaCheckCircle, 
+import {
+  FaVideo,
+  FaPlus,
+  FaTrash,
+  FaEdit,
+  FaCheckCircle,
   FaTimesCircle,
   FaUpload,
-  FaLink,
   FaBlog,
   FaCalendarAlt,
   FaUserTie,
   FaNewspaper,
   FaImage
 } from 'react-icons/fa'
+import {
+  DashboardEmptyState,
+  DashboardHeader,
+  DashboardLoadingState,
+  DashboardPage,
+  DashboardPrimaryButton,
+  DashboardStatCard,
+  DashboardStatsGrid,
+  DashboardTable,
+  DashboardTableCard,
+  DashboardTableHead,
+  DashboardTh,
+} from '@/components/shared-component/admin-dashboard-ui'
+import { useAdminFeedback } from '@/components/shared-component/admin-feedback'
 
 interface HeroSettings {
   id: string
@@ -44,6 +57,7 @@ export default function HeroVideoManagementPage() {
   const [editingVideo, setEditingVideo] = useState<HeroSettings | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [uploading, setUploading] = useState<'video' | 'screenshot' | null>(null)
+  const { showToast, askConfirm } = useAdminFeedback()
 
   const [formData, setFormData] = useState({
     title: '',
@@ -58,13 +72,13 @@ export default function HeroVideoManagementPage() {
     setLoading(true)
     try {
       const supabase = getSupabaseClient()
-      
+
       // Fetch hero settings
       const { data: heroData, error: heroErr } = await supabase
         .from('hero_settings')
         .select('*')
         .order('updated_at', { ascending: false })
-      
+
       if (heroErr) throw heroErr
       setVideos(heroData || [])
 
@@ -130,7 +144,7 @@ export default function HeroVideoManagementPage() {
       const ext = file.name.split('.').pop()
       const folder = type === 'video' ? 'hero-video' : 'hero-screenshots'
       const path = `${folder}/${Date.now()}.${ext}`
-      
+
       const { error: upErr } = await supabase.storage
         .from('media')
         .upload(path, file, { upsert: true })
@@ -138,7 +152,7 @@ export default function HeroVideoManagementPage() {
       if (upErr) throw upErr
 
       const { data } = supabase.storage.from('media').getPublicUrl(path)
-      
+
       if (type === 'video') {
         setFormData(p => ({ ...p, video_url: data.publicUrl, is_embed: false }))
       } else {
@@ -146,7 +160,7 @@ export default function HeroVideoManagementPage() {
       }
     } catch (err) {
       console.error('Upload failed:', err)
-      alert('Upload failed')
+      showToast('Upload failed', 'error')
     } finally {
       setUploading(null)
     }
@@ -157,7 +171,7 @@ export default function HeroVideoManagementPage() {
     setIsSubmitting(true)
     try {
       const supabase = getSupabaseClient()
-      
+
       const payload = {
         ...formData,
         updated_at: new Date().toISOString()
@@ -182,9 +196,10 @@ export default function HeroVideoManagementPage() {
       }
       setIsModalOpen(false)
       fetchData()
+      showToast(editingVideo ? 'Hero video updated successfully' : 'Hero video created successfully', 'success')
     } catch (err) {
       console.error('Failed to save hero video:', err)
-      alert('Error saving hero video')
+      showToast('Error saving hero video', 'error')
     } finally {
       setIsSubmitting(false)
     }
@@ -196,7 +211,7 @@ export default function HeroVideoManagementPage() {
     // Actually, user said "only one video will be shown at one time"
     try {
       const supabase = getSupabaseClient()
-      
+
       if (!currentStatus) {
         // Deactivate all first
         await supabase.from('hero_settings').update({ is_active: false }).neq('id', '00000000-0000-0000-0000-000000000000')
@@ -214,144 +229,134 @@ export default function HeroVideoManagementPage() {
           .eq('id', id)
         if (error) throw error
       }
-      
+
       fetchData()
+      showToast(currentStatus ? 'Hero video deactivated' : 'Hero video activated', 'success')
     } catch (err) {
       console.error('Toggle active failed:', err)
+      showToast('Failed to update hero video status', 'error')
     }
   }
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this Hero configuration?')) return
-    try {
-      const supabase = getSupabaseClient()
-      const { error } = await supabase
-        .from('hero_settings')
-        .delete()
-        .eq('id', id)
-      if (error) throw error
-      fetchData()
-    } catch (err) {
-      console.error('Failed to delete hero video:', err)
-      alert('Error deleting hero video')
-    }
+  const handleDelete = (id: string) => {
+    askConfirm('Are you sure you want to delete this Hero configuration?', async () => {
+      try {
+        const supabase = getSupabaseClient()
+        const { error } = await supabase
+          .from('hero_settings')
+          .delete()
+          .eq('id', id)
+        if (error) throw error
+        fetchData()
+        showToast('Hero video deleted successfully', 'success')
+      } catch (err) {
+        console.error('Failed to delete hero video:', err)
+        showToast('Error deleting hero video', 'error')
+      }
+    })
   }
 
   const stats = useMemo(() => [
-    { label: "Projects", value: counts.projects, icon: <FaBlog className="text-blue-500" /> },
-    { label: "Events", value: counts.events, icon: <FaCalendarAlt className="text-emerald-500" /> },
-    { label: "Donations", value: counts.donations, icon: <FaUserTie className="text-sky-500" /> },
-    { label: "Content", value: counts.content, icon: <FaNewspaper className="text-purple-500" /> },
+    { label: "Projects", value: counts.projects, icon: <FaBlog className="h-6 w-6 text-white" />, variant: "blue" as const },
+    { label: "Events", value: counts.events, icon: <FaCalendarAlt className="h-6 w-6 text-white" />, variant: "green" as const },
+    { label: "Donations", value: counts.donations, icon: <FaUserTie className="h-6 w-6 text-white" />, variant: "orange" as const },
+    { label: "Content", value: counts.content, icon: <FaNewspaper className="h-6 w-6 text-white" />, variant: "purple" as const },
   ], [counts])
 
   return (
-    <div className="p-6 space-y-8">
-      {/* Overview Stats Bar */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {stats.map((s, i) => (
-          <div key={i} className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex items-center gap-3">
-            <div className="p-2 bg-slate-50 rounded-lg">{s.icon}</div>
-            <div>
-              <p className="text-[10px] uppercase tracking-wider font-bold text-slate-400">{s.label}</p>
-              <p className="text-xl font-bold text-slate-900">{s.value}</p>
-            </div>
-          </div>
+    <DashboardPage>
+      <DashboardHeader
+        title="Hero Video Management"
+        description="Manage the videos and content shown in the main hero section."
+        action={
+          <DashboardPrimaryButton onClick={() => handleOpenModal()}>
+            <FaPlus className="h-4 w-4" />
+            Add New Hero
+          </DashboardPrimaryButton>
+        }
+      />
+
+      <DashboardStatsGrid>
+        {stats.map((stat) => (
+          <DashboardStatCard key={stat.label} {...stat} />
         ))}
-      </section>
+      </DashboardStatsGrid>
 
-      <div className="flex justify-between items-center bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-        <div className="flex items-center gap-4">
-          <div className="p-3 bg-emerald-100 rounded-xl text-emerald-600">
-            <FaVideo size={24} />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">Hero Video Management</h1>
-            <p className="text-sm text-slate-500">Manage the videos and content shown in the main hero section.</p>
-          </div>
-        </div>
-        <button
-          onClick={() => handleOpenModal()}
-          className="bg-emerald-600 text-white px-6 py-3 rounded-xl text-sm font-bold shadow-lg hover:bg-emerald-700 transition flex items-center gap-2"
-        >
-          <FaPlus /> Add New Hero
-        </button>
-      </div>
-
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <DashboardTableCard>
         {loading ? (
-          <div className="py-20 text-center text-slate-500">
-            <FaVideo className="h-8 w-8 text-slate-300 mb-2 mx-auto animate-pulse" />
-            Loading Hero Videos...
-          </div>
+          <DashboardLoadingState
+            icon={<FaVideo className="mx-auto mb-2 h-8 w-8 animate-pulse text-slate-300" />}
+            message="Loading Hero Videos..."
+          />
         ) : videos.length === 0 ? (
-          <div className="py-20 text-center text-slate-400">No Hero configurations found. Create your first one!</div>
+          <DashboardEmptyState
+            icon={<FaVideo className="mx-auto mb-2 h-8 w-8 text-slate-300" />}
+            message="No Hero configurations found. Create your first one!"
+          />
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
-              <thead className="bg-slate-50 border-b border-slate-200 font-bold text-slate-400 uppercase tracking-wider text-[10px]">
-                <tr>
-                  <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4">Screenshot</th>
-                  <th className="px-6 py-4">Content</th>
-                  <th className="px-6 py-4">Type</th>
-                  <th className="px-6 py-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {videos.map(video => (
-                  <tr key={video.id} className={`hover:bg-slate-50 transition ${video.is_active ? 'bg-emerald-50/20' : ''}`}>
-                    <td className="px-6 py-4">
-                      <button
-                        onClick={() => handleToggleActive(video.id, video.is_active)}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-bold transition ${
-                          video.is_active 
-                          ? 'bg-emerald-100 text-emerald-700' 
+          <DashboardTable>
+            <DashboardTableHead>
+              <tr>
+                <DashboardTh>Status</DashboardTh>
+                <DashboardTh>Screenshot</DashboardTh>
+                <DashboardTh>Content</DashboardTh>
+                <DashboardTh>Type</DashboardTh>
+                <DashboardTh className="text-right">Actions</DashboardTh>
+              </tr>
+            </DashboardTableHead>
+            <tbody className="divide-y divide-slate-100 bg-white">
+              {videos.map(video => (
+                <tr key={video.id} className={`hover:bg-slate-50 transition ${video.is_active ? 'bg-emerald-50/20' : ''}`}>
+                  <td className="px-6 py-4">
+                    <button
+                      onClick={() => handleToggleActive(video.id, video.is_active)}
+                      className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-bold transition ${video.is_active
+                          ? 'bg-emerald-100 text-emerald-700'
                           : 'bg-slate-100 text-slate-500 hover:bg-emerald-50 hover:text-emerald-600'
                         }`}
-                      >
-                        {video.is_active ? <FaCheckCircle /> : <FaTimesCircle />}
-                        {video.is_active ? 'ACTIVE' : 'INACTIVE'}
-                      </button>
-                    </td>
-                    <td className="px-6 py-4">
-                      {video.screenshot_url ? (
-                        <img src={video.screenshot_url} className="h-10 w-16 object-cover rounded shadow-sm border border-slate-200" alt="" />
-                      ) : (
-                        <div className="h-10 w-16 bg-slate-100 rounded flex items-center justify-center text-slate-300">
-                          <FaVideo size={12} />
-                        </div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4">
-                      <p className="font-bold text-slate-900 line-clamp-1">{video.title}</p>
-                      <p className="text-xs text-slate-500 line-clamp-1">{video.subtitle}</p>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${video.is_embed ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-blue-600'}`}>
-                        {video.is_embed ? 'Embed' : 'Upload'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-right space-x-2">
-                      <button 
-                        onClick={() => handleOpenModal(video)}
-                        className="text-emerald-600 hover:text-emerald-800 p-2 rounded-lg hover:bg-emerald-50 transition"
-                      >
-                        <FaEdit />
-                      </button>
-                      <button 
-                        onClick={() => handleDelete(video.id)}
-                        className="text-red-600 hover:text-red-800 p-2 rounded-lg hover:bg-red-50 transition"
-                      >
-                        <FaTrash />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                    >
+                      {video.is_active ? <FaCheckCircle /> : <FaTimesCircle />}
+                      {video.is_active ? 'ACTIVE' : 'INACTIVE'}
+                    </button>
+                  </td>
+                  <td className="px-6 py-4">
+                    {video.screenshot_url ? (
+                      <img src={video.screenshot_url} className="h-10 w-16 object-cover rounded shadow-sm border border-slate-200" alt="" />
+                    ) : (
+                      <div className="h-10 w-16 bg-slate-100 rounded flex items-center justify-center text-slate-300">
+                        <FaVideo size={12} />
+                      </div>
+                    )}
+                  </td>
+                  <td className="px-6 py-4">
+                    <p className="font-bold text-slate-900 line-clamp-1">{video.title}</p>
+                    <p className="text-xs text-slate-500 line-clamp-1">{video.subtitle}</p>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${video.is_embed ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-blue-600'}`}>
+                      {video.is_embed ? 'Embed' : 'Upload'}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-right space-x-2">
+                    <button
+                      onClick={() => handleOpenModal(video)}
+                      className="text-emerald-600 hover:text-emerald-800 p-2 rounded-lg hover:bg-emerald-50 transition"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(video.id)}
+                      className="text-red-600 hover:text-red-800 p-2 rounded-lg hover:bg-red-50 transition"
+                    >
+                      <FaTrash />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </DashboardTable>
         )}
-      </div>
+      </DashboardTableCard>
 
       {/* Modal */}
       {isModalOpen && (
@@ -372,7 +377,7 @@ export default function HeroVideoManagementPage() {
                     <input
                       required
                       value={formData.title}
-                      onChange={e => setFormData({...formData, title: e.target.value})}
+                      onChange={e => setFormData({ ...formData, title: e.target.value })}
                       className="w-full rounded-xl border border-slate-200 p-3 text-sm outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50/50 transition-all"
                       placeholder="Main headline"
                     />
@@ -383,7 +388,7 @@ export default function HeroVideoManagementPage() {
                       required
                       rows={3}
                       value={formData.subtitle}
-                      onChange={e => setFormData({...formData, subtitle: e.target.value})}
+                      onChange={e => setFormData({ ...formData, subtitle: e.target.value })}
                       className="w-full rounded-xl border border-slate-200 p-3 text-sm outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-50/50 transition-all"
                       placeholder="Supporting text"
                     />
@@ -393,7 +398,7 @@ export default function HeroVideoManagementPage() {
                       type="checkbox"
                       id="is_active_check"
                       checked={formData.is_active}
-                      onChange={e => setFormData({...formData, is_active: e.target.checked})}
+                      onChange={e => setFormData({ ...formData, is_active: e.target.checked })}
                       className="w-5 h-5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
                     />
                     <label htmlFor="is_active_check" className="text-sm font-bold text-slate-700 cursor-pointer">Set as Active</label>
@@ -406,12 +411,12 @@ export default function HeroVideoManagementPage() {
                     <div className="flex gap-2 p-1 bg-slate-100 rounded-xl mb-4">
                       <button
                         type="button"
-                        onClick={() => setFormData({...formData, is_embed: false})}
+                        onClick={() => setFormData({ ...formData, is_embed: false })}
                         className={`flex-1 py-2 text-xs font-bold rounded-lg transition ${!formData.is_embed ? 'bg-white shadow-sm text-emerald-600' : 'text-slate-400'}`}
                       >Upload</button>
                       <button
                         type="button"
-                        onClick={() => setFormData({...formData, is_embed: true})}
+                        onClick={() => setFormData({ ...formData, is_embed: true })}
                         className={`flex-1 py-2 text-xs font-bold rounded-lg transition ${formData.is_embed ? 'bg-white shadow-sm text-emerald-600' : 'text-slate-400'}`}
                       >Embed</button>
                     </div>
@@ -420,7 +425,7 @@ export default function HeroVideoManagementPage() {
                       <input
                         required
                         value={formData.video_url}
-                        onChange={e => setFormData({...formData, video_url: e.target.value})}
+                        onChange={e => setFormData({ ...formData, video_url: e.target.value })}
                         className="w-full rounded-xl border border-slate-200 p-3 text-sm outline-none focus:border-emerald-500"
                         placeholder="YouTube embed URL"
                       />
@@ -463,7 +468,7 @@ export default function HeroVideoManagementPage() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 rounded-2xl border border-slate-200 py-4 text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all"
+                  className="flex-1 rounded-2xl border border-slate-200 py-4 text-sm font-bold text-black hover:bg-slate-50 transition-all"
                 >
                   Cancel
                 </button>
@@ -479,6 +484,6 @@ export default function HeroVideoManagementPage() {
           </div>
         </div>
       )}
-    </div>
+    </DashboardPage>
   )
 }

@@ -20,7 +20,7 @@ export default function ThematicAreasSection() {
           <h2 className="mt-4 text-4xl font-bold tracking-tight text-grey-900 sm:text-5xl lg:text-6xl">
             Our Thematic <span className="font-light text-brand">Working Areas</span>
           </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-gray-500 md:text-base">
+          <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-black md:text-base">
             {/* Focused programs across environment, education, and community — with room to grow into health and clean energy. */}
           </p>
           {/* {hasMore && (

@@ -24,7 +24,7 @@ const ExploreSection = () => {
                 Two ways to{" "}
                 <em className="font-light text-brand">Explore</em>
             </h2>
-            <p className="mx-auto mb-10 max-w-md text-sm leading-relaxed text-gray-500">
+            <p className="mx-auto mb-10 max-w-md text-sm leading-relaxed text-black">
                 Learn about our ongoing programs and events, or dive into our
                 impact-driven projects.
             </p>

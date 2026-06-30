@@ -1,11 +1,34 @@
-import { DM_Sans, Playfair_Display } from "next/font/google";
+import localFont from "next/font/local";
 
-export const bodyFont = DM_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+export const satoshiFont = localFont({
+  src: [
+    {
+      path: "../public/fonts/satoshi/Satoshi-Regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/satoshi/Satoshi-Medium.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/satoshi/Satoshi-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/satoshi/Satoshi-Black.woff2",
+      weight: "900",
+      style: "normal",
+    },
+  ],
+  variable: "--font-sans",
+  display: "swap",
 });
 
-export const headingFont = Playfair_Display({
-  subsets: ["latin"],
-  weight: ["600", "700", "800"],
-});
+/** @deprecated Use satoshiFont — headings and body both use Satoshi */
+export const bodyFont = satoshiFont;
+
+/** @deprecated Use satoshiFont — headings and body both use Satoshi */
+export const headingFont = satoshiFont;

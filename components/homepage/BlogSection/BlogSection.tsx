@@ -28,21 +28,21 @@ const BlogSection = async () => {
                 <div className="text-center mb-12">
                     <p className="text-cyan-500 font-semibold uppercase tracking-wide mb-3">Latest Updates</p>
                     <h2 className="text-4xl md:text-5xl font-bold text-slate-900">From Our Blog</h2>
-                    <p className="text-gray-500 max-w-2xl mx-auto mt-4">
+                    <p className="text-black max-w-2xl mx-auto mt-4">
                         Read the newest stories, news, and impact updates from our team.
                     </p>
                 </div>
 
                 {blogs.length === 0 ? (
-                    <div className="rounded-3xl border border-slate-200 bg-white p-10 text-center text-slate-600">
+                    <div className="rounded-3xl border border-slate-200 bg-white p-10 text-center text-black">
                         No published blog posts are available yet.
                     </div>
                 ) : (
                     <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
                         {blogs.map((blog) => (
-                            <Link 
-                                href={`/blog/${blog.id}`} 
-                                key={blog.id} 
+                            <Link
+                                href={`/blog/${blog.id}`}
+                                key={blog.id}
                                 className="group block rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden hover:shadow-md transition-shadow"
                             >
                                 <article>
@@ -65,7 +65,7 @@ const BlogSection = async () => {
                                     <div className="p-6">
                                         <p className="text-xs uppercase tracking-[0.24em] text-cyan-500 font-semibold mb-3">Blog</p>
                                         <h3 className="text-xl font-semibold text-slate-900 mb-3">{blog.title}</h3>
-                                        <p className="text-sm text-slate-600 leading-relaxed mb-4 line-clamp-3">
+                                        <p className="text-sm text-black leading-relaxed mb-4 line-clamp-3">
                                             {blog.excerpt || (blog.content && blog.content.slice(0, 100)) || 'A new update from our team.'}
                                         </p>
                                         <div className="text-xs text-slate-500 flex flex-wrap gap-2 items-center">

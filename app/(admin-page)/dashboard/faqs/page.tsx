@@ -1,7 +1,20 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { FaPlus, FaQuestionCircle } from 'react-icons/fa'
 import { getSupabaseClient } from '@/lib/supabase/supabase'
+import {
+  DashboardEmptyState,
+  DashboardHeader,
+  DashboardLoadingState,
+  DashboardPage,
+  DashboardPrimaryButton,
+  DashboardTable,
+  DashboardTableCard,
+  DashboardTableHead,
+  DashboardTh,
+} from '@/components/shared-component/admin-dashboard-ui'
+import { useAdminFeedback } from '@/components/shared-component/admin-feedback'
 
 interface FAQ {
   id: string
@@ -18,6 +31,7 @@ export default function AdminFAQsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingFaq, setEditingFaq] = useState<FAQ | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { showToast, askConfirm } = useAdminFeedback()
 
   const [formData, setFormData] = useState({
     question: '',
@@ -34,7 +48,7 @@ export default function AdminFAQsPage() {
         .from('faq')
         .select('*')
         .order('display_order', { ascending: true })
-      
+
       if (error) throw error
       setFaqs(data || [])
     } catch (err) {
@@ -86,90 +100,95 @@ export default function AdminFAQsPage() {
       }
       setIsModalOpen(false)
       fetchFaqs()
+      showToast(editingFaq ? 'FAQ updated successfully' : 'FAQ created successfully', 'success')
     } catch (err) {
       console.error('Failed to save FAQ:', err)
-      alert('Error saving FAQ')
+      showToast('Error saving FAQ', 'error')
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this FAQ?')) return
-    try {
-      const supabase = getSupabaseClient()
-      const { error } = await supabase
-        .from('faq')
-        .delete()
-        .eq('id', id)
-      if (error) throw error
-      fetchFaqs()
-    } catch (err) {
-      console.error('Failed to delete FAQ:', err)
-      alert('Error deleting FAQ')
-    }
+  const handleDelete = (id: string) => {
+    askConfirm('Are you sure you want to delete this FAQ?', async () => {
+      try {
+        const supabase = getSupabaseClient()
+        const { error } = await supabase
+          .from('faq')
+          .delete()
+          .eq('id', id)
+        if (error) throw error
+        fetchFaqs()
+        showToast('FAQ deleted successfully', 'success')
+      } catch (err) {
+        console.error('Failed to delete FAQ:', err)
+        showToast('Error deleting FAQ', 'error')
+      }
+    })
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Manage FAQs</h1>
-          <p className="text-sm text-slate-500">Add or edit frequently asked questions shown on the About page.</p>
-        </div>
-        <button
-          onClick={() => handleOpenModal()}
-          className="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-emerald-700 transition"
-        >
-          + Add New FAQ
-        </button>
-      </div>
+    <DashboardPage>
+      <DashboardHeader
+        title="Manage FAQs"
+        description="Add or edit frequently asked questions shown on the About page."
+        action={
+          <DashboardPrimaryButton onClick={() => handleOpenModal()}>
+            <FaPlus className="h-4 w-4" />
+            Add New FAQ
+          </DashboardPrimaryButton>
+        }
+      />
 
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <DashboardTableCard>
         {loading ? (
-          <div className="py-12 text-center text-slate-500">Loading FAQs...</div>
+          <DashboardLoadingState
+            icon={<FaQuestionCircle className="mx-auto mb-2 h-8 w-8 text-slate-300" />}
+            message="Loading FAQs..."
+          />
         ) : faqs.length === 0 ? (
-          <div className="py-12 text-center text-slate-400">No FAQs found. Add your first one!</div>
+          <DashboardEmptyState
+            icon={<FaQuestionCircle className="mx-auto mb-2 h-8 w-8 text-slate-300" />}
+            message="No FAQs found. Add your first one!"
+          />
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
-              <thead className="bg-slate-50 border-b border-slate-200 font-semibold text-slate-600 uppercase tracking-wider text-[10px]">
-                <tr>
-                  <th className="px-6 py-4">Order</th>
-                  <th className="px-6 py-4">Question</th>
-                  <th className="px-6 py-4">Answer</th>
-                  <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4 text-right">Actions</th>
+          <DashboardTable>
+            <DashboardTableHead>
+              <tr>
+                <DashboardTh>Order</DashboardTh>
+                <DashboardTh>Question</DashboardTh>
+                <DashboardTh>Answer</DashboardTh>
+                <DashboardTh>Status</DashboardTh>
+                <DashboardTh className="text-right">Actions</DashboardTh>
+              </tr>
+            </DashboardTableHead>
+            <tbody className="divide-y divide-slate-100 bg-white">
+              {faqs.map(faq => (
+                <tr key={faq.id} className="hover:bg-slate-50 transition">
+                  <td className="px-6 py-4 font-medium text-slate-500">{faq.display_order}</td>
+                  <td className="px-6 py-4 font-semibold text-slate-900">{faq.question}</td>
+                  <td className="px-6 py-4 text-black max-w-xs truncate">{faq.answer}</td>
+                  <td className="px-6 py-4">
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${faq.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
+                      {faq.is_active ? 'Active' : 'Hidden'}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-right space-x-2">
+                    <button
+                      onClick={() => handleOpenModal(faq)}
+                      className="text-sky-600 hover:text-sky-800 font-medium"
+                    >Edit</button>
+                    <button
+                      onClick={() => handleDelete(faq.id)}
+                      className="text-red-600 hover:text-red-800 font-medium"
+                    >Delete</button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {faqs.map(faq => (
-                  <tr key={faq.id} className="hover:bg-slate-50 transition">
-                    <td className="px-6 py-4 font-medium text-slate-500">{faq.display_order}</td>
-                    <td className="px-6 py-4 font-semibold text-slate-900">{faq.question}</td>
-                    <td className="px-6 py-4 text-slate-600 max-w-xs truncate">{faq.answer}</td>
-                    <td className="px-6 py-4">
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${faq.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
-                        {faq.is_active ? 'Active' : 'Hidden'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-right space-x-2">
-                      <button 
-                        onClick={() => handleOpenModal(faq)}
-                        className="text-sky-600 hover:text-sky-800 font-medium"
-                      >Edit</button>
-                      <button 
-                        onClick={() => handleDelete(faq.id)}
-                        className="text-red-600 hover:text-red-800 font-medium"
-                      >Delete</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </DashboardTable>
         )}
-      </div>
+      </DashboardTableCard>
 
       {/* Modal */}
       {isModalOpen && (
@@ -185,7 +204,7 @@ export default function AdminFAQsPage() {
                 <input
                   required
                   value={formData.question}
-                  onChange={e => setFormData({...formData, question: e.target.value})}
+                  onChange={e => setFormData({ ...formData, question: e.target.value })}
                   className="w-full rounded-lg border border-slate-200 p-2 text-sm outline-none focus:border-emerald-500"
                   placeholder="e.g. How can I donate?"
                 />
@@ -196,7 +215,7 @@ export default function AdminFAQsPage() {
                   required
                   rows={4}
                   value={formData.answer}
-                  onChange={e => setFormData({...formData, answer: e.target.value})}
+                  onChange={e => setFormData({ ...formData, answer: e.target.value })}
                   className="w-full rounded-lg border border-slate-200 p-2 text-sm outline-none focus:border-emerald-500"
                   placeholder="Provide a clear and helpful answer..."
                 />
@@ -207,7 +226,7 @@ export default function AdminFAQsPage() {
                   <input
                     type="number"
                     value={formData.display_order}
-                    onChange={e => setFormData({...formData, display_order: parseInt(e.target.value)})}
+                    onChange={e => setFormData({ ...formData, display_order: parseInt(e.target.value) })}
                     className="w-full rounded-lg border border-slate-200 p-2 text-sm outline-none focus:border-emerald-500"
                   />
                 </div>
@@ -216,7 +235,7 @@ export default function AdminFAQsPage() {
                     <input
                       type="checkbox"
                       checked={formData.is_active}
-                      onChange={e => setFormData({...formData, is_active: e.target.checked})}
+                      onChange={e => setFormData({ ...formData, is_active: e.target.checked })}
                       className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
                     />
                     <span className="text-sm text-slate-700">Is Active?</span>
@@ -227,7 +246,7 @@ export default function AdminFAQsPage() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 rounded-lg border border-slate-200 py-2.5 text-sm font-bold text-slate-600 hover:bg-slate-50 transition"
+                  className="flex-1 rounded-lg border border-slate-200 py-2.5 text-sm font-bold text-black hover:bg-slate-50 transition"
                 >
                   Cancel
                 </button>
@@ -243,6 +262,6 @@ export default function AdminFAQsPage() {
           </div>
         </div>
       )}
-    </div>
+    </DashboardPage>
   )
 }

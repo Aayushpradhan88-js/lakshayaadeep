@@ -25,7 +25,7 @@ const categoryColors: Record<string, string> = {
   'environment': 'text-[#4ab870]',
   'disaster_relief': 'text-brand',
   'community': 'text-[#6080e0]',
-  'other': 'text-gray-500',
+  'other': 'text-black',
 };
 
 // Unified Event Card (Matching Project Card)

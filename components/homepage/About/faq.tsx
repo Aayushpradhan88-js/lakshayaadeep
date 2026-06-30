@@ -53,7 +53,7 @@ function FAQSection() {
             <span className="text-[#ed7423]">Frequently</span>{" "}
             <span className="text-gray-900">Asked Questions</span>
           </h2>
-          <p className="mx-auto mt-3 max-w-sm text-sm text-gray-500">
+          <p className="mx-auto mt-3 max-w-sm text-sm text-black">
             Everything you need to know about donating and volunteering with Lakshyadeep.
           </p>
         </div>
@@ -72,28 +72,28 @@ function FAQSection() {
                 <div
                   key={faq.id}
                   className={`overflow-hidden rounded-2xl border transition-all ${isOpen
-                      ? "border-cyan-200 bg-cyan-50"
-                      : "border-gray-100 bg-gray-50 hover:border-gray-200"
+                    ? "border-cyan-200 bg-cyan-50"
+                    : "border-gray-100 bg-gray-50 hover:border-gray-200"
                     }`}
                 >
                   <button
                     onClick={() => setOpen(isOpen ? null : faq.id)}
                     className="flex w-full items-center justify-between px-5 py-4 text-left"
                   >
-                    <span className={`text-sm font-semibold ${isOpen ? "text-cyan-600" : "text-gray-800"}`}>
+                    <span className={`text-sm font-semibold ${isOpen ? "text-cyan-600" : "text-black"}`}>
                       {faq.question}
                     </span>
                     <span
                       className={`ml-4 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full text-sm font-bold transition-transform ${isOpen
-                          ? "bg-cyan-400 text-white rotate-45"
-                          : "bg-white text-gray-400 border border-gray-200"
+                        ? "bg-cyan-400 text-white rotate-45"
+                        : "bg-white text-black border border-gray-200"
                         }`}
                     >
                       +
                     </span>
                   </button>
                   {isOpen && (
-                    <p className="px-5 pb-5 text-sm leading-relaxed text-gray-600">
+                    <p className="px-5 pb-5 text-sm leading-relaxed text-black">
                       {faq.answer}
                     </p>
                   )}
@@ -101,7 +101,7 @@ function FAQSection() {
               );
             })
           ) : (
-            <div className="text-center py-12 text-gray-400 border border-dashed rounded-2xl border-gray-200">
+            <div className="text-center py-12 text-black border border-dashed rounded-2xl border-gray-200">
               No FAQs available at the moment.
             </div>
           )}

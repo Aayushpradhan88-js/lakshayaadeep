@@ -97,7 +97,7 @@ function DetailModal({ report, onClose }: { report: Report; onClose: () => void 
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
           <button
             onClick={onClose}
-            className="absolute right-3 top-3 rounded-full bg-white/80 px-2 py-1 text-xs font-semibold text-gray-600 hover:bg-white"
+            className="absolute right-3 top-3 rounded-full bg-white/80 px-2 py-1 text-xs font-semibold text-black hover:bg-white"
           >
             ✕
           </button>
@@ -107,27 +107,27 @@ function DetailModal({ report, onClose }: { report: Report; onClose: () => void 
         </div>
 
         <div className="p-6">
-          <p className="mb-1 text-xs text-gray-400">{report.date} · {report.category}</p>
-          <h3 className="mb-2 text-xl font-bold text-gray-800">{report.title}</h3>
-          <p className="mb-5 text-sm leading-relaxed text-gray-600">{report.summary}</p>
+          <p className="mb-1 text-xs text-black">{report.date} · {report.category}</p>
+          <h3 className="mb-2 text-xl font-bold text-black">{report.title}</h3>
+          <p className="mb-5 text-sm leading-relaxed text-black">{report.summary}</p>
 
           <div className="mb-5 grid grid-cols-2 gap-3">
             <div className="rounded-xl bg-cyan-50 p-4 text-center">
               <p className="text-lg font-bold text-cyan-500">{report.raised}</p>
-              <p className="mt-0.5 text-xs text-gray-500">Total Raised</p>
+              <p className="mt-0.5 text-xs text-black">Total Raised</p>
             </div>
             <div className="rounded-xl bg-orange-50 p-4 text-center">
               <p className="text-lg font-bold text-brand">{report.beneficiaries}+</p>
-              <p className="mt-0.5 text-xs text-gray-500">Beneficiaries</p>
+              <p className="mt-0.5 text-xs text-black">Beneficiaries</p>
             </div>
           </div>
 
-          <p className="mb-1 text-xs font-semibold text-gray-500">Fund Utilization</p>
+          <p className="mb-1 text-xs font-semibold text-black">Fund Utilization</p>
           <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
             <div className="h-full rounded-full bg-cyan-400" style={{ width: "88%" }} />
           </div>
-          <p className="mt-1 text-right text-xs text-gray-400">88% directly to programs</p>
-          
+          <p className="mt-1 text-right text-xs text-black">88% directly to programs</p>
+
           <Link href="/donation">
             <button className="mt-5 w-full rounded-xl bg-orange-500 py-3 text-sm font-bold text-white hover:bg-orange-600 transition">
               Donate to This Cause
@@ -149,12 +149,12 @@ function DonorReportsModal({ onClose }: { onClose: () => void }) {
           {/* Header */}
           <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
             <div>
-              <h2 className="text-lg font-bold text-gray-800">Impact Reports</h2>
-              <p className="text-xs text-gray-400">Transparency in every rupee donated</p>
+              <h2 className="text-lg font-bold text-black">Impact Reports</h2>
+              <p className="text-xs text-black">Transparency in every rupee donated</p>
             </div>
             <button
               onClick={onClose}
-              className="rounded-full p-2 text-gray-400 hover:bg-gray-100 transition"
+              className="rounded-full p-2 text-black hover:bg-gray-100 transition"
             >
               ✕
             </button>
@@ -185,18 +185,18 @@ function DonorReportsModal({ onClose }: { onClose: () => void }) {
 
                   {/* Card body */}
                   <div className="p-4">
-                    <p className="mb-0.5 text-xs text-gray-400">{r.date} · {r.category}</p>
-                    <h3 className="mb-2 text-sm font-bold text-gray-800 line-clamp-1">{r.title}</h3>
-                    <p className="mb-3 text-xs leading-relaxed text-gray-500 line-clamp-2">{r.summary}</p>
+                    <p className="mb-0.5 text-xs text-black">{r.date} · {r.category}</p>
+                    <h3 className="mb-2 text-sm font-bold text-black line-clamp-1">{r.title}</h3>
+                    <p className="mb-3 text-xs leading-relaxed text-black line-clamp-2">{r.summary}</p>
 
                     {/* Stats row */}
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-xs text-gray-400">Raised</p>
+                        <p className="text-xs text-black">Raised</p>
                         <p className="text-sm font-bold text-cyan-500">{r.raised}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-xs text-gray-400">Beneficiaries</p>
+                        <p className="text-xs text-black">Beneficiaries</p>
                         <p className="text-sm font-bold text-brand">{r.beneficiaries}+</p>
                       </div>
                     </div>
@@ -205,7 +205,7 @@ function DonorReportsModal({ onClose }: { onClose: () => void }) {
                     <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
                       <div className="h-full rounded-full bg-cyan-400" style={{ width: "88%" }} />
                     </div>
-                    <p className="mt-0.5 text-right text-xs text-gray-400">88% to programs</p>
+                    <p className="mt-0.5 text-right text-xs text-black">88% to programs</p>
                   </div>
                 </button>
               ))}

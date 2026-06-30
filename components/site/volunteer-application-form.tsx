@@ -10,11 +10,10 @@ type VolunteerApplicationFormProps = {
 };
 
 function fieldClass(hasError: boolean) {
-  return `w-full rounded-lg border bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 ${
-    hasError
+  return `w-full rounded-lg border bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 ${hasError
       ? "border-red-400 focus:border-red-400 focus:ring-red-100"
-      : "border-slate-300 focus:border-emerald-500 focus:ring-emerald-100"
-  }`;
+      : "border-slate-300 focus:border-brand focus:ring-brand-light"
+    }`;
 }
 
 export function VolunteerApplicationForm({ heading, id = "apply" }: VolunteerApplicationFormProps) {
@@ -96,12 +95,12 @@ export function VolunteerApplicationForm({ heading, id = "apply" }: VolunteerApp
       ) : (
         <h2 className="mb-2 text-2xl font-bold text-slate-900">Volunteer application</h2>
       )}
-      <p className="mb-6 text-slate-600">
+      <p className="mb-6 text-black">
         Tell us about yourself. One main social profile is required; you can paste more links below. Our team will reach out using your email or phone.
       </p>
 
       {status === "success" ? (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-900">
+        <div className="rounded-xl border border-brand/30 bg-brand-light px-4 py-3 text-brand">
           Thank you — your application was received. We will get back to you soon.
         </div>
       ) : (
@@ -216,7 +215,7 @@ export function VolunteerApplicationForm({ heading, id = "apply" }: VolunteerApp
           <button
             type="submit"
             disabled={status === "submitting"}
-            className="inline-flex items-center gap-2 rounded-2xl bg-emerald-800 px-6 py-3 text-sm font-semibold text-white shadow hover:bg-emerald-900 disabled:opacity-60"
+            className="inline-flex items-center gap-2 rounded-2xl bg-brand px-6 py-3 text-sm font-semibold text-white shadow hover:bg-brand-hover disabled:opacity-60"
           >
             <FaPaperPlane className="h-4 w-4" />
             {status === "submitting" ? "Submitting..." : "Submit application"}

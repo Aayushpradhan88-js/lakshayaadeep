@@ -63,7 +63,7 @@ const GalleryPage = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight sm:text-5xl">Our Gallery</h1>
-            <p className="mt-4 max-w-2xl text-xl text-slate-500 mx-auto">
+            <p className="mt-4 max-w-2xl text-xl text-black mx-auto">
               Explore moments of impact and hope from our various initiatives.
             </p>
           </div>

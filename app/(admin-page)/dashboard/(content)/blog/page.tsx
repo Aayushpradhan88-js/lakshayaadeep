@@ -18,6 +18,7 @@ import {
 } from "react-icons/fa";
 import { getSupabaseClient } from "@/lib/supabase/supabase";
 import { Blog } from "@/lib/database/types";
+import { useAdminFeedback } from "@/components/shared-component/admin-feedback";
 
 export default function BlogsPage() {
   const [blogPosts, setBlogPosts] = useState<Blog[]>([]);
@@ -27,6 +28,7 @@ export default function BlogsPage() {
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const { showToast, askConfirm } = useAdminFeedback();
 
   useEffect(() => {
     fetchBlogPosts();
@@ -49,26 +51,28 @@ export default function BlogsPage() {
     }
   };
 
-  const deleteBlogPost = async (postId: string) => {
-    if (!confirm('Are you sure you want to delete this blog post?')) return;
+  const deleteBlogPost = (postId: string) => {
+    askConfirm('Are you sure you want to delete this blog post?', async () => {
+      try {
+        const supabase = getSupabaseClient();
+        const { error } = await supabase
+          .from('blogs')
+          .delete()
+          .eq('id', postId);
 
-    try {
-      const supabase = getSupabaseClient();
-      const { error } = await supabase
-        .from('blogs')
-        .delete()
-        .eq('id', postId);
+        if (error) throw error;
 
-      if (error) throw error;
-
-      setBlogPosts(prev => prev.filter(post => post.id !== postId));
-      if (selectedBlog?.id === postId) {
-        setSelectedBlog(null);
-        setShowDetailModal(false);
+        setBlogPosts(prev => prev.filter(post => post.id !== postId));
+        if (selectedBlog?.id === postId) {
+          setSelectedBlog(null);
+          setShowDetailModal(false);
+        }
+        showToast('Blog post deleted successfully', 'success');
+      } catch (error) {
+        console.error('Error deleting blog post:', error);
+        showToast('Failed to delete blog post', 'error');
       }
-    } catch (error) {
-      console.error('Error deleting blog post:', error);
-    }
+    });
   };
 
   const filteredBlogPosts = blogPosts.filter(post => {
@@ -104,7 +108,7 @@ export default function BlogsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div className="mb-4 sm:mb-0">
             <h1 className="text-3xl font-bold text-slate-900 mb-2">Blogs Management</h1>
-            <p className="text-slate-600">Manage and publish blog posts for your audience</p>
+            <p className="text-black">Manage and publish blog posts for your audience</p>
           </div>
           <div className="flex items-center space-x-3">
             <Link href="/dashboard/blog/create">
@@ -236,34 +240,19 @@ export default function BlogsPage() {
               <thead className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
                 <tr>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaBlog className="h-4 w-4" />
-                      Blog Post
-                    </div>
+                    Blog Post
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaUser className="h-4 w-4" />
-                      Author
-                    </div>
+                    Author
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaTag className="h-4 w-4" />
-                      Category
-                    </div>
+                    Category
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaClock className="h-4 w-4" />
-                      Status
-                    </div>
+                    Status
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaCalendarAlt className="h-4 w-4" />
-                      Date
-                    </div>
+                    Date
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
                     Actions
@@ -358,13 +347,13 @@ export default function BlogsPage() {
 
             <div className="p-6 space-y-4">
               <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Title</label>
+                <label className="text-xs font-semibold text-black uppercase tracking-wider">Title</label>
                 <h3 className="text-lg font-bold text-slate-900 mt-1">{selectedBlog.title}</h3>
               </div>
 
               {selectedBlog.blog_image_url && (
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Blog Image</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Blog Image</label>
                   <div className="mt-2">
                     <img src={selectedBlog.blog_image_url} alt={selectedBlog.title} className="w-full h-48 object-cover rounded-lg" />
                   </div>
@@ -372,21 +361,21 @@ export default function BlogsPage() {
               )}
 
               <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Excerpt</label>
+                <label className="text-xs font-semibold text-black uppercase tracking-wider">Excerpt</label>
                 <p className="text-slate-900 font-medium mt-1">{selectedBlog.excerpt || 'No excerpt'}</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Author</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Author</label>
                   <p className="text-slate-900 font-medium mt-1">{selectedBlog.author}</p>
                 </div>
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Category</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Category</label>
                   <p className="text-slate-900 font-medium mt-1">{selectedBlog.category}</p>
                 </div>
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Status</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Status</label>
                   <div className="mt-1">
                     <span className={`inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-full border ${getStatusColor(selectedBlog.status)}`}>
                       {selectedBlog.status}
@@ -394,18 +383,18 @@ export default function BlogsPage() {
                   </div>
                 </div>
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Read Time</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Read Time</label>
                   <p className="text-slate-900 font-medium mt-1">{selectedBlog.read_time || 'N/A'} minutes</p>
                 </div>
               </div>
 
               <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Content</label>
+                <label className="text-xs font-semibold text-black uppercase tracking-wider">Content</label>
                 <div className="text-slate-900 mt-1 whitespace-pre-wrap max-h-64 overflow-y-auto">{selectedBlog.content}</div>
               </div>
 
               <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Tags</label>
+                <label className="text-xs font-semibold text-black uppercase tracking-wider">Tags</label>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {(selectedBlog.tags || []).map((tag, index) => (
                     <span key={index} className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-xs font-medium">
@@ -417,13 +406,13 @@ export default function BlogsPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Published Date</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Published Date</label>
                   <p className="text-slate-900 font-medium mt-1">
                     {selectedBlog.published_at ? new Date(selectedBlog.published_at).toLocaleString() : 'Not published'}
                   </p>
                 </div>
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Created</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Created</label>
                   <p className="text-slate-900 font-medium mt-1">{new Date(selectedBlog.created_at).toLocaleString()}</p>
                 </div>
               </div>

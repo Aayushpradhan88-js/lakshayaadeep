@@ -5,13 +5,25 @@ import {
   FaPlus,
   FaTrash,
   FaEdit,
-  FaCheckCircle,
-  FaTimesCircle,
   FaUpload,
   FaImage,
+  FaToggleOn,
+  FaToggleOff,
 } from "react-icons/fa"
 import { FaSliders } from "react-icons/fa6"
 import { getSupabaseClient } from "@/lib/supabase/supabase"
+import { useAdminFeedback } from "@/components/shared-component/admin-feedback"
+import {
+  DashboardEmptyState,
+  DashboardHeader,
+  DashboardLoadingState,
+  DashboardPage,
+  DashboardPrimaryButton,
+  DashboardTable,
+  DashboardTableCard,
+  DashboardTableHead,
+  DashboardTh,
+} from "@/components/shared-component/admin-dashboard-ui"
 
 interface CarouselSlide {
   id: string
@@ -45,6 +57,7 @@ export default function CarouselSlidesPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [formData, setFormData] = useState(DEFAULT_FORM)
+  const { showToast, askConfirm } = useAdminFeedback()
 
   const fetchSlides = async () => {
     setLoading(true)
@@ -103,7 +116,7 @@ export default function CarouselSlidesPage() {
       setFormData((p) => ({ ...p, image_url: data.publicUrl }))
     } catch (err) {
       console.error("Upload failed:", err)
-      alert("Image upload failed")
+      showToast("Image upload failed", "error")
     } finally {
       setUploading(false)
     }
@@ -136,9 +149,13 @@ export default function CarouselSlidesPage() {
 
       setIsModalOpen(false)
       fetchSlides()
+      showToast(
+        editingSlide ? "Carousel slide updated successfully" : "Carousel slide created successfully",
+        "success"
+      )
     } catch (err) {
       console.error("Failed to save slide:", err)
-      alert("Error saving carousel slide")
+      showToast("Error saving carousel slide", "error")
     } finally {
       setIsSubmitting(false)
     }
@@ -152,132 +169,131 @@ export default function CarouselSlidesPage() {
         .update({ is_active: !currentStatus, updated_at: new Date().toISOString() })
         .eq("id", id)
       if (error) throw error
-      fetchSlides()
+
+      setSlides((prev) =>
+        prev.map((slide) =>
+          slide.id === id ? { ...slide, is_active: !currentStatus } : slide
+        )
+      )
+      showToast(
+        !currentStatus ? "Slide activated successfully" : "Slide deactivated successfully",
+        "success"
+      )
     } catch (err) {
       console.error("Toggle active failed:", err)
-      alert("Could not update slide status")
+      showToast("Could not update slide status", "error")
     }
   }
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Delete this carousel slide?")) return
-    try {
-      const supabase = getSupabaseClient()
-      const { error } = await supabase.from("carousel_slides").delete().eq("id", id)
-      if (error) throw error
-      fetchSlides()
-    } catch (err) {
-      console.error("Delete failed:", err)
-      alert("Error deleting slide")
-    }
+  const handleDelete = (id: string) => {
+    askConfirm("Are you sure you want to delete this carousel slide?", async () => {
+      try {
+        const supabase = getSupabaseClient()
+        const { error } = await supabase.from("carousel_slides").delete().eq("id", id)
+        if (error) throw error
+        setSlides((prev) => prev.filter((slide) => slide.id !== id))
+        showToast("Carousel slide deleted successfully", "success")
+      } catch (err) {
+        console.error("Delete failed:", err)
+        showToast("Error deleting slide", "error")
+      }
+    })
   }
 
   const activeCount = slides.filter((s) => s.is_active).length
 
   return (
-    <div className="space-y-8 p-6">
-      <div className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-4">
-          <div className="rounded-xl bg-emerald-100 p-3 text-emerald-600">
-            <FaSliders size={24} />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">Carousel Slides</h1>
-            <p className="text-sm text-slate-500">
-              Manage homepage hero slideshow. {activeCount} of {slides.length} slide{slides.length !== 1 ? "s" : ""} active.
-            </p>
-          </div>
-        </div>
-        <button
-          type="button"
-          onClick={() => handleOpenModal()}
-          className="flex items-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-emerald-700"
-        >
-          <FaPlus /> Add Slide
-        </button>
-      </div>
+    <DashboardPage>
+      <DashboardHeader
+        title="Carousel Slides"
+        description={`Manage homepage hero slideshow. ${activeCount} of ${slides.length} slide${slides.length !== 1 ? "s" : ""} active.`}
+        action={
+          <DashboardPrimaryButton onClick={() => handleOpenModal()}>
+            <FaPlus className="h-4 w-4" />
+            Add Slide
+          </DashboardPrimaryButton>
+        }
+      />
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <DashboardTableCard>
         {loading ? (
-          <div className="py-20 text-center text-slate-500">
-            <FaSliders className="mx-auto mb-2 h-8 w-8 animate-pulse text-slate-300" />
-            Loading slides...
-          </div>
+          <DashboardLoadingState
+            icon={<FaSliders className="mx-auto mb-2 h-8 w-8 animate-pulse text-slate-300" />}
+            message="Loading slides..."
+          />
         ) : slides.length === 0 ? (
-          <div className="py-20 text-center text-slate-400">No carousel slides yet. Add your first slide.</div>
+          <DashboardEmptyState
+            icon={<FaSliders className="mx-auto mb-2 h-8 w-8 text-slate-300" />}
+            message="No carousel slides yet. Add your first slide."
+          />
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-slate-200 bg-slate-50 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                <tr>
-                  <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4">Preview</th>
-                  <th className="px-6 py-4">Content</th>
-                  <th className="px-6 py-4">Order</th>
-                  <th className="px-6 py-4">Duration</th>
-                  <th className="px-6 py-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {slides.map((slide) => (
-                  <tr key={slide.id} className={`transition hover:bg-slate-50 ${slide.is_active ? "bg-emerald-50/20" : ""}`}>
-                    <td className="px-6 py-4">
-                      <button
-                        type="button"
-                        onClick={() => handleToggleActive(slide.id, slide.is_active)}
-                        className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-[10px] font-bold transition ${
-                          slide.is_active
-                            ? "bg-emerald-100 text-emerald-700"
-                            : "bg-slate-100 text-slate-500 hover:bg-emerald-50 hover:text-emerald-600"
+          <DashboardTable>
+            <DashboardTableHead>
+              <tr>
+                <DashboardTh>Order</DashboardTh>
+                <DashboardTh>Preview</DashboardTh>
+                <DashboardTh>Content</DashboardTh>
+                <DashboardTh>Status</DashboardTh>
+                <DashboardTh>Duration</DashboardTh>
+                <DashboardTh className="text-right">Actions</DashboardTh>
+              </tr>
+            </DashboardTableHead>
+            <tbody className="divide-y divide-slate-100 bg-white">
+              {slides.map((slide) => (
+                <tr key={slide.id} className={`transition hover:bg-slate-50 ${slide.is_active ? "bg-emerald-50/20" : ""}`}>
+                  <td className="px-6 py-4 text-sm font-semibold text-slate-900">
+                    {slide.display_order}
+                  </td>
+                  <td className="px-6 py-4">
+                    {slide.image_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={slide.image_url} alt="" className="h-12 w-20 rounded border border-slate-200 object-cover shadow-sm" />
+                    ) : (
+                      <div className="flex h-12 w-20 items-center justify-center rounded bg-slate-100 text-slate-300">
+                        <FaImage size={12} />
+                      </div>
+                    )}
+                  </td>
+                  <td className="px-6 py-4">
+                    <p className="line-clamp-1 font-bold text-slate-900">{slide.title}</p>
+                    <p className="line-clamp-1 text-xs text-slate-500">{slide.subtitle || "—"}</p>
+                  </td>
+                  <td className="px-6 py-4">
+                    <button
+                      type="button"
+                      onClick={() => handleToggleActive(slide.id, slide.is_active)}
+                      className={`flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${slide.is_active
+                          ? "border-green-200 bg-green-100 text-green-800 hover:bg-green-200"
+                          : "border-slate-200 bg-slate-100 text-slate-800 hover:bg-slate-200"
                         }`}
-                      >
-                        {slide.is_active ? <FaCheckCircle /> : <FaTimesCircle />}
-                        {slide.is_active ? "ACTIVE" : "INACTIVE"}
-                      </button>
-                    </td>
-                    <td className="px-6 py-4">
-                      {slide.image_url ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={slide.image_url} alt="" className="h-12 w-20 rounded border border-slate-200 object-cover shadow-sm" />
-                      ) : (
-                        <div className="flex h-12 w-20 items-center justify-center rounded bg-slate-100 text-slate-300">
-                          <FaImage size={12} />
-                        </div>
-                      )}
-                    </td>
-                    <td className="px-6 py-4">
-                      <p className="line-clamp-1 font-bold text-slate-900">{slide.title}</p>
-                      <p className="line-clamp-1 text-xs text-slate-500">{slide.subtitle || "—"}</p>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-600">
-                        #{slide.display_order}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-xs text-slate-600">{slide.auto_slide_duration ?? 3}s</td>
-                    <td className="space-x-2 px-6 py-4 text-right">
-                      <button
-                        type="button"
-                        onClick={() => handleOpenModal(slide)}
-                        className="rounded-lg p-2 text-emerald-600 transition hover:bg-emerald-50 hover:text-emerald-800"
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(slide.id)}
-                        className="rounded-lg p-2 text-red-600 transition hover:bg-red-50 hover:text-red-800"
-                      >
-                        <FaTrash />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                    >
+                      {slide.is_active ? <FaToggleOn className="h-3 w-3" /> : <FaToggleOff className="h-3 w-3" />}
+                      {slide.is_active ? "Active" : "Inactive"}
+                    </button>
+                  </td>
+                  <td className="px-6 py-4 text-xs text-black">{slide.auto_slide_duration ?? 3}s</td>
+                  <td className="space-x-2 px-6 py-4 text-right">
+                    <button
+                      type="button"
+                      onClick={() => handleOpenModal(slide)}
+                      className="rounded-lg p-2 text-emerald-600 transition hover:bg-emerald-50 hover:text-emerald-800"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(slide.id)}
+                      className="rounded-lg p-2 text-red-600 transition hover:bg-red-50 hover:text-red-800"
+                    >
+                      <FaTrash />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </DashboardTable>
         )}
-      </div>
+      </DashboardTableCard>
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
@@ -401,7 +417,7 @@ export default function CarouselSlidesPage() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 rounded-2xl border border-slate-200 py-4 text-sm font-bold text-slate-600 hover:bg-slate-50"
+                  className="flex-1 rounded-2xl border border-slate-200 py-4 text-sm font-bold text-black hover:bg-slate-50"
                 >
                   Cancel
                 </button>
@@ -417,6 +433,6 @@ export default function CarouselSlidesPage() {
           </div>
         </div>
       )}
-    </div>
+    </DashboardPage>
   )
 }

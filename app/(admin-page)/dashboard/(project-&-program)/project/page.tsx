@@ -11,9 +11,11 @@ import {
   FaTag,
   FaUser,
   FaClock,
-  FaCheckCircle,} from "react-icons/fa"
+  FaCheckCircle,
+} from "react-icons/fa"
 import { getSupabaseClient } from "@/lib/supabase/supabase"
 import Link from "next/link"
+import { useAdminFeedback } from "@/components/shared-component/admin-feedback"
 
 interface Project {
   id: string
@@ -49,6 +51,7 @@ export default function ProjectPage() {
   const [showDetailModal, setShowDetailModal] = useState(false)
   const [projectImages, setProjectImages] = useState<string[]>([])
   const [fetchingImages, setFetchingImages] = useState(false)
+  const { showToast, askConfirm } = useAdminFeedback()
 
   useEffect(() => {
     fetchProjects()
@@ -88,37 +91,39 @@ export default function ProjectPage() {
         .eq('id', projectId)
 
       if (error) throw error
-      alert('Status updated successfully')
+      showToast('Status updated successfully', 'success')
 
-      setProjects(prev => prev.map(project => 
+      setProjects(prev => prev.map(project =>
         project.id === projectId ? { ...project, status: newStatus } : project
       ))
     } catch (error) {
       console.error('Error updating project status:', error)
-      alert('Failed to update project status')
+      showToast('Failed to update project status', 'error')
     }
   }
 
-  const deleteProject = async (projectId: string) => {
-    if (!confirm('Are you sure you want to delete this project?')) return
+  const deleteProject = (projectId: string) => {
+    askConfirm('Are you sure you want to delete this project?', async () => {
+      try {
+        const supabase = getSupabaseClient()
+        const { error } = await supabase
+          .from('project')
+          .delete()
+          .eq('id', projectId)
 
-    try {
-      const supabase = getSupabaseClient()
-      const { error } = await supabase
-        .from('project')
-        .delete()
-        .eq('id', projectId)
+        if (error) throw error
 
-      if (error) throw error
-
-      setProjects(prev => prev.filter(project => project.id !== projectId))
-      if (selectedProject?.id === projectId) {
-        setSelectedProject(null)
-        setShowDetailModal(false)
+        setProjects(prev => prev.filter(project => project.id !== projectId))
+        if (selectedProject?.id === projectId) {
+          setSelectedProject(null)
+          setShowDetailModal(false)
+        }
+        showToast('Project deleted successfully', 'success')
+      } catch (error) {
+        console.error('Error deleting project:', error)
+        showToast('Failed to delete project', 'error')
       }
-    } catch (error) {
-      console.error('Error deleting project:', error)
-    }
+    })
   }
 
   const filteredProjects = projects.filter(project => {
@@ -181,7 +186,7 @@ export default function ProjectPage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div className="mb-4 sm:mb-0">
             <h1 className="text-3xl font-bold text-slate-900 mb-2">Projects Management</h1>
-            <p className="text-slate-600">Manage and publish projects for your audience</p>
+            <p className="text-black">Manage and publish projects for your audience</p>
           </div>
           <div className="flex items-center space-x-3">
             <button className="cursor-pointer bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-lg hover:from-emerald-600 hover:to-emerald-700 flex items-center gap-2 shadow-lg">
@@ -312,34 +317,19 @@ export default function ProjectPage() {
               <thead className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
                 <tr>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaBlog className="h-4 w-4" />
-                      Project Name
-                    </div>
+                    Project Name
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaUser className="h-4 w-4" />
-                      Organizer
-                    </div>
+                    Organizer
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaTag className="h-4 w-4" />
-                      Category
-                    </div>
+                    Category
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaClock className="h-4 w-4" />
-                      Status
-                    </div>
+                    Status
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                    <div className="flex items-center gap-2">
-                      <FaCalendarAlt className="h-4 w-4" />
-                      Date
-                    </div>
+                    Date
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider">
                     Actions
@@ -432,26 +422,26 @@ export default function ProjectPage() {
 
             <div className="p-6 space-y-4">
               <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Title</label>
+                <label className="text-xs font-semibold text-black uppercase tracking-wider">Title</label>
                 <h3 className="text-lg font-bold text-slate-900 mt-1">{selectedProject.title || selectedProject.project_title}</h3>
               </div>
 
               <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Description</label>
+                <label className="text-xs font-semibold text-black uppercase tracking-wider">Description</label>
                 <p className="text-slate-900 font-medium mt-1">{selectedProject.description || 'No description'}</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Organizer</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Organizer</label>
                   <p className="text-slate-900 font-medium mt-1">{selectedProject.project_organizer || 'N/A'}</p>
                 </div>
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Category</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Category</label>
                   <p className="text-slate-900 font-medium mt-1">{selectedProject.category || 'N/A'}</p>
                 </div>
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Location</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Location</label>
                   <p className="text-slate-900 font-medium mt-1">
                     {selectedProject.project_location ? (
                       `${selectedProject.project_location.municipality}, ${selectedProject.project_location.district}, ${selectedProject.project_location.province}`
@@ -459,20 +449,20 @@ export default function ProjectPage() {
                   </p>
                 </div>
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Target Beneficiaries</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Target Beneficiaries</label>
                   <p className="text-slate-900 font-medium mt-1">{selectedProject.target_beneficiaries || 'N/A'}</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Start Date</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Start Date</label>
                   <p className="text-slate-900 font-medium mt-1">
                     {selectedProject.start_date ? new Date(selectedProject.start_date).toLocaleDateString() : 'N/A'}
                   </p>
                 </div>
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">End Date</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">End Date</label>
                   <p className="text-slate-900 font-medium mt-1">
                     {selectedProject.end_date ? new Date(selectedProject.end_date).toLocaleDateString() : 'N/A'}
                   </p>
@@ -481,18 +471,18 @@ export default function ProjectPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Target Budget</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Target Budget</label>
                   <p className="text-slate-900 font-medium mt-1">रू {selectedProject.target_budget || '0'}</p>
                 </div>
                 <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Actual Budget</label>
+                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Actual Budget</label>
                   <p className="text-slate-900 font-medium mt-1">रू {selectedProject.actual_budget || '0'}</p>
                 </div>
               </div>
 
               {/* Project Images Section */}
               <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider block mb-3">Project Images</label>
+                <label className="text-xs font-semibold text-black uppercase tracking-wider block mb-3">Project Images</label>
                 {fetchingImages ? (
                   <div className="py-4 text-center text-slate-500 text-sm">Loading images...</div>
                 ) : projectImages.length > 0 ? (

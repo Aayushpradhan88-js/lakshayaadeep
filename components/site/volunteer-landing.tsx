@@ -71,7 +71,7 @@ export function VolunteerLanding() {
           <div className="absolute inset-0 bg-black/50" aria-hidden />
           <div className="relative z-10 mx-auto flex min-h-[min(70vh,720px)] max-w-4xl flex-col items-center justify-center px-4 py-20 text-center sm:px-6">
             <h1 className={`${headingFont.className} text-4xl font-bold text-white sm:text-5xl md:text-6xl`}>
-              Join Our <span className="text-[#ed7423]">Mission</span>
+              Join Our <span className="text-brand">Mission</span>
             </h1>
             <p className="mt-6 max-w-2xl text-lg text-white/90 sm:text-xl">
               Become a volunteer and make a meaningful difference in our community today.
@@ -79,7 +79,7 @@ export function VolunteerLanding() {
             <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center">
               <a
                 href="#apply"
-                className="inline-flex min-w-[200px] items-center justify-center rounded-2xl bg-emerald-800 px-8 py-4 text-base font-semibold text-white shadow-lg transition hover:bg-emerald-900"
+                className="inline-flex min-w-[200px] items-center justify-center rounded-2xl bg-brand px-8 py-4 text-base font-semibold text-white shadow-lg transition hover:bg-brand-hover"
               >
                 Apply as volunteer
               </a>
@@ -97,13 +97,13 @@ export function VolunteerLanding() {
       {/* Why volunteer */}
       <section id="why" className="scroll-mt-24 py-20 lg:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p className="mb-2 text-center text-sm font-semibold uppercase tracking-wide text-emerald-800">
+          <p className="mb-2 text-center text-sm font-semibold uppercase tracking-wide text-brand">
             Why volunteer
           </p>
           <h2 className="mb-4 text-center text-3xl font-bold text-slate-900 sm:text-4xl">
-            More Than <span className="text-emerald-800">Just Giving Back</span>
+            More Than <span className="text-brand">Just Giving Back</span>
           </h2>
-          <p className="mx-auto mb-12 max-w-2xl text-center text-slate-600">
+          <p className="mx-auto mb-12 max-w-2xl text-center text-black">
             Volunteering with Lakshyadeep is a structured way to learn, lead, and lift others — with clear roles and
             real responsibility.
           </p>
@@ -113,11 +113,11 @@ export function VolunteerLanding() {
                 key={item.title}
                 className="rounded-[18px] border border-slate-100 bg-slate-50/80 p-6 shadow-sm ring-1 ring-slate-100"
               >
-                <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-800 text-white">
+                <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-white">
                   <FaCheckCircle className="h-5 w-5" aria-hidden />
                 </div>
                 <h3 className="text-lg font-bold text-slate-900">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">{item.body}</p>
+                <p className="mt-2 text-sm leading-relaxed text-black">{item.body}</p>
               </li>
             ))}
           </ul>
@@ -126,10 +126,10 @@ export function VolunteerLanding() {
 
       {/* Quote */}
       <section className="relative py-20">
-        <div className="absolute inset-0 bg-emerald-950" />
+        <div className="absolute inset-0 bg-brand" />
         <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6">
           <p className={`${headingFont.className} text-2xl font-semibold text-white sm:text-3xl md:text-4xl`}>
-            Every hour you <span className="text-emerald-400">give</span> transforms more than you know.
+            Every hour you <span className="text-brand-light">give</span> transforms more than you know.
           </p>
         </div>
       </section>
@@ -142,19 +142,19 @@ export function VolunteerLanding() {
             <ol className="space-y-6">
               {steps.map((step, i) => (
                 <li key={step.title} className="flex gap-4">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-sm font-bold text-emerald-900">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-light text-sm font-bold text-brand">
                     {i + 1}
                   </span>
                   <div>
                     <h3 className="text-lg font-semibold text-slate-900">{step.title}</h3>
-                    <p className="mt-1 text-slate-600">{step.body}</p>
+                    <p className="mt-1 text-black">{step.body}</p>
                   </div>
                 </li>
               ))}
             </ol>
             <a
               href="#apply"
-              className="mt-10 inline-flex rounded-2xl bg-emerald-800 px-6 py-3 text-sm font-semibold text-white hover:bg-emerald-900"
+              className="mt-10 inline-flex rounded-2xl bg-brand px-6 py-3 text-sm font-semibold text-white hover:bg-brand-hover"
             >
               Start your application
             </a>

@@ -103,8 +103,8 @@ export default function LoginPage() {
           <div className="mt-10 grid grid-cols-3 gap-6">
             {[
               { value: "10K+", label: "Lives Touched", delay: "delay-500" },
-              { value: "50+",  label: "Projects",      delay: "delay-650" },
-              { value: "15+",  label: "Years",         delay: "delay-800" },
+              { value: "50+", label: "Projects", delay: "delay-650" },
+              { value: "15+", label: "Years", delay: "delay-800" },
             ].map(s => (
               <div
                 key={s.label}
@@ -125,7 +125,7 @@ export default function LoginPage() {
           {/* Back link */}
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-brand transition-colors mb-8"
+            className="inline-flex items-center gap-2 text-sm text-black hover:text-brand transition-colors mb-8"
           >
             <FiArrowLeft size={15} />
             Back to website
@@ -134,7 +134,7 @@ export default function LoginPage() {
           {/* Heading */}
           <div className="mb-8">
             <h2 className="text-3xl font-extrabold text-gray-900">Enter Your Admin Credentials</h2>
-            {/* <p className="mt-2 text-sm text-gray-500">Welcome back — enter your credentials below.</p>
+            {/* <p className="mt-2 text-sm text-black">Welcome back — enter your credentials below.</p>
             <div className="mt-3 h-1 w-12 rounded-full" style={{ backgroundColor: "#fc8703" }} /> */}
           </div>
 
@@ -157,7 +157,7 @@ export default function LoginPage() {
                 <div className="relative">
                   <FiMail
                     size={16}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-black pointer-events-none"
                   />
                   <input
                     id="email"
@@ -181,7 +181,7 @@ export default function LoginPage() {
                 <div className="relative">
                   <FiLock
                     size={16}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-black pointer-events-none"
                   />
                   <input
                     id="password"
@@ -197,7 +197,7 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(v => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-black hover:text-black transition"
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
@@ -216,7 +216,7 @@ export default function LoginPage() {
                     onChange={handleInputChange}
                     className="h-4 w-4 rounded border-gray-300 accent-brand"
                   />
-                  <span className="text-sm text-gray-600">Remember me</span>
+                  <span className="text-sm text-black">Remember me</span>
                 </label>
                 <Link
                   href="/forgot-password"
@@ -263,7 +263,7 @@ export default function LoginPage() {
           </div>
 
           {/* Footer note */}
-          <p className="mt-6 text-center text-xs text-gray-400">
+          <p className="mt-6 text-center text-xs text-black">
             This portal is restricted to authorised administrators only.
           </p>
         </div>

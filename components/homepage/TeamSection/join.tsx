@@ -20,7 +20,7 @@ export default function JoinSection() {
           <h2 className="text-4xl font-bold text-gray-700">
             Your work Count?
           </h2>
-          <p className="mt-4 max-w-sm text-sm leading-relaxed text-gray-600">
+          <p className="mt-4 max-w-sm text-sm leading-relaxed text-black">
             We are a Nepal-based youth-led organization empowering youth for
             community development, sustainability, and financial literacy.
           </p>
@@ -36,7 +36,7 @@ export default function JoinSection() {
 
         {/* Right */}
         <div>
-          <p className="mb-4 text-center text-sm font-semibold text-gray-600">
+          <p className="mb-4 text-center text-sm font-semibold text-black">
             Current Opening
           </p>
           <div className="flex flex-col gap-3">

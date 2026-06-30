@@ -30,13 +30,13 @@ const ArticleSection = async () => {
                     <div className="text-center mb-12">
                         <p className="text-brand font-semibold uppercase tracking-wide mb-3">Featured Insights</p>
                         <h2 className="text-4xl md:text-5xl font-bold text-slate-900">Latest Articles</h2>
-                        <p className="text-gray-500 max-w-2xl mx-auto mt-4">
+                        <p className="text-black max-w-2xl mx-auto mt-4">
                             Explore our newest articles to stay informed about our programs and impact.
                         </p>
                     </div>
 
                     {articles.length === 0 ? (
-                        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-10 text-center text-slate-600">
+                        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-10 text-center text-black">
                             No published articles are available yet.
                         </div>
                     ) : (
@@ -67,7 +67,7 @@ const ArticleSection = async () => {
                                         <div className="p-6">
                                             <p className="text-xs uppercase tracking-[0.24em] text-brand font-semibold mb-3">Article #{article.article_no}</p>
                                             <h3 className="text-xl font-semibold text-slate-900 mb-3">{article.title}</h3>
-                                            <p className="text-sm text-slate-600 leading-relaxed mb-4 line-clamp-3">
+                                            <p className="text-sm text-black leading-relaxed mb-4 line-clamp-3">
                                                 {article.excerpt || (article.content && article.content.slice(0, 100)) || 'Discover our latest insights and updates.'}
                                             </p>
                                             <div className="text-xs text-slate-500 flex flex-wrap gap-2 items-center">

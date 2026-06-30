@@ -3,7 +3,12 @@ import { FeedbackForm } from "@/components/site/feedback-form";
 
 export default function ContactPage() {
   return (
-    <PublicPageShell title="Contact & Feedback" subtitle="Send us a message — our team reads everything.">
+    <PublicPageShell
+      variant="minimal"
+      showCommunityCta={false}
+      title="Contact & Feedback"
+      subtitle="Send us a message — our team reads everything."
+    >
       <FeedbackForm />
     </PublicPageShell>
   );

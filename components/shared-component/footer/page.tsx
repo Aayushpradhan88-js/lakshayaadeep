@@ -6,9 +6,16 @@ import {
   FOOTER_LEGAL_LINKS,
   FOOTER_QUICK_LINKS,
 } from '@/components/homepage/Header/nav-config'
+import CommunityCtaSection from '@/components/shared-component/community-cta-section'
 
-const Footer = () => {
+type FooterProps = {
+  showCommunityCta?: boolean
+}
+
+const Footer = ({ showCommunityCta = true }: FooterProps) => {
     return (
+        <>
+        {showCommunityCta ? <CommunityCtaSection /> : null}
         <footer className="mt-12 border-t border-border bg-white pt-20 pb-8">
             <div className="mx-auto max-w-[1200px] px-4 md:px-8">
                 <div className="mb-16 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
@@ -98,6 +105,7 @@ const Footer = () => {
                 </div>
             </div>
         </footer>
+        </>
     )
 }
 

@@ -92,7 +92,7 @@ export default function CauseEventsSection() {
 
       {/* Empty */}
       {!loading && events.length === 0 && (
-        <p className="text-center text-sm text-gray-400">No events found.</p>
+        <p className="text-center text-sm text-black">No events found.</p>
       )}
 
       {/* Infinite slider */}

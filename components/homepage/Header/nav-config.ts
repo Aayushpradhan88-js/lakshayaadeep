@@ -21,7 +21,7 @@ export const PROJECTS_EVENTS_CARDS = [
     label: "Events",
     href: "/event",
     description: "Join tree plantation drives, health camps, and community gatherings near you.",
-    image: "/community-background.jpg",
+    image: "/forest.jpg",
   },
 ] as const
 

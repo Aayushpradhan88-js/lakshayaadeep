@@ -40,7 +40,7 @@ const StoryHighlight = ({
                 </div>
 
                 {/* Description */}
-                <p className="text-gray-600 leading-relaxed text-lg font-medium">
+                <p className="text-black leading-relaxed text-lg font-medium">
                     {description}
                 </p>
 
@@ -56,7 +56,7 @@ const StoryHighlight = ({
                     </div>
                     <div>
                         <p className="font-bold text-[#6b7280]">{userName}</p>
-                        <p className="text-gray-500 text-sm">
+                        <p className="text-black text-sm">
                             <span className="text-[#65c9d6]">{role}</span>-{place}
                         </p>
                     </div>

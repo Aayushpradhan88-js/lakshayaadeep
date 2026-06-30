@@ -61,9 +61,9 @@
   --color-brand-header: var(--brand-header);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-heading);
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-heading: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -219,6 +219,54 @@
 }
 
 @layer utilities {
+  .text-display {
+    @apply text-4xl font-black leading-[1.1] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl;
+  }
+
+  .text-h1 {
+    @apply text-3xl font-bold leading-tight tracking-tight sm:text-4xl md:text-5xl;
+  }
+
+  .text-h2 {
+    @apply text-2xl font-bold leading-snug tracking-tight sm:text-3xl md:text-4xl;
+  }
+
+  .text-h3 {
+    @apply text-xl font-semibold leading-snug sm:text-2xl;
+  }
+
+  .text-h4 {
+    @apply text-lg font-semibold leading-normal;
+  }
+
+  .text-body-lg {
+    @apply text-lg font-normal leading-relaxed;
+  }
+
+  .text-body {
+    @apply text-base font-normal leading-relaxed;
+  }
+
+  .text-body-sm {
+    @apply text-sm font-normal leading-relaxed;
+  }
+
+  .text-description {
+    @apply text-sm font-normal leading-relaxed text-black;
+  }
+
+  .text-caption {
+    @apply text-xs font-medium leading-normal text-muted-foreground;
+  }
+
+  .text-overline {
+    @apply text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground;
+  }
+
+  .text-label {
+    @apply text-sm font-medium leading-none;
+  }
+
   @keyframes reveal-up {
     0% {
       opacity: 0;
@@ -254,5 +302,23 @@
   }
   .animate-delay-300 {
     animation-delay: 300ms;
+  }
+
+  .thin-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(203 213 225) transparent;
+  }
+
+  .thin-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .thin-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgb(203 213 225);
+    border-radius: 9999px;
+  }
+
+  .thin-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
   }
 }

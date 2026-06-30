@@ -13,7 +13,7 @@ const StoriesSection = () => {
                         <span className="text-brand">Stories of Hope</span>
                         <span className="text-[#6b7280]">& Change</span>
                     </h2>
-                    <p className="text-gray-500 max-w-2xl mx-auto text-base">
+                    <p className="text-black max-w-2xl mx-auto text-base">
                         Behind every Statistic is a human story. These are some of the lives you&apos;ve
                         <br />
                         heloed transform

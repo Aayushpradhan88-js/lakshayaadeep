@@ -18,7 +18,7 @@ export default function AddHeroVideoPage() {
   const [saving, setSaving] = useState(false);
   const [uploadingVideo, setUploadingVideo] = useState(false);
   const [uploadingScreenshot, setUploadingScreenshot] = useState(false);
-  
+
   const [form, setForm] = useState({
     video_url: "",
     screenshot_url: "",
@@ -38,7 +38,7 @@ export default function AddHeroVideoPage() {
       const ext = file.name.split(".").pop();
       const folder = isVideo ? 'hero-video' : 'hero-screenshots';
       const path = `${folder}/${Date.now()}.${ext}`;
-      
+
       const { error: upErr } = await supabase.storage
         .from("media")
         .upload(path, file, { upsert: true });
@@ -46,13 +46,13 @@ export default function AddHeroVideoPage() {
       if (upErr) throw upErr;
 
       const { data } = supabase.storage.from("media").getPublicUrl(path);
-      
+
       if (isVideo) {
         setForm(p => ({ ...p, video_url: data.publicUrl, is_embed: false }));
       } else {
         setForm(p => ({ ...p, screenshot_url: data.publicUrl }));
       }
-      
+
       alert(`${isVideo ? 'Video' : 'Screenshot'} uploaded successfully!`);
     } catch (err) {
       console.error("Upload failed:", err);
@@ -73,7 +73,7 @@ export default function AddHeroVideoPage() {
     setSaving(true);
     try {
       const supabase = getSupabaseClient();
-      
+
       // If setting as active, deactivate others first
       if (form.is_active) {
         await supabase.from("hero_settings").update({ is_active: false }).neq('id', '00000000-0000-0000-0000-000000000000'); // hacky way to target all
@@ -103,8 +103,8 @@ export default function AddHeroVideoPage() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
-      <Link 
-        href="/dashboard/video" 
+      <Link
+        href="/dashboard/video"
         className="inline-flex items-center gap-2 text-slate-500 hover:text-emerald-600 transition-colors font-medium mb-2"
       >
         <FaArrowLeft size={14} /> Back to Management
@@ -131,22 +131,20 @@ export default function AddHeroVideoPage() {
                 <button
                   type="button"
                   onClick={() => setForm(p => ({ ...p, is_embed: false }))}
-                  className={`flex-1 py-3 px-4 rounded-xl border-2 transition-all flex items-center justify-center gap-2 font-semibold ${
-                    !form.is_embed 
-                    ? "border-emerald-500 bg-emerald-50 text-emerald-700" 
-                    : "border-slate-100 bg-slate-50 text-slate-500 hover:border-slate-200"
-                  }`}
+                  className={`flex-1 py-3 px-4 rounded-xl border-2 transition-all flex items-center justify-center gap-2 font-semibold ${!form.is_embed
+                      ? "border-emerald-500 bg-emerald-50 text-emerald-700"
+                      : "border-slate-100 bg-slate-50 text-slate-500 hover:border-slate-200"
+                    }`}
                 >
                   <FaUpload /> Upload
                 </button>
                 <button
                   type="button"
                   onClick={() => setForm(p => ({ ...p, is_embed: true }))}
-                  className={`flex-1 py-3 px-4 rounded-xl border-2 transition-all flex items-center justify-center gap-2 font-semibold ${
-                    form.is_embed 
-                    ? "border-emerald-500 bg-emerald-50 text-emerald-700" 
-                    : "border-slate-100 bg-slate-50 text-slate-500 hover:border-slate-200"
-                  }`}
+                  className={`flex-1 py-3 px-4 rounded-xl border-2 transition-all flex items-center justify-center gap-2 font-semibold ${form.is_embed
+                      ? "border-emerald-500 bg-emerald-50 text-emerald-700"
+                      : "border-slate-100 bg-slate-50 text-slate-500 hover:border-slate-200"
+                    }`}
                 >
                   <FaLink /> URL
                 </button>
@@ -170,7 +168,7 @@ export default function AddHeroVideoPage() {
                   <label className="block text-sm font-semibold text-slate-700 mb-1">Video File (MP4)</label>
                   <label className="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-2xl py-6 hover:border-emerald-400 hover:bg-emerald-50 transition-all">
                     <FaUpload className={`text-xl mb-2 ${uploadingVideo ? 'animate-bounce' : 'text-slate-400'}`} />
-                    <span className="text-xs font-medium text-slate-600">
+                    <span className="text-xs font-medium text-black">
                       {uploadingVideo ? "Uploading..." : "Click to upload video"}
                     </span>
                     <input
@@ -194,7 +192,7 @@ export default function AddHeroVideoPage() {
               <label className="block text-sm font-semibold text-slate-700 mb-1">Screenshot / Thumbnail</label>
               <label className="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-2xl py-6 hover:border-emerald-400 hover:bg-emerald-50 transition-all">
                 <FaImage className={`text-xl mb-2 ${uploadingScreenshot ? 'animate-pulse' : 'text-slate-400'}`} />
-                <span className="text-xs font-medium text-slate-600">
+                <span className="text-xs font-medium text-black">
                   {uploadingScreenshot ? "Uploading..." : "Click to upload screenshot"}
                 </span>
                 <input

@@ -45,12 +45,12 @@ function PaymentStep({
   };
 
   if (submitted && isSubmitting) {
-     return (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500 mb-4"></div>
-          <p className="text-sm font-medium text-gray-600">Processing your donation...</p>
-        </div>
-     );
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500 mb-4"></div>
+        <p className="text-sm font-medium text-black">Processing your donation...</p>
+      </div>
+    );
   }
 
   return (
@@ -58,12 +58,12 @@ function PaymentStep({
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h2 className="text-xl font-bold text-gray-800">Complete Your Donation</h2>
-          <p className="text-xs text-gray-400">Scan & Upload Screenshot</p>
+          <h2 className="text-xl font-bold text-black">Complete Your Donation</h2>
+          <p className="text-xs text-black">Scan & Upload Screenshot</p>
         </div>
-        <button 
+        <button
           onClick={onBack}
-          className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400"
+          className="p-2 hover:bg-gray-100 rounded-full transition-colors text-black"
         >
           <span className="text-xl leading-none">←</span>
         </button>
@@ -76,24 +76,24 @@ function PaymentStep({
             Donation Summary
           </p>
           <div className="grid grid-cols-2 gap-y-1.5 text-xs">
-            <span className="text-gray-500">Amount</span>
+            <span className="text-black">Amount</span>
             <span className="font-bold text-cyan-600 text-right text-sm">
               Rs. {data.amount.toLocaleString()}
             </span>
-            <span className="text-gray-500">Frequency</span>
+            <span className="text-black">Frequency</span>
             <span className="font-medium text-gray-700 text-right capitalize">
               {data.frequency === "once" ? "One-time" : "Monthly"}
             </span>
-            <span className="text-gray-500">Cause</span>
+            <span className="text-black">Cause</span>
             <span className="font-medium text-gray-700 text-right">{data.category}</span>
-            <span className="text-gray-500">Name</span>
+            <span className="text-black">Name</span>
             <span className="font-medium text-gray-700 text-right">{data.name || "—"}</span>
           </div>
         </div>
 
         {/* QR Code */}
         <div className="flex flex-col items-center rounded-xl border border-gray-100 bg-gray-50 p-4">
-          <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+          <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-black">
             Scan to Pay via eSewa / Khalti
           </p>
           <div className="relative p-2 bg-white rounded-lg shadow-sm">
@@ -110,7 +110,7 @@ function PaymentStep({
 
         {/* Screenshot Upload */}
         <div>
-          <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+          <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-black">
             Upload Payment Screenshot
           </p>
           <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-cyan-200 bg-cyan-50/20 p-4 hover:border-cyan-400 transition hover:bg-cyan-50/40">
@@ -133,7 +133,7 @@ function PaymentStep({
                 <span className="text-xs font-bold text-cyan-600 mb-1">
                   Click to upload screenshot
                 </span>
-                <span className="text-[10px] text-gray-400 italic">
+                <span className="text-[10px] text-black italic">
                   PNG, JPG up to 5MB
                 </span>
               </div>
@@ -160,7 +160,7 @@ function PaymentStep({
         <button
           onClick={onBack}
           disabled={isSubmitting}
-          className="w-full rounded-xl py-2.5 text-xs font-bold text-gray-400 hover:text-gray-600 transition"
+          className="w-full rounded-xl py-2.5 text-xs font-bold text-black hover:text-black transition"
         >
           Go Back to Form
         </button>
@@ -204,8 +204,7 @@ function DonateSection() {
   const [donationMessage, setDonationMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const donationFieldClass = (hasError: boolean) =>
-    `w-full rounded-xl border-2 bg-gray-50/50 px-4 py-3 text-sm font-medium outline-none transition focus:bg-white ${
-      hasError ? "border-red-400 focus:border-red-400" : "border-gray-100 focus:border-cyan-400"
+    `w-full rounded-xl border-2 bg-gray-50/50 px-4 py-3 text-sm font-medium outline-none transition focus:bg-white ${hasError ? "border-red-400 focus:border-red-400" : "border-gray-100 focus:border-cyan-400"
     }`;
 
   const validateDonationForm = () => {
@@ -300,9 +299,9 @@ function DonateSection() {
               <h2 className="text-5xl font-bold text-white leading-tight">
                 Your Gift
               </h2>
-              <h2 
-              // className="text-5xl font-bold text-brand leading-tight"
-              className="text-brand font-light"
+              <h2
+                // className="text-5xl font-bold text-brand leading-tight"
+                className="text-brand font-light"
               >
                 Changes Lives
               </h2>
@@ -327,11 +326,10 @@ function DonateSection() {
             <div className="rounded-3xl bg-white p-6 lg:p-8 shadow-2xl relative min-h-[500px]">
               {donationMessage ? (
                 <div
-                  className={`mb-4 rounded-xl border px-4 py-3 text-sm ${
-                    donationMessage.type === "success"
-                      ? "border-emerald-200 bg-emerald-50 text-emerald-900"
-                      : "border-red-200 bg-red-50 text-red-800"
-                  }`}
+                  className={`mb-4 rounded-xl border px-4 py-3 text-sm ${donationMessage.type === "success"
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-900"
+                    : "border-red-200 bg-red-50 text-red-800"
+                    }`}
                 >
                   {donationMessage.text}
                 </div>
@@ -344,11 +342,10 @@ function DonateSection() {
                       <button
                         key={f}
                         onClick={() => setFrequency(f)}
-                        className={`flex-1 py-2.5 text-sm font-bold rounded-xl transition cursor-pointer ${
-                          frequency === f
-                            ? "bg-white text-orange-600 shadow-sm"
-                            : "text-gray-500 hover:text-gray-700"
-                        }`}
+                        className={`flex-1 py-2.5 text-sm font-bold rounded-xl transition cursor-pointer ${frequency === f
+                          ? "bg-white text-orange-600 shadow-sm"
+                          : "text-black hover:text-gray-700"
+                          }`}
                       >
                         Give {f === "once" ? "Once" : "Monthly"}
                       </button>
@@ -358,7 +355,7 @@ function DonateSection() {
                   <div className="space-y-5">
                     {/* Amount */}
                     <div>
-                      <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                      <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-black">
                         Donation Amount
                       </p>
                       <div className="grid grid-cols-3 gap-3 mb-3">
@@ -369,11 +366,10 @@ function DonateSection() {
                               setSelectedAmount(amt);
                               setCustomAmount("");
                             }}
-                            className={`rounded-xl border-2 cursor-pointer py-3 text-sm font-bold transition ${
-                              selectedAmount === amt && !customAmount
-                                ? "border-cyan-400 bg-cyan-50 text-cyan-600"
-                                : "border-gray-100 text-gray-600 hover:border-cyan-200"
-                            }`}
+                            className={`rounded-xl border-2 cursor-pointer py-3 text-sm font-bold transition ${selectedAmount === amt && !customAmount
+                              ? "border-cyan-400 bg-cyan-50 text-cyan-600"
+                              : "border-gray-100 text-black hover:border-cyan-200"
+                              }`}
                           >
                             Rs. {amt.toLocaleString()}
                           </button>
@@ -396,7 +392,7 @@ function DonateSection() {
 
                     {/* Designate */}
                     <div>
-                      <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                      <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-black">
                         Designate Your Gift
                       </p>
                       <div className="flex flex-wrap gap-2">
@@ -404,11 +400,10 @@ function DonateSection() {
                           <button
                             key={cat}
                             onClick={() => setCategory(cat)}
-                            className={`rounded-full border-2 px-4 py-2 text-[11px] font-bold transition cursor-pointer ${
-                              category === cat
-                                ? "border-cyan-400 bg-cyan-400 text-white"
-                                : "border-gray-100 text-gray-500 hover:border-cyan-200"
-                            }`}
+                            className={`rounded-full border-2 px-4 py-2 text-[11px] font-bold transition cursor-pointer ${category === cat
+                              ? "border-cyan-400 bg-cyan-400 text-white"
+                              : "border-gray-100 text-black hover:border-cyan-200"
+                              }`}
                           >
                             {cat}
                           </button>
@@ -418,7 +413,7 @@ function DonateSection() {
 
                     {/* Details */}
                     <div className="space-y-3">
-                      <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                      <p className="mb-1 text-[10px] font-bold uppercase tracking-widest text-black">
                         Personal Details
                       </p>
                       <input
@@ -432,12 +427,11 @@ function DonateSection() {
                         className={donationFieldClass(Boolean(fieldErrors.name))}
                       />
                       {fieldErrors.name ? <p className="text-xs text-red-600">{fieldErrors.name}</p> : null}
-                      
+
                       <div>
-                        <div className={`flex overflow-hidden rounded-xl border-2 bg-gray-50/50 transition focus-within:bg-white ${
-                          fieldErrors.phone ? "border-red-400" : "border-gray-100 focus-within:border-cyan-400"
-                        }`}>
-                          <span className="flex items-center border-r border-gray-100 bg-gray-100 px-4 text-[10px] font-bold text-gray-500">
+                        <div className={`flex overflow-hidden rounded-xl border-2 bg-gray-50/50 transition focus-within:bg-white ${fieldErrors.phone ? "border-red-400" : "border-gray-100 focus-within:border-cyan-400"
+                          }`}>
+                          <span className="flex items-center border-r border-gray-100 bg-gray-100 px-4 text-[10px] font-bold text-black">
                             +977
                           </span>
                           <input
