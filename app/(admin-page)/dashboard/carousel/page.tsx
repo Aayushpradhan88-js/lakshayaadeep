@@ -13,6 +13,7 @@ import {
 import { FaSliders } from "react-icons/fa6"
 import { getSupabaseClient } from "@/lib/supabase/supabase"
 import { useAdminFeedback } from "@/components/shared-component/admin-feedback"
+import { FastLoading } from "@/components/shared-component/fast-loading"
 import {
   DashboardEmptyState,
   DashboardHeader,
@@ -296,7 +297,7 @@ export default function CarouselSlidesPage() {
       </DashboardTableCard>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
           <div className="max-h-[90vh] w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-2xl">
             <div className="flex items-center justify-between bg-emerald-600 p-6">
               <h2 className="flex items-center gap-2 text-xl font-bold text-white">
@@ -426,7 +427,7 @@ export default function CarouselSlidesPage() {
                   disabled={isSubmitting || uploading}
                   className="flex-1 rounded-2xl bg-emerald-600 py-4 text-sm font-bold text-white shadow-lg hover:bg-emerald-700 disabled:opacity-50"
                 >
-                  {isSubmitting ? "Saving..." : "Save Slide"}
+                  {isSubmitting ? <FastLoading size="sm" variant="light" /> : "Save Slide"}
                 </button>
               </div>
             </form>

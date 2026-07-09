@@ -29,9 +29,6 @@ type Article = {
   slug?: string;
 };
 
-// ─── Filter categories ────────────────────────────────────────────────────────
-const CATEGORIES = ["All", "Health", "Education", "Nutrition", "Community", "News"];
-
 // ─── Skeleton ─────────────────────────────────────────────────────────────────
 const ArticleSkeleton = () => (
   <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 animate-pulse">
@@ -156,9 +153,6 @@ const ArticleCard = ({ article }: { article: Article }) => {
 // ─── Main page ────────────────────────────────────────────────────────────────
 export default function ArticlePage() {
   const [articles, setArticles] = useState<Article[]>([]);
-  const [filtered, setFiltered] = useState<Article[]>([]);
-  const [activeCategory, setActiveCategory] = useState("All");
-  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -177,36 +171,12 @@ export default function ArticlePage() {
         console.error(error);
       } else {
         setArticles(data ?? []);
-        setFiltered(data ?? []);
       }
       setLoading(false);
     };
 
     fetchArticles();
   }, []);
-
-  // Filter by category + search
-  useEffect(() => {
-    let result = articles;
-
-    if (activeCategory !== "All") {
-      result = result.filter(
-        (a) => a.category?.toLowerCase() === activeCategory.toLowerCase()
-      );
-    }
-
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      result = result.filter(
-        (a) =>
-          a.title?.toLowerCase().includes(q) ||
-          a.content?.toLowerCase().includes(q) ||
-          a.author?.toLowerCase().includes(q)
-      );
-    }
-
-    setFiltered(result);
-  }, [activeCategory, search, articles]);
 
   return (
     <>
@@ -216,55 +186,11 @@ export default function ArticlePage() {
 
         <div className="max-w-5xl mx-auto px-4 py-8">
 
-          {/* ── Search + filter row ── */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-
-            {/* Category tabs */}
-            <div className="flex flex-wrap gap-2">
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`text-xs font-medium px-4 py-1.5 rounded-full border transition-all duration-200 ${activeCategory === cat
-                    ? "bg-amber-500 text-white border-amber-500"
-                    : "bg-white text-black border-gray-200 hover:border-amber-300 hover:text-amber-600"
-                    }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-
-            {/* Search */}
-            <div className="relative w-full sm:w-56">
-              <svg
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-black"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-              <input
-                type="text"
-                placeholder="Search articles..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-8 pr-3 py-1.5 text-xs rounded-full border border-gray-200 bg-white focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-100 transition"
-              />
-            </div>
-          </div>
-
           {/* ── Results count ── */}
           {!loading && (
             <p className="text-xs text-black mb-5">
-              {filtered.length}{" "}
-              {filtered.length === 1 ? "article" : "articles"} found
+              {articles.length}{" "}
+              {articles.length === 1 ? "article" : "articles"} found
             </p>
           )}
 
@@ -282,7 +208,7 @@ export default function ArticlePage() {
                 <ArticleSkeleton key={i} />
               ))}
             </div>
-          ) : filtered.length === 0 ? (
+          ) : articles.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
               <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center mb-4">
                 <svg
@@ -300,13 +226,10 @@ export default function ArticlePage() {
                 </svg>
               </div>
               <p className="text-sm font-medium text-black">No articles found</p>
-              <p className="text-xs text-black mt-1">
-                Try a different category or search term
-              </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {filtered.map((article) => (
+              {articles.map((article) => (
                 <ArticleCard key={article.id} article={article} />
               ))}
             </div>

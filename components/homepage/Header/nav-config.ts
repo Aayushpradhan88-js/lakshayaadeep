@@ -15,13 +15,13 @@ export const PROJECTS_EVENTS_CARDS = [
     label: "Projects",
     href: "/project",
     description: "Explore our ongoing, upcoming, and completed community initiatives across Nepal.",
-    image: "/lakshaydeepimg1.jpeg",
+    image: "/banner/project/project-card.jpg",
   },
   {
     label: "Events",
     href: "/event",
     description: "Join tree plantation drives, health camps, and community gatherings near you.",
-    image: "/forest.jpg",
+    image: "/banner/event/event-card.jpg",
   },
 ] as const
 

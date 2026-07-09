@@ -29,7 +29,7 @@ export default function LeadershipSection({ members }: Props) {
         <section className="w-full bg-[#f8fafc] px-6 py-20">
             {/* Header */}
             <div className="relative mb-16 text-center">
-                <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-brand">
+                <p className="mb-3 text-sm font-bold uppercase  text-brand">
                     Leadership
                 </p>
                 <h2 className="text-4xl md:text-5xl font-bold text-gray-900">

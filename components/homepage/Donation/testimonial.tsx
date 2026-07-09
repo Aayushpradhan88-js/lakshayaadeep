@@ -1,144 +1,149 @@
 "use client";
 
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const testimonials = [
   {
     id: 1,
     quote:
-      "Always friendly, honest services. Comparable price and good advice. I appreciate the ride to work too and delivered to my work the same day it broke down",
-    name: "Brandon Munson",
-    role: "CTO, Design",
-    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80",
-    position: "top-left",
+      "Supporting Lakshyadeep has been one of the most meaningful decisions I've made. Every update shows how my contribution directly reaches communities — from tree plantation drives to school support programs. Their transparency and local-first approach made giving easy and rewarding.",
+    name: "Ankita Shrestha",
+    role: "Volunteer & Donor",
+    image: "/clearn-forest.jpg",
   },
   {
     id: 2,
     quote:
-      "We offer a variety of service to help you get back on the road and keep your life safer and provide easy care tips. Always friendly, honest service. Comparable price and good advice. I appreciate the ride to work too and delivered to my work the same day it broke down",
-    name: "Brandon Munson",
-    role: "CTO, Design",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80",
-    position: "center",
+      "I've donated to several organizations, but Lakshyadeep stands out for how deeply they engage with communities. The health camp they organized in our area reached families who had never seen a doctor. Knowing my donation made that possible keeps me committed.",
+    name: "Bikash Rai",
+    role: "Community Partner, Morang",
+    image: "/mission-vision.jpeg",
   },
   {
     id: 3,
     quote:
-      "Always friendly, honest services. Comparable price and good advice. I appreciate the ride to work too and delivered to my work the same day it broke down",
-    name: "Brandon Munson",
-    role: "CTO, Design",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80",
-    position: "top-right",
+      "What impressed me most was seeing the impact firsthand. After contributing to their education initiative, I visited the school and met students who now have desks, books, and a brighter future. Lakshyadeep doesn't just ask for support — they show you the change.",
+    name: "Rajesh Karki",
+    role: "School Coordinator & Donor",
+    image: "/forest.jpg",
+  },
+  {
+    id: 4,
+    quote:
+      "Their reforestation project transformed barren land in our ward into a green belt. As a donor, I received regular updates and was invited to the plantation drive. It felt like being part of something bigger than a transaction — a real community movement.",
+    name: "Sunita Sharma",
+    role: "Community Leader, Sunsari",
+    image: "/mountain.jpg",
   },
 ];
 
-function TestimonialCard({
-  quote,
-  name,
-  role,
-  image,
-  align = "left",
-}: {
-  quote: string;
-  name: string;
-  role: string;
-  image: string;
-  align?: "left" | "center" | "right";
-}) {
-  const isCenter = align === "center";
+const AUTO_SCROLL_MS = 6000;
+
+export default function DonorTestimonialsSection() {
+  const [current, setCurrent] = useState(0);
+  const [timerKey, setTimerKey] = useState(0);
+
+  const goNext = useCallback(() => {
+    setCurrent((prev) => (prev + 1) % testimonials.length);
+  }, []);
+
+  const goPrev = useCallback(() => {
+    setCurrent((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(goNext, AUTO_SCROLL_MS);
+    return () => clearInterval(timer);
+  }, [goNext, timerKey]);
+
+  const handleManual = (direction: "prev" | "next") => {
+    if (direction === "prev") goPrev();
+    else goNext();
+    setTimerKey((k) => k + 1);
+  };
+
+  const active = testimonials[current];
 
   return (
-    <div className={`flex flex-col ${align === "right" ? "items-end" : align === "center" ? "items-center" : "items-start"}`}>
-      {/* Quote bubble */}
-      <div
-        className={`rounded-2xl border border-gray-200 bg-white p-5 shadow-sm ${isCenter ? "max-w-sm" : "max-w-xs"
-          }`}
-      >
-        <p className={`leading-relaxed text-black ${isCenter ? "text-sm" : "text-xs"}`}>
-          {quote}
-        </p>
-      </div>
-
-      {/* Connector line */}
-      <div className="h-8 w-px bg-gray-300" />
-
-      {/* Avatar + name */}
-      <div
-        className={`flex items-end gap-3 ${align === "right" ? "flex-row-reverse" : "flex-row"
-          }`}
-      >
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wide text-black">
-            {name}
+    <section className="w-full bg-slate-100 px-4 py-16 md:px-8 md:py-24">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-12 text-center md:mb-16">
+          <p className="text-xs font-semibold uppercase  text-brand md:text-sm">
+            What Our Donors Say
           </p>
-          <p className="text-xs text-black">{role}</p>
-        </div>
-        <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-xl border border-gray-200">
-          <Image src={image} alt={name} fill className="object-cover" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function DonorTestimonialsSection() {
-  return (
-    <section className="w-full bg-white px-6 py-16">
-      <h2 className="mb-14 text-center text-2xl font-bold text-black">
-        Donor Testimonials
-      </h2>
-
-      {/* Desktop layout */}
-      <div className="mx-auto hidden max-w-5xl grid-cols-3 items-start gap-8 lg:grid">
-        {/* Top-left — starts high */}
-        <div className="mt-0">
-          <TestimonialCard
-            quote={testimonials[0].quote}
-            name={testimonials[0].name}
-            role={testimonials[0].role}
-            image={testimonials[0].image}
-            align="left"
-          />
+          <h2 className="mt-3 font-serif text-3xl font-bold uppercase tracking-[0.08em] text-brand-dark sm:text-4xl md:text-5xl">
+            Donor Testimonials
+          </h2>
         </div>
 
-        {/* Center — starts lower */}
-        <div className="mt-24">
-          <TestimonialCard
-            quote={testimonials[1].quote}
-            name={testimonials[1].name}
-            role={testimonials[1].role}
-            image={testimonials[1].image}
-            align="center"
-          />
+        <div className="relative flex items-center gap-4 md:gap-8">
+          <button
+            type="button"
+            aria-label="Previous testimonial"
+            onClick={() => handleManual("prev")}
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gray-300/70 text-white transition hover:bg-gray-400/80 md:h-14 md:w-14"
+          >
+            <ChevronLeft className="h-6 w-6 stroke-[2.5] md:h-8 md:w-8" />
+          </button>
+
+          <div className="min-w-0 flex-1 overflow-hidden">
+            <div
+              key={active.id}
+              className="grid animate-in fade-in duration-500 grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-12 lg:gap-16"
+            >
+              <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden bg-white shadow-sm md:max-w-none">
+                <Image
+                  src={active.image}
+                  alt={active.name}
+                  fill
+                  className="object-cover object-center"
+                  sizes="(max-width: 768px) 80vw, 40vw"
+                  priority
+                />
+              </div>
+
+              <div className="flex flex-col justify-center px-2 md:px-0">
+                <p className="font-serif text-base leading-relaxed text-gray-900 md:text-lg lg:text-xl">
+                  &ldquo;{active.quote}&rdquo;
+                </p>
+                <p className="mt-8 text-sm font-bold uppercase tracking-[0.12em] text-brand md:text-base">
+                  {active.name}
+                </p>
+                <p className="mt-2 text-sm font-bold uppercase tracking-[0.12em] text-brand-dark md:text-base">
+                  {active.role}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            aria-label="Next testimonial"
+            onClick={() => handleManual("next")}
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gray-300/70 text-white transition hover:bg-gray-400/80 md:h-14 md:w-14"
+          >
+            <ChevronRight className="h-6 w-6 stroke-[2.5] md:h-8 md:w-8" />
+          </button>
         </div>
 
-        {/* Top-right — starts high */}
-        <div className="mt-0">
-          <TestimonialCard
-            quote={testimonials[2].quote}
-            name={testimonials[2].name}
-            role={testimonials[2].role}
-            image={testimonials[2].image}
-            align="right"
-          />
+        <div className="mt-10 flex justify-center gap-2">
+          {testimonials.map((item, index) => (
+            <button
+              key={item.id}
+              type="button"
+              aria-label={`Go to testimonial ${index + 1}`}
+              onClick={() => {
+                setCurrent(index);
+                setTimerKey((k) => k + 1);
+              }}
+              className={`h-2 rounded-full transition-all duration-300 ${index === current ? "w-8 bg-brand" : "w-2 bg-gray-300 hover:bg-gray-400"
+                }`}
+            />
+          ))}
         </div>
-      </div>
-
-      {/* Mobile layout — stacked */}
-      <div className="flex flex-col items-center gap-10 lg:hidden">
-        {testimonials.map((t) => (
-          <TestimonialCard
-            key={t.id}
-            quote={t.quote}
-            name={t.name}
-            role={t.role}
-            image={t.image}
-            align="center"
-          />
-        ))}
       </div>
     </section>
   );
 }
-
-export default DonorTestimonialsSection

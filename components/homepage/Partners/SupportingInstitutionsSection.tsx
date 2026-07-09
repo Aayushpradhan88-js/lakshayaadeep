@@ -23,8 +23,8 @@ export default function SupportingInstitutionsSection() {
     <section id="partners" className="w-full border-t border-gray-100 bg-slate-50 px-4 py-16 md:px-8 md:py-20">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 text-center">
-          <h2 className="mt-4 text-4xl font-bold tracking-tight text-grey-900 sm:text-5xl lg:text-6xl">
-            Supporting <span className="font-light text-brand">Institutions</span>
+          <h2 className="mt-4 text-4xl font-bold tracking-tight text-black sm:text-5xl lg:text-6xl">
+            Supporting <span className="font-light text-black">Institutions</span>
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-sm text-black md:text-base">
             We collaborate with municipalities, schools, volunteer networks, and allied organizations across Nepal.
@@ -44,7 +44,7 @@ export default function SupportingInstitutionsSection() {
                 >
                   <Icon className={`h-8 w-8 md:h-9 md:w-9 ${partner.iconColor}`} aria-hidden />
                 </div>
-                <p className="text-sm font-medium leading-snug text-gray-700">{partner.name}</p>
+                <p className="text-sm font-medium leading-snug text-black">{partner.name}</p>
               </div>
             )
           })}

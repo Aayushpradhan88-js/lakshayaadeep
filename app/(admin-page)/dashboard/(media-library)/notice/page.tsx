@@ -18,6 +18,7 @@ import {
 } from "react-icons/fa";
 import { getSupabaseClient } from "@/lib/supabase/supabase";
 import { useAdminFeedback } from "@/components/shared-component/admin-feedback";
+import { FastLoading } from "@/components/shared-component/fast-loading";
 
 interface Notice {
   id: string;
@@ -622,7 +623,7 @@ export default function NoticePage() {
                   disabled={isSubmitting}
                   className="flex-1 bg-emerald-500 text-white px-4 py-3 rounded-lg hover:bg-emerald-600 font-medium shadow-lg disabled:opacity-50"
                 >
-                  {isSubmitting ? "Creating..." : "Create Notice"}
+                  {isSubmitting ? <FastLoading size="sm" variant="light" /> : "Create Notice"}
                 </button>
               </div>
             </form>

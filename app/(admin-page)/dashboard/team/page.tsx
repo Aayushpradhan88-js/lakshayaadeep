@@ -14,6 +14,7 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import { getSupabaseClient } from "@/lib/supabase/supabase";
+import { FastLoading } from "@/components/shared-component/fast-loading";
 
 type TeamMember = {
   id: string;
@@ -454,8 +455,14 @@ export default function DashboardTeamPage() {
               disabled={submitting}
               className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <FaPlus className="h-3.5 w-3.5" />
-              {editingId ? "Update Member" : "Add Member"}
+              {submitting ? (
+                <FastLoading size="sm" variant="light" />
+              ) : (
+                <>
+                  <FaPlus className="h-3.5 w-3.5" />
+                  {editingId ? "Update Member" : "Add Member"}
+                </>
+              )}
             </button>
             {editingId && (
               <button
@@ -475,11 +482,14 @@ export default function DashboardTeamPage() {
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-lg font-semibold text-slate-900">Current Team Members</h2>
           <p className="text-sm text-slate-500">
-            Drag the handle to reorder.{reordering ? " Saving..." : ""}
+            Drag the handle to reorder.
+            {reordering ? <FastLoading size="sm" className="ml-2 inline-flex align-middle" /> : null}
           </p>
         </div>
         {loading ? (
-          <p className="text-sm text-black">Loading team members...</p>
+          <div className="flex justify-center py-8">
+            <FastLoading size="md" />
+          </div>
         ) : sortedMembers.length === 0 ? (
           <p className="text-sm text-black">No members yet. Add the first one above.</p>
         ) : (

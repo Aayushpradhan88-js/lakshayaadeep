@@ -23,6 +23,7 @@ import {
 import { getSupabaseClient } from "@/lib/supabase/supabase";
 import { useRouter } from "next/navigation";
 import { useAdminFeedback } from "@/components/shared-component/admin-feedback";
+import { FastLoading } from "@/components/shared-component/fast-loading";
 
 interface MediaItem {
   id: string;
@@ -640,8 +641,7 @@ export default function MediaPage() {
                 />
                 {uploading ? (
                   <div className="flex flex-col items-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mb-4"></div>
-                    <p className="text-black">Uploading photos...</p>
+                  <FastLoading size="lg" />
                   </div>
                 ) : (
                   <>

@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/supabase";
+import { FastLoading } from "@/components/shared-component/fast-loading";
 
 function fieldClass(hasError: boolean) {
   return `w-full rounded-md border bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition focus:ring-2 ${
@@ -177,7 +178,7 @@ export function FeedbackForm({ id = "feedback", showContactInfo = true }: Feedba
             disabled={status === "submitting"}
             className="w-full rounded-md bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-hover disabled:opacity-60 sm:w-auto"
           >
-            {status === "submitting" ? "Sending..." : "Send message"}
+            {status === "submitting" ? <FastLoading size="sm" variant="light" /> : "Send message"}
           </button>
         </form>
       )}

@@ -1,9 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { createPortal } from "react-dom"
 import Image from "next/image"
 import Link from "next/link"
 import { X } from "lucide-react"
+import { FastLoading } from "@/components/shared-component/fast-loading"
 
 export type GalleryImage = {
   id: string
@@ -35,6 +37,35 @@ export default function ProgramGallerySection({
   viewAllLabel = "View full gallery",
 }: ProgramGallerySectionProps) {
   const [activeImage, setActiveImage] = useState<GalleryImage | null>(null)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!activeImage) return
+
+    const previousOverflow = document.body.style.overflow
+    const previousPaddingRight = document.body.style.paddingRight
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+
+    document.body.style.overflow = "hidden"
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setActiveImage(null)
+    }
+    window.addEventListener("keydown", onKeyDown)
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+      document.body.style.paddingRight = previousPaddingRight
+      window.removeEventListener("keydown", onKeyDown)
+    }
+  }, [activeImage])
 
   return (
     <section id={id} className="w-full bg-white px-4 py-16 md:px-8 md:py-24">
@@ -50,7 +81,7 @@ export default function ProgramGallerySection({
 
         {loading ? (
           <div className="flex h-64 items-center justify-center">
-            <div className="h-10 w-10 animate-spin rounded-full border-2 border-brand border-t-transparent" />
+            <FastLoading size="md" />
           </div>
         ) : images.length === 0 ? (
           <div className="rounded-2xl border border-gray-100 bg-slate-50 px-6 py-16 text-center text-black">
@@ -90,33 +121,39 @@ export default function ProgramGallerySection({
         ) : null}
       </div>
 
-      {activeImage ? (
-        <div
-          className="fixed inset-0 z-[120] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
-          onClick={() => setActiveImage(null)}
-        >
-          <button
-            type="button"
-            aria-label="Close image"
-            onClick={() => setActiveImage(null)}
-            className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20"
-          >
-            <X className="h-6 w-6" />
-          </button>
-          <div
-            className="relative h-[min(80vh,720px)] w-full max-w-5xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Image
-              src={activeImage.url}
-              alt={activeImage.alt ?? "Gallery image"}
-              fill
-              className="object-contain"
-              sizes="100vw"
-            />
-          </div>
-        </div>
-      ) : null}
+      {activeImage && mounted
+        ? createPortal(
+            <div
+              className="fixed inset-0 z-[200] flex items-center justify-center overflow-hidden overscroll-none bg-black/80 p-4 backdrop-blur-sm"
+              onClick={() => setActiveImage(null)}
+            >
+              <div
+                className="relative w-full max-w-5xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="relative mx-auto h-[min(80vh,720px)] w-full overflow-hidden rounded-lg">
+                  <button
+                    type="button"
+                    aria-label="Close image"
+                    onClick={() => setActiveImage(null)}
+                    className="absolute right-3 top-3 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-900 shadow-lg transition hover:bg-slate-100"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                  <Image
+                    src={activeImage.url}
+                    alt={activeImage.alt ?? "Gallery image"}
+                    fill
+                    className="object-contain"
+                    sizes="100vw"
+                    draggable={false}
+                  />
+                </div>
+              </div>
+            </div>,
+            document.body
+          )
+        : null}
     </section>
   )
 }

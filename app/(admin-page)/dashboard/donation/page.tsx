@@ -17,6 +17,7 @@ import {
   dashboardSelectClassName,
 } from '@/components/shared-component/admin-dashboard-ui'
 import { useAdminFeedback } from '@/components/shared-component/admin-feedback'
+import { getAdminAuthHeaders } from '@/lib/client/admin-fetch'
 
 type Donation = {
   id: string
@@ -75,35 +76,22 @@ export default function AdminDonationsPage() {
   const updateStatus = async (id: string, status: string) => {
     setUpdating(id)
     try {
-      const supabase = getSupabaseClient()
+      const headers = await getAdminAuthHeaders()
 
-      // Ensure user is authenticated
-      const { data: { user }, error: authError } = await supabase.auth.getUser()
-      if (authError || !user) {
-        throw new Error('Authentication required to update status. Please log in again.')
+      const response = await fetch(`/api/admin/donations/${id}`, {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify({ status }),
+      })
+
+      const payload = await response.json().catch(() => ({}))
+
+      if (!response.ok || !payload.ok) {
+        throw new Error(payload.message || 'Failed to update donation status.')
       }
 
-      console.log(`Updating donation ${id} status to ${status}...`)
-
-      const { data, error } = await supabase
-        .from('donations')
-        .update({ status })
-        .eq('id', id)
-        .select()
-
-      if (error) throw error
-
-      if (!data || data.length === 0) {
-        console.error('Update failed: No rows matched the query.', { id, status })
-        throw new Error('No rows updated. You might not have permission to modify this record.')
-      }
-
-      console.log('Update successful:', data[0])
-
-      // Update local state
       setDonations(prev => prev.map(d => d.id === id ? { ...d, status: status as Donation['status'] } : d))
 
-      // Also update selected donation if it's the one being modified
       if (selectedDonation?.id === id) {
         setSelectedDonation(prev => prev ? { ...prev, status: status as Donation['status'] } : null)
       }

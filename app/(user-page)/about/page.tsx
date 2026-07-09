@@ -11,7 +11,7 @@ export default function AboutPage() {
     <>
       <Header />
       <div className="animate-reveal-up">
-        <AboutSection />
+        <AboutSection variant="page" />
         <OurStorySection />
         <OurImpactSection />
       </div>

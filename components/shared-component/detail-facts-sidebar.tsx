@@ -18,7 +18,7 @@ export default function DetailFactsSidebar({
   if (visible.length === 0) return null
 
   return (
-    <aside className={`rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm lg:sticky lg:top-24 ${className}`}>
+    <aside className={`rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm ${className}`}>
       <h2 className="mb-3 text-base font-semibold text-slate-900">{title}</h2>
       <dl className="space-y-4 text-sm text-black">
         {visible.map((fact) => (

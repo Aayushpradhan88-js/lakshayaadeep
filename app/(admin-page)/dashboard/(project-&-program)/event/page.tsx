@@ -1,6 +1,5 @@
 "use client"
 
-import Image from "next/image"
 import { useState, useEffect } from "react"
 import {
   FaBlog,
@@ -13,36 +12,20 @@ import {
   FaCheckCircle,
 } from "react-icons/fa"
 import { getSupabaseClient } from "@/lib/supabase/supabase"
-import Link from "next/link"
 import { useAdminFeedback } from "@/components/shared-component/admin-feedback"
-
-interface Event {
-  id: string
-  event_title: string
-  description: string
-  category: string
-  location: string
-  event_location?: {
-    province: string
-    district: string
-    municipality: string
-  }
-  start_date: string
-  end_date: string
-  organizer: string
-  cover_event_image_url: string
-  status: string
-  created_at: string
-}
+import { AdminDetailModal } from "@/components/shared-component/admin-detail-modal"
+import { EventCreateForm } from "@/components/shared-component/event-create-form"
+import { EventDetailEditModal, type EventRecord } from "@/components/shared-component/event-detail-edit-modal"
 
 export default function EventPage() {
-  const [events, setEvents] = useState<Event[]>([])
+  const [events, setEvents] = useState<EventRecord[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState<string>("all")
   const [categoryFilter, setCategoryFilter] = useState<string>("all")
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
+  const [selectedEvent, setSelectedEvent] = useState<EventRecord | null>(null)
   const [showDetailModal, setShowDetailModal] = useState(false)
+  const [showCreateModal, setShowCreateModal] = useState(false)
   const { showToast, askConfirm } = useAdminFeedback()
 
   useEffect(() => {
@@ -158,13 +141,15 @@ export default function EventPage() {
             <p className="text-black">Manage and publish events for your audience</p>
           </div>
           <div className="flex items-center space-x-3">
-            <Link
-              href="/dashboard/event/create"
+            {/* Previous: <Link href="/dashboard/event/create"> redirected to a new page */}
+            <button
+              type="button"
+              onClick={() => setShowCreateModal(true)}
               className="inline-flex items-center gap-2 rounded-full bg-linear-to-r from-emerald-500 to-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-lg hover:from-emerald-600 hover:to-emerald-700"
             >
               <FaPlus className="h-4 w-4" />
               Create Event
-            </Link>
+            </button>
           </div>
         </div>
       </div>
@@ -373,103 +358,28 @@ export default function EventPage() {
         )}
       </div>
 
-      {/* Event Detail Modal */}
       {showDetailModal && selectedEvent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-2xl">
-            <div className="bg-linear-to-r from-emerald-500 to-emerald-600 px-6 py-4 rounded-t-2xl">
-              <div className="flex justify-between items-center">
-                <h2 className="text-xl font-bold text-white">Event Details</h2>
-                <button
-                  onClick={() => setShowDetailModal(false)}
-                  className="text-white/80 hover:text-white transition-colors"
-                >
-                  <div className="bg-white/20 p-1 rounded-lg">
-                    ×
-                  </div>
-                </button>
-              </div>
-            </div>
-
-            <div className="p-6 space-y-4">
-              {selectedEvent.cover_event_image_url && (
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Cover Image</label>
-                  <div className="mt-2 w-full h-48 overflow-hidden rounded-lg">
-                    <Image
-                      src={selectedEvent.cover_event_image_url}
-                      alt="Cover"
-                      width={1200}
-                      height={600}
-                      className="w-full h-full object-cover"
-                      unoptimized
-                    />
-                  </div>
-                </div>
-              )}
-
-              <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-black uppercase tracking-wider">Title</label>
-                <h3 className="text-lg font-bold text-slate-900 mt-1">{selectedEvent.event_title}</h3>
-              </div>
-
-              <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-black uppercase tracking-wider">Description</label>
-                <p className="text-slate-900 font-medium mt-1">{selectedEvent.description || 'No description'}</p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Organizer</label>
-                  <p className="text-slate-900 font-medium mt-1">{selectedEvent.organizer || 'N/A'}</p>
-                </div>
-                {/* <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Category</label>
-                  <p className="text-slate-900 font-medium mt-1">{selectedEvent.category || 'N/A'}</p>
-                </div> */}
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Status</label>
-                  <span className={`inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold rounded-full border mt-1 ${getStatusColor(selectedEvent.status)}`}>
-                    {selectedEvent.status}
-                  </span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Start Date</label>
-                  <p className="text-slate-900 font-medium mt-1">
-                    {selectedEvent.start_date ? new Date(selectedEvent.start_date).toLocaleDateString() : 'N/A'}
-                  </p>
-                </div>
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-black uppercase tracking-wider">End Date</label>
-                  <p className="text-slate-900 font-medium mt-1">
-                    {selectedEvent.end_date ? new Date(selectedEvent.end_date).toLocaleDateString() : 'N/A'}
-                  </p>
-                </div>
-              </div>
-
-              <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-black uppercase tracking-wider">Location</label>
-                <p className="text-slate-900 font-medium mt-1">
-                  {selectedEvent.event_location ? (
-                    `${selectedEvent.event_location.municipality}, ${selectedEvent.event_location.district}, ${selectedEvent.event_location.province}`
-                  ) : selectedEvent.location || 'N/A'}
-                </p>
-              </div>
-
-              <div className="flex gap-3 pt-4">
-                <button
-                  onClick={() => setShowDetailModal(false)}
-                  className="flex-1 bg-slate-200 text-slate-800 px-4 py-3 rounded-lg hover:bg-slate-300 font-medium"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <EventDetailEditModal
+          event={selectedEvent}
+          onClose={() => setShowDetailModal(false)}
+          onSaved={(updated) => {
+            setEvents((prev) => prev.map((item) => (item.id === updated.id ? updated : item)))
+            setSelectedEvent(updated)
+          }}
+          showToast={showToast}
+        />
+      )}
+      {showCreateModal && (
+        <AdminDetailModal title="Create Event" onClose={() => setShowCreateModal(false)} size="xl">
+          <EventCreateForm
+            onCancel={() => setShowCreateModal(false)}
+            showToast={showToast}
+            onSuccess={(event) => {
+              setEvents((prev) => [event, ...prev])
+              setShowCreateModal(false)
+            }}
+          />
+        </AdminDetailModal>
       )}
     </div>
   )

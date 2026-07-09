@@ -9,6 +9,7 @@ import {
   Select, SelectContent, SelectItem,
   SelectTrigger, SelectValue
 } from '@/components/ui/select'
+import { FastLoading } from '@/components/shared-component/fast-loading'
 
 const districtMap: Record<string, string[]> = {
   'Koshi': ['Taplejung', 'Panchthar', 'Ilam', 'Jhapa', 'Morang', 'Sunsari'],
@@ -60,9 +61,8 @@ export default function CreateeventPage() {
     if (!form.title) err.title = 'Title is required'
     // if (!form.category) err.category = 'Category is required'
     if (!form.start_date) err.start_date = 'Start date required'
-    if (!form.end_date) err.end_date = 'End date required'
-    if (form.start_date && form.end_date && form.end_date <= form.start_date)
-      err.end_date = 'End date must be after start date'
+    if (form.start_date && form.end_date && form.end_date < form.start_date)
+      err.end_date = 'End date cannot be before start date'
     setErrors(err)
     return Object.keys(err).length === 0
   }
@@ -123,7 +123,7 @@ export default function CreateeventPage() {
         .insert({
           event_title: form.title, description: form.description,
           //  category: form.category.toLowerCase(),
-          location: loc?.id, start_date: form.start_date, end_date: form.end_date,
+          location: loc?.id, start_date: form.start_date, end_date: form.end_date || null,
           organizer: form.organizer, cover_event_image_url: coverImageUrl,
         })
         .select().single()
@@ -217,7 +217,7 @@ export default function CreateeventPage() {
             {errors.start_date && <p className="text-red-500 text-xs mt-1">{errors.start_date}</p>}
           </div>
           <div>
-            <p className="text-xs text-muted-foreground mb-1">End Date</p>
+            <p className="text-xs text-muted-foreground mb-1">End Date <span className="text-slate-400">(optional)</span></p>
             <Input type="date" value={form.end_date} onChange={e => set('end_date', e.target.value)} />
             {errors.end_date && <p className="text-red-500 text-xs mt-1">{errors.end_date}</p>}
           </div>
@@ -299,7 +299,7 @@ export default function CreateeventPage() {
           onClick={onSubmit}
           disabled={loading}
         >
-          {loading ? 'Creating...' : 'Create event'}
+          {loading ? <FastLoading size="sm" variant="light" /> : 'Create event'}
         </Button>
         <Button variant="outline" className="flex-1" onClick={() => router.back()}>
           Cancel

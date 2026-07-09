@@ -1,90 +1,113 @@
-// import { MISSION_VISION_OBJECTIVES } from "@/components/homepage/home-content"
-"use client"
-
+import Image from "next/image"
 import { Eye, Target, TreePine, type LucideIcon } from "lucide-react"
+
+type Pillar = {
+  id: number
+  title: string
+  body?: string
+  items?: string[]
+  icon: LucideIcon
+  iconBg: string
+  iconColor: string
+}
+
+const pillars: Pillar[] = [
+  {
+    id: 1,
+    title: "Our Mission",
+    body: "To empower and mobilize youth by equipping them with knowledge and skills to drive innovation for a youth-friendly Nation.",
+    icon: Target,
+    iconBg: "bg-orange-100",
+    iconColor: "text-brand",
+  },
+  {
+    id: 2,
+    title: "Our Vision",
+    body: "Lakshyadeep envisions a youth friendly society.",
+    icon: Eye,
+    iconBg: "bg-cyan-100",
+    iconColor: "text-cyan-600",
+  },
+  {
+    id: 3,
+    title: "Our Objectives",
+    items: [
+      "Provide skill-based, practical, and life-useful training to youth and adolescents to enhance their capacity and leadership for social transformation.",
+      "Foster intergenerational dialogue to promote youth participation in decision-making.",
+      "Organize programs to promote self-reliance, youth entrepreneurship, financial literacy, and personal financial development.",
+    ],
+    icon: TreePine,
+    iconBg: "bg-green-100",
+    iconColor: "text-green-600",
+  },
+]
+
 export default function MissionVisionSection() {
-
-
-  const pillars: {
-    id: number
-    title: string
-    body: string
-    icon: LucideIcon
-    iconBg: string
-    iconColor: string
-  }[] = [
-      {
-        id: 1,
-        title: "Our Mission",
-        body: "To empower communities and individuals through education, health and sustainable development",
-        icon: Target,
-        iconBg: "bg-orange-100",
-        iconColor: "text-brand",
-      },
-      {
-        id: 2,
-        title: "Our Vision",
-        body: "A world where everyone has equal opportunities to thrive in a safe, health and inclusive society",
-        icon: Eye,
-        iconBg: "bg-cyan-100",
-        iconColor: "text-cyan-600",
-      },
-      {
-        id: 3,
-        title: "Our Objectives",
-        body: "Restore ecosystems, raise environmental awareness, strengthen local partnerships, and deliver transparent programs communities own and sustain.",
-        icon: TreePine,
-        iconBg: "bg-green-100",
-        iconColor: "text-green-600",
-      },
-    ]
   return (
-    <section id="mission-vision" className="w-full bg-slate-50 px-4 py-16 md:px-8 md:py-20">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-12 text-center">
-          {/* <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-brand">Who We Are</p> */}
-          {/* <h2 className="text-3xl font-bold text-gray-900 md:text-4xl"> */}
-          <h2 className="mt-4 text-4xl font-bold tracking-tight text-grey-900 sm:text-5xl lg:text-6xl">
-            Mission, Vision <span className="font-light text-brand">&amp; Objectives</span>
-          </h2>
-          {/* <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-black md:text-base">
-            Our purpose guides every project, event, and partnership — from classrooms to villages across Nepal.
-          </p> */}
-        </div>
+    <section id="mission-vision" className="w-full bg-slate-50 py-16 md:py-20">
+      <div className="mx-auto mb-10 max-w-6xl px-4 text-center md:mb-12 md:px-8">
+        <h2 className="text-4xl font-bold tracking-tight text-grey-900 sm:text-5xl lg:text-6xl">
+          Mission, Vision <span className="font-light text-brand">&amp; Objectives</span>
+        </h2>
+      </div>
 
-        {/* <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-          {MISSION_VISION_OBJECTIVES.map((item) => (
-            <div
-              key={item.id}
-              className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
-            >
-              <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-brand-light">
-                <span className="text-sm font-bold text-brand">{item.title.charAt(0)}</span>
-              </div>
-              <h3 className="mb-3 text-lg font-bold text-gray-900">{item.title}</h3>
-              <p className="text-sm leading-relaxed text-black">{item.body}</p>
-            </div>
-          ))}
-        </div> */}
+      <div className="relative w-full">
+        <div className="relative min-h-[420px] w-full sm:min-h-[480px] md:min-h-[560px] lg:min-h-[620px]">
+          <Image
+            src="/mission-vision.jpeg"
+            alt="Lakshyadeep team at Chia Manthan"
+            fill
+            className="object-cover object-center"
+            sizes="100vw"
+            priority={false}
+          />
+          <div
+            className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-black/10"
+            aria-hidden
+          />
+          <div
+            className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/30"
+            aria-hidden
+          />
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 md:gap-8">
-          {pillars.map((p) => {
-            const Icon = p.icon
-            return (
-              <div
-                key={p.id}
-                className="rounded-2xl border border-gray-100 bg-gray-50 p-7 md:p-8"
-              >
-                <div className="mb-5 flex items-center gap-4">
-                  <div className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl ${p.iconBg}`}>
-                    <Icon className={`h-6 w-6 ${p.iconColor}`} aria-hidden />
+          <div className="absolute inset-x-0 bottom-0 z-10 px-4 pb-6 pt-16 sm:px-6 sm:pb-8 md:px-8 md:pb-10">
+            <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 md:grid-cols-3 md:gap-5 lg:gap-6">
+              {pillars.map((p) => {
+                const Icon = p.icon
+                return (
+                  <div
+                    key={p.id}
+                    className="rounded-2xl border border-white/20 bg-white/95 p-5 shadow-xl backdrop-blur-md transition hover:-translate-y-0.5 hover:bg-white md:p-6"
+                  >
+                    <div className="mb-4 flex items-center gap-3">
+                      <div
+                        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${p.iconBg}`}
+                      >
+                        <Icon className={`h-5 w-5 ${p.iconColor}`} aria-hidden />
+                      </div>
+                      <h3 className="text-base font-bold text-black md:text-lg">{p.title}</h3>
+                    </div>
+                    {p.body ? (
+                      <p className="text-sm leading-relaxed text-black/90">{p.body}</p>
+                    ) : null}
+                    {p.items ? (
+                      <ul className="space-y-2.5 text-sm leading-relaxed text-black/90">
+                        {p.items.map((item) => (
+                          <li key={item} className="flex gap-2">
+                            <span
+                              className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand"
+                              aria-hidden
+                            />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
                   </div>
-                  <h3 className="text-lg font-bold text-black md:text-xl">{p.title}</h3>
-                </div>
-                <p className="text-sm leading-relaxed text-black md:text-base">{p.body}</p>
-              </div>
-            )
-          })}
+                )
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </section>

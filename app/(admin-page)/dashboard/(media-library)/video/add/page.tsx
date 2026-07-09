@@ -12,6 +12,7 @@ import {
 } from "react-icons/fa";
 import { getSupabaseClient } from "@/lib/supabase/supabase";
 import Link from "next/link";
+import { FastLoading } from "@/components/shared-component/fast-loading";
 
 export default function AddHeroVideoPage() {
   const router = useRouter();
@@ -257,7 +258,7 @@ export default function AddHeroVideoPage() {
               className="w-full bg-gradient-to-r from-emerald-500 to-emerald-700 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
               <FaSave />
-              {saving ? "Creating..." : "Add Hero Video"}
+              {saving ? <FastLoading size="sm" variant="light" /> : "Add Hero Video"}
             </button>
           </div>
         </div>

@@ -2,17 +2,17 @@ export const MISSION_VISION_OBJECTIVES = [
   {
     id: "mission",
     title: "Our Mission",
-    body: "To plant trees across Nepal and empower communities through education, health, and sustainable development that protects our environment.",
+    body: "To empower and mobilize youth by equipping them with knowledge and skills to drive innovation for a youth-friendly Nation.",
   },
   {
     id: "vision",
     title: "Our Vision",
-    body: "A greener, cleaner, and environmentally sustainable Nepal where every community thrives with dignity, opportunity, and hope.",
+    body: "Lakshyadeep envisions a youth friendly society.",
   },
   {
     id: "objectives",
     title: "Our Objectives",
-    body: "Restore ecosystems, raise environmental awareness, strengthen local partnerships, and deliver transparent programs communities own and sustain.",
+    body: "Provide skill-based training, foster intergenerational dialogue, and organize programs for youth entrepreneurship and financial literacy.",
   },
 ] as const
 
@@ -48,7 +48,7 @@ export const THEMATIC_AREAS = [
     id: 4,
     title: "Health & Wellbeing",
     description: "Health camps and awareness sessions that reach families in underserved areas.",
-    image: "/community-background.jpg",
+    image: "/health-welbearing.jpg",
     link: "/event",
     priority: false,
   },
@@ -56,7 +56,7 @@ export const THEMATIC_AREAS = [
     id: 5,
     title: "Clean Energy Access",
     description: "Promoting renewable solutions and sustainable practices in the communities we serve.",
-    image: "/hero.jpg",
+    image: "/clearn-forest.jpg",
     link: "/project",
     priority: false,
   },
@@ -118,7 +118,7 @@ export const BOARD_MESSAGE = {
     "At Lakshyadeep, we believe lasting change grows from communities that are heard, supported, and empowered. Every tree planted, every child educated, and every volunteer engaged moves Nepal closer to a sustainable future we can all be proud of.",
   name: "Board of Directors",
   role: "Lakshyadeep",
-  image: "/ourteam.jpg",
+  image: "/banner/Our-team/main.jpg",
 } as const
 
 export const SUPPORTING_INSTITUTIONS = [

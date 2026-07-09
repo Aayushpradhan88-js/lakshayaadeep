@@ -16,6 +16,7 @@ import OngoingProjects from "@/components/homepage/Project/Project"
 import UpcomingProjects from "@/components/homepage/Project/UpCommingProjects"
 import OngoingEvents from "@/components/homepage/Event/Events"
 import UpcomingEvents from "@/components/homepage/Event/UpCommingEvents"
+import ProjectLogosSection from "@/components/homepage/Partners/ProjectLogosSection"
 
 export default function Home() {
   return (
@@ -44,9 +45,13 @@ export default function Home() {
         <ImpactStatsSection />
       </div>
 
+      <div className="h-10 bg-white md:h-14" aria-hidden />
+
       <div className="animate-reveal-up animate-delay-300">
         <StakeholderTestimonialsSection />
       </div>
+
+      <div className="h-10 bg-white md:h-14" aria-hidden />
 
       <div className="animate-reveal-up">
         <BoardMessageSection />
@@ -54,6 +59,10 @@ export default function Home() {
 
       <div className="animate-reveal-up">
         <SupportingInstitutionsSection />
+      </div>
+
+      <div className="animate-reveal-up">
+        <ProjectLogosSection />
       </div>
 
       {/* <section className="animate-reveal-up bg-gradient-to-b from-white to-slate-50/50 py-20">

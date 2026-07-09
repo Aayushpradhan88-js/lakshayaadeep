@@ -15,6 +15,7 @@ import {
   DashboardTh,
 } from '@/components/shared-component/admin-dashboard-ui'
 import { useAdminFeedback } from '@/components/shared-component/admin-feedback'
+import { FastLoading } from '@/components/shared-component/fast-loading'
 
 interface FAQ {
   id: string
@@ -255,7 +256,7 @@ export default function AdminFAQsPage() {
                   disabled={isSubmitting}
                   className="flex-1 rounded-lg bg-emerald-600 py-2.5 text-sm font-bold text-white hover:bg-emerald-700 transition disabled:opacity-50"
                 >
-                  {isSubmitting ? 'Saving...' : 'Save FAQ'}
+                  {isSubmitting ? <FastLoading size="sm" variant="light" /> : 'Save FAQ'}
                 </button>
               </div>
             </form>

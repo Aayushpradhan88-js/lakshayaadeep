@@ -9,6 +9,7 @@ import {
   Select, SelectContent, SelectItem,
   SelectTrigger, SelectValue
 } from '@/components/ui/select'
+import { FastLoading } from '@/components/shared-component/fast-loading'
 
 const districtMap: Record<string, string[]> = {
   'Koshi': ['Taplejung', 'Panchthar', 'Ilam', 'Jhapa', 'Morang', 'Sunsari'],
@@ -28,7 +29,6 @@ export function CreateProjectPage() {
     title: '', description: '', category: '',
     province: '', district: '', tole: '',
     start_date: '', end_date: '',
-    target_budget: '', actual_budget: '',
     target_beneficiaries: '', organizer: '',
   })
   const [images, setImages] = useState<File[]>([])
@@ -84,8 +84,6 @@ export function CreateProjectPage() {
         location_id: loc?.id,
         start_date: form.start_date,
         end_date: form.end_date,
-        target_budget: Number(form.target_budget) || null,
-        actual_budget: Number(form.actual_budget) || null,
         target_beneficiaries: Number(form.target_beneficiaries) || null,
         project_organizer: form.organizer,
         cover_image_url: imageUrls[0] || null,  // first image = cover
@@ -169,21 +167,6 @@ export function CreateProjectPage() {
         {errors.end_date && <p className="text-red-500 text-xs mt-1">{errors.end_date}</p>}
       </div>
 
-      {/* Budget */}
-      <div className="mb-4">
-        <label className="text-sm text-muted-foreground mb-1 block">Budget</label>
-        <div className="grid grid-cols-2 gap-2">
-          <div>
-            <p className="text-xs text-muted-foreground mb-1">Target Budget</p>
-            <Input type="number" placeholder="रू" value={form.target_budget} onChange={e => set('target_budget', e.target.value)} />
-          </div>
-          <div>
-            <p className="text-xs text-muted-foreground mb-1">Actual Budget</p>
-            <Input type="number" placeholder="रू" value={form.actual_budget} onChange={e => set('actual_budget', e.target.value)} />
-          </div>
-        </div>
-      </div>
-
       {/* Beneficiaries + Organizer */}
       <div className="grid grid-cols-2 gap-2 mb-4">
         <div>
@@ -218,7 +201,7 @@ export function CreateProjectPage() {
       {/* Buttons */}
       <div className="flex gap-3">
         <Button className="flex-1 bg-green-800 hover:bg-green-700" onClick={onSubmit} disabled={loading}>
-          {loading ? 'Creating...' : 'Create Project'}
+          {loading ? <FastLoading size="sm" variant="light" /> : 'Create Project'}
         </Button>
         <Button variant="outline" className="flex-1" onClick={() => router.back()}>
           Cancel

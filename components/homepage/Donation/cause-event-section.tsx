@@ -9,7 +9,6 @@ interface CauseEvent {
   event_title: string;
   description: string;
   cover_event_image_url: string | null;
-  progress_percent?: number;
   status: string;
 }
 
@@ -79,8 +78,6 @@ export default function CauseEventsSection() {
             >
               <div className="h-44 bg-orange-100" />
               <div className="p-4 space-y-2">
-                <div className="h-3 w-12 rounded bg-orange-200" />
-                <div className="h-2 w-full rounded bg-orange-100" />
                 <div className="h-4 w-3/4 rounded bg-orange-200" />
                 <div className="h-3 w-full rounded bg-orange-100" />
                 <div className="h-3 w-5/6 rounded bg-orange-100" />
@@ -140,30 +137,6 @@ export default function CauseEventsSection() {
 
                 {/* Body */}
                 <div style={{ padding: 16 }}>
-                  {/* Progress */}
-                  <p style={{ marginBottom: 4, fontSize: 13, fontWeight: 700, color: "#374151" }}>
-                    {event.progress_percent ?? 0}%
-                  </p>
-                  <div
-                    style={{
-                      marginBottom: 12,
-                      height: 4,
-                      width: "100%",
-                      borderRadius: 9999,
-                      backgroundColor: "#fed7aa",
-                      overflow: "hidden",
-                    }}
-                  >
-                    <div
-                      style={{
-                        height: "100%",
-                        borderRadius: 9999,
-                        backgroundColor: "#22d3ee",
-                        width: `${event.progress_percent ?? 0}%`,
-                      }}
-                    />
-                  </div>
-
                   {/* Title */}
                   <h3
                     style={{

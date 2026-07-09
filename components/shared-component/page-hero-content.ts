@@ -24,10 +24,10 @@ export const PAGE_HERO_CONTENT = {
     headlineAccent: "We Are Here",
     headlineRest: "to Make a Difference",
     description:
-      "Lakshyadeep is a non-profit organization working towards building a better, fairer and sustainable Nepal. We believe every individual deserves the opportunity to live with dignity and hope.",
+      "Lakshyadeep is a Sunsari-based, youth-led non-profit organization dedicated to empowering young people and mobilizing them to advance the Sustainable Development Goals (SDGs). The organization engages youth in policy advocacy, skill-building, and sustainable development initiatives through events, workshops, and campaigns.",
   },
   projects: {
-    images: ["/lakshaydeepimg1.jpeg", "/forest.jpg", "/mountain.jpg"],
+    images: ["/banner/project/project-card.jpg"],
     overline: "Get Involved",
     titlePrefix: "Lakshyadeep ",
     titleAccent: "Projects",
@@ -36,8 +36,18 @@ export const PAGE_HERO_CONTENT = {
     description:
       "Explore our long-term community projects — from education and health to sustainable development — creating lasting impact across Nepal.",
   },
+  events: {
+    images: ["/banner/event/event-card.jpg"],
+    overline: "Get Involved",
+    titlePrefix: "Lakshyadeep ",
+    titleAccent: "Events",
+    headlineAccent: "Bringing People",
+    headlineRest: "Together",
+    description:
+      "Join workshops, health camps, plantation drives, and community gatherings that create meaningful change across Nepal.",
+  },
   projectsEvents: {
-    images: ["/lakshaydeepimg1.jpeg", "/team2.jpg", "/forest.jpg"],
+    images: ["/banner/project/project-img.JPG"],
     overline: "Get Involved",
     titlePrefix: "Projects ",
     titleAccent: "& Events",
@@ -47,7 +57,7 @@ export const PAGE_HERO_CONTENT = {
       "Choose how you want to engage with Lakshyadeep — explore our long-term community projects or join upcoming events across Nepal.",
   },
   ourTeam: {
-    images: ["/team2.jpg", "/team3.jpg", "/lakshaydeepimg2.jpeg"],
+    images: ["/banner/About/about-img.jpg"],
     titlePrefix: "Our ",
     titleAccent: "Team",
     headlineAccent: "Together We Build",
@@ -61,7 +71,7 @@ export const PAGE_HERO_CONTENT = {
     ],
   },
   blog: {
-    images: ["/forest.jpg", "/lakshaydeepimg1.jpeg", "/mountain.jpg"],
+    images: ["/banner/blog/blog-img.jpg"],
     overline: "Our Stories",
     titlePrefix: "Blogs & ",
     titleAccent: "Insights",
@@ -71,7 +81,7 @@ export const PAGE_HERO_CONTENT = {
       "Read firsthand accounts, field updates, and reflections from our team and the communities we serve across Nepal.",
   },
   article: {
-    images: ["/mountain.jpg", "/lakshaydeepimg2.jpeg", "/forest.jpg"],
+    images: ["/banner/article/article-test.jpg"],
     overline: "Knowledge Hub",
     titlePrefix: "Articles & ",
     titleAccent: "Stories",

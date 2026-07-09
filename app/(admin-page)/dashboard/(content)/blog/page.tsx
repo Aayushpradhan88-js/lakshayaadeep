@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import {
   FaBlog,
   FaPlus,
@@ -19,6 +18,8 @@ import {
 import { getSupabaseClient } from "@/lib/supabase/supabase";
 import { Blog } from "@/lib/database/types";
 import { useAdminFeedback } from "@/components/shared-component/admin-feedback";
+import { AdminDetailModal } from "@/components/shared-component/admin-detail-modal";
+import { BlogCreateForm } from "@/components/shared-component/blog-create-form";
 
 export default function BlogsPage() {
   const [blogPosts, setBlogPosts] = useState<Blog[]>([]);
@@ -28,6 +29,7 @@ export default function BlogsPage() {
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const { showToast, askConfirm } = useAdminFeedback();
 
   useEffect(() => {
@@ -111,12 +113,15 @@ export default function BlogsPage() {
             <p className="text-black">Manage and publish blog posts for your audience</p>
           </div>
           <div className="flex items-center space-x-3">
-            <Link href="/dashboard/blog/create">
-              <button className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-lg hover:from-emerald-600 hover:to-emerald-700 flex items-center gap-2 shadow-lg">
-                <FaPlus className="h-4 w-4" />
-                Write Blog
-              </button>
-            </Link>
+            {/* Previous: <Link href="/dashboard/blog/create"> redirected to a new page */}
+            <button
+              type="button"
+              onClick={() => setShowCreateModal(true)}
+              className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-lg hover:from-emerald-600 hover:to-emerald-700 flex items-center gap-2 shadow-lg"
+            >
+              <FaPlus className="h-4 w-4" />
+              Write Blog
+            </button>
           </div>
         </div>
       </div>
@@ -428,6 +433,19 @@ export default function BlogsPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {showCreateModal && (
+        <AdminDetailModal title="Create Blog Post" onClose={() => setShowCreateModal(false)} size="lg">
+          <BlogCreateForm
+            onCancel={() => setShowCreateModal(false)}
+            showToast={showToast}
+            onSuccess={(blog) => {
+              setBlogPosts((prev) => [blog, ...prev])
+              setShowCreateModal(false)
+            }}
+          />
+        </AdminDetailModal>
       )}
     </div>
   );

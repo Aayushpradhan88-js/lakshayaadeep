@@ -38,6 +38,8 @@ import { isAdminEmail } from "@/features/auth/lib/seed-admin";
 import type { User } from "@supabase/supabase-js";
 import { FaBook, FaRegNewspaper, FaSliders } from "react-icons/fa6";
 import { AdminFeedbackProvider } from "@/components/shared-component/admin-feedback";
+import { FastLoading } from "@/components/shared-component/fast-loading";
+import { BrandLogo } from "@/components/shared-component/brand-logo";
 
 interface SidebarItem {
   id: string;
@@ -187,8 +189,7 @@ export default function DashboardLayout({
     return (
       <div className="min-h-screen bg-slate-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto"></div>
-          <p className="mt-2 text-black">Loading...</p>
+        <FastLoading size="md" />
         </div>
       </div>
     );
@@ -201,16 +202,12 @@ export default function DashboardLayout({
         <aside className="hidden lg:flex lg:w-64 lg:shrink-0 lg:flex-col lg:h-full lg:border-r lg:border-slate-200 bg-white">
           <div className="flex flex-col h-full overflow-hidden">
             {/* Logo Section */}
-            <div className="shrink-0 flex items-center gap-3 px-6 py-5 border-b border-slate-200">
-              <img
-                src="/logo.png"
-                alt="Lakshyadeep Logo"
-                className="h-8 w-auto"
+            <div className="shrink-0 border-b border-slate-200 px-4 py-5">
+              <BrandLogo
+                href="/dashboard"
+                imageClassName="h-10 max-w-full"
               />
-              <div>
-                <p className="text-xl font-semibold tracking-tight text-emerald-800">Lakshyadeep</p>
-                <p className="text-xs text-slate-500">Operations</p>
-              </div>
+              <p className="mt-1.5 text-xs text-slate-500">Operations</p>
             </div>
 
             {/* Navigation */}
@@ -313,7 +310,7 @@ export default function DashboardLayout({
             </nav>
 
             {/* Logout at Bottom */}
-            <div className="shrink-0 px-4 py-4 border-t border-slate-200 space-y-2">
+            <div className="shrink-0 space-y-3 border-t border-slate-200 px-4 py-4">
               <button
                 type="button"
                 onClick={() => window.open(process.env.NODE_ENV === 'development' ? 'http://localhost:3000/' : 'https://lakshyadeep-orpin.vercel.app', '_blank')}
@@ -351,18 +348,14 @@ export default function DashboardLayout({
           <div className="lg:hidden fixed inset-0 z-50 w-full bg-white">
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between border-b border-slate-200 p-4">
-                <div className="flex items-center gap-3">
-                  <img
-                    src="/logo.png"
-                    alt="Lakshyadeep Logo"
-                    className="h-6 w-auto"
+                <div className="min-w-0">
+                  <BrandLogo
+                    href="/dashboard"
+                    imageClassName="h-9 max-w-[200px]"
                   />
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-slate-900">Lakshyadeep</p>
-                    <p className="truncate text-xs text-slate-500">
-                      {currentUser?.email ?? "admin@lakshyadeep.com"}
-                    </p>
-                  </div>
+                  <p className="mt-1 truncate text-xs text-slate-500">
+                    {currentUser?.email ?? "admin@lakshyadeep.com"}
+                  </p>
                 </div>
                 <button
                   type="button"
@@ -374,18 +367,14 @@ export default function DashboardLayout({
               </div>
 
               <div className="border-t border-slate-200 p-4">
-                <div className="flex items-center gap-3 mb-3">
-                  <img
-                    src="/logo.png"
-                    alt="Lakshyadeep Logo"
-                    className="h-6 w-auto"
+                <div className="mb-3 min-w-0">
+                  <BrandLogo
+                    href="/dashboard"
+                    imageClassName="h-9 max-w-[200px]"
                   />
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-slate-900">Lakshyadeep</p>
-                    <p className="truncate text-xs text-slate-500">
-                      {currentUser?.email ?? "admin@lakshyadeep.com"}
-                    </p>
-                  </div>
+                  <p className="mt-1 truncate text-xs text-slate-500">
+                    {currentUser?.email ?? "admin@lakshyadeep.com"}
+                  </p>
                 </div>
 
                 {/* Mobile navigation (so Feedback shows up here too). */}

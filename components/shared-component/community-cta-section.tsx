@@ -40,8 +40,8 @@ export default function CommunityCtaSection() {
     <section className="relative w-full overflow-hidden">
       <div className="relative min-h-[22rem] sm:min-h-[26rem] lg:min-h-[30rem]">
         <Image
-          src="/lakshaydeepimg1.jpeg"
-          alt=""
+          src="/donation-img.jpg"
+          alt="Lakshyadeep community members celebrating a project milestone"
           fill
           className="object-cover object-center"
           sizes="100vw"

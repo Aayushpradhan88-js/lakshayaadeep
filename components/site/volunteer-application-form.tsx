@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/supabase";
-import { FaPaperPlane } from "react-icons/fa";
+import { FastLoading } from "@/components/shared-component/fast-loading";
 
 type VolunteerApplicationFormProps = {
   heading?: string;
@@ -215,10 +215,9 @@ export function VolunteerApplicationForm({ heading, id = "apply" }: VolunteerApp
           <button
             type="submit"
             disabled={status === "submitting"}
-            className="inline-flex items-center gap-2 rounded-2xl bg-brand px-6 py-3 text-sm font-semibold text-white shadow hover:bg-brand-hover disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-brand px-6 py-3 text-sm font-semibold text-white shadow hover:bg-brand-hover disabled:opacity-60"
           >
-            <FaPaperPlane className="h-4 w-4" />
-            {status === "submitting" ? "Submitting..." : "Submit application"}
+            {status === "submitting" ? <FastLoading size="sm" variant="light" /> : "Submit application"}
           </button>
         </form>
       )}

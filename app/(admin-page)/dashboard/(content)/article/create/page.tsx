@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { FaArrowLeft, FaUpload, FaSave } from "react-icons/fa"
 import { getSupabaseClient } from "@/lib/supabase/supabase"
+import { FastLoading } from "@/components/shared-component/fast-loading"
 
 export default function CreateArticlePage() {
     const router = useRouter()
@@ -224,8 +225,12 @@ export default function CreateArticlePage() {
                             disabled={submitting}
                             className="inline-flex items-center justify-center gap-2 rounded-3xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-200/30 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
                         >
-                            <FaSave className="h-4 w-4" />
-                            {submitting ? 'Saving...' : 'Publish Article'}
+                            {submitting ? <FastLoading size="sm" variant="light" /> : (
+                              <>
+                                <FaSave className="h-4 w-4" />
+                                Publish Article
+                              </>
+                            )}
                         </button>
                     </div>
                 </form>

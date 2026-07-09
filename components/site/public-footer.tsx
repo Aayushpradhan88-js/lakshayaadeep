@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { BrandLogo } from "@/components/shared-component/brand-logo";
 
 export function PublicFooter() {
   return (
@@ -7,11 +7,8 @@ export function PublicFooter() {
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
           <div>
-            <div className="mb-4 flex items-center gap-3">
-              <div className="relative h-12 w-12 overflow-hidden rounded-full ring-2 ring-white/30">
-                <Image src="/logo.png" alt="Lakshyadeep" fill className="object-cover" sizes="48px" />
-              </div>
-              <span className="text-xl font-bold">Lakshyadeep</span>
+            <div className="mb-4 inline-flex rounded-md bg-white p-2">
+              <BrandLogo imageClassName="h-10 max-w-[200px]" />
             </div>
             <p className="max-w-sm text-sm leading-relaxed text-emerald-100/90">
               A nonprofit dedicated to education, dignity, and sustainable progress for every community we serve.

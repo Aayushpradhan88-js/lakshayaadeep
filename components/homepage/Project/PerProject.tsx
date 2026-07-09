@@ -170,7 +170,7 @@ async function PerProject({ params }: { params: Promise<{ id: string }> }) {
                         emptyMessage="No description available."
                     />
 
-                    <div className="space-y-6">
+                    <div className="space-y-6 lg:sticky lg:top-24 lg:self-start">
                         <DetailFactsSidebar facts={facts} />
                         <RelatedItemsList
                             title="Other projects"

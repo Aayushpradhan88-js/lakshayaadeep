@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import {
   FaFileAlt,
   FaPlus,
@@ -20,6 +19,9 @@ import {
 import { getSupabaseClient } from "@/lib/supabase/supabase";
 import { Article } from "@/lib/database/types";
 import { useAdminFeedback } from "@/components/shared-component/admin-feedback";
+import { FastLoading } from "@/components/shared-component/fast-loading";
+import { AdminDetailModal } from "@/components/shared-component/admin-detail-modal";
+import { ArticleCreateForm } from "@/components/shared-component/article-create-form";
 
 export default function ArticlesPage() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -29,6 +31,7 @@ export default function ArticlesPage() {
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const { showToast, askConfirm } = useAdminFeedback();
 
   useEffect(() => {
@@ -105,7 +108,7 @@ export default function ArticlesPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+        <FastLoading size="lg" />
       </div>
     );
   }
@@ -120,12 +123,15 @@ export default function ArticlesPage() {
             <p className="text-black">Manage and publish articles for your audience</p>
           </div>
           <div className="flex items-center space-x-3">
-            <Link href="/dashboard/article/create">
-              <button className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-blue-600 hover:to-blue-700 flex items-center gap-2 shadow-lg">
-                <FaPlus className="h-4 w-4" />
-                Write Article
-              </button>
-            </Link>
+            {/* Previous: <Link href="/dashboard/article/create"> redirected to a new page */}
+            <button
+              type="button"
+              onClick={() => setShowCreateModal(true)}
+              className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-blue-600 hover:to-blue-700 flex items-center gap-2 shadow-lg"
+            >
+              <FaPlus className="h-4 w-4" />
+              Write Article
+            </button>
           </div>
         </div>
       </div>
@@ -384,6 +390,19 @@ export default function ArticlesPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {showCreateModal && (
+        <AdminDetailModal title="Create Article" onClose={() => setShowCreateModal(false)} size="lg">
+          <ArticleCreateForm
+            onCancel={() => setShowCreateModal(false)}
+            showToast={showToast}
+            onSuccess={(article) => {
+              setArticles((prev) => [article, ...prev])
+              setShowCreateModal(false)
+            }}
+          />
+        </AdminDetailModal>
       )}
     </div>
   );

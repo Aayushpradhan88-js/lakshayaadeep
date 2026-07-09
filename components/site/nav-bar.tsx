@@ -1,13 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import LoginButton from "../homepage/Header/TopBar/ActionButtons/LoginButton";
 import MissionServiceButton from "../homepage/Header/TopBar/ActionButtons/MissionServiceButton";
-import Logo from "../homepage/Header/TopBar/Logo";
+import { BrandLogo } from "@/components/shared-component/brand-logo";
 
 export function PublicNav() {
   const pathname = usePathname();
@@ -38,25 +37,7 @@ export function PublicNav() {
       >
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           {/* Logo + Brand */}
-          <Link href="/" className="flex shrink-0 items-center gap-2.5">
-            <Image
-              src="/logo.png"
-              alt="Lakshyadeep Logo"
-              width={44}
-              height={44}
-              className="rounded-sm"
-            />
-            <div className="flex flex-col leading-tight">
-              <span className="text-sm font-bold uppercase tracking-wider text-slate-800">
-                Lakshyadeep
-              </span>
-              <span className="rounded bg-sky-500 px-1.5 py-[1px] text-[10px] font-semibold text-white">
-                लक्ष्यदीप
-              </span>
-            </div>
-          </Link>
-
-          {/* <Logo/> */}
+          <BrandLogo priority imageClassName="h-10 max-w-[200px] sm:h-11 sm:max-w-[220px]" />
 
           {/* Right-side buttons — Desktop */}
           <div className="hidden cursor-pointer items-center gap-3 md:flex">

@@ -10,10 +10,11 @@ type HeroSlide = {
   id: string
   image_url: string
   title?: string
+  href?: string
   auto_slide_duration?: number | null
 }
 
-const DEFAULT_SLIDE_DURATION_SEC = 1
+const DEFAULT_SLIDE_DURATION_SEC = 4
 
 const FALLBACK_SLIDES: HeroSlide[] = [
   { id: "fallback-1", image_url: "/hero.jpg" },
@@ -21,21 +22,19 @@ const FALLBACK_SLIDES: HeroSlide[] = [
 ]
 
 const DEFAULT_TITLE = "LAKSHYADEEP"
-const DEFAULT_SUBTITLE =
-  "Changing lives across Nepal through education, community support, and lasting impact."
 
-function HeroImage({ src, active }: { src: string; active: boolean }) {
+function HeroImage({ src, alt, active }: { src: string; alt: string; active: boolean }) {
   const isLocal = src.startsWith("/") || src.includes(".supabase.co/storage/")
 
   if (isLocal) {
     return (
       <Image
         src={src}
-        alt=""
+        alt={alt}
         fill
         priority={active}
         sizes="100vw"
-        className={`object-cover object-center transition-opacity duration-500 ${active ? "opacity-100" : "opacity-0"}`}
+        className={`object-cover object-center transition-opacity duration-700 ${active ? "opacity-100" : "opacity-0"}`}
       />
     )
   }
@@ -44,45 +43,105 @@ function HeroImage({ src, active }: { src: string; active: boolean }) {
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={src}
-      alt=""
-      className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-500 ${active ? "opacity-100" : "opacity-0"}`}
+      alt={alt}
+      className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-700 ${active ? "opacity-100" : "opacity-0"}`}
     />
   )
+}
+
+// Future: loop latest project photos in the hero (client PDF requirement).
+// const MAX_PROJECT_SLIDES = 8
+//
+// async function fetchLatestProjectSlides(supabase: ReturnType<typeof getSupabaseClient>): Promise<HeroSlide[]> {
+//   const { data: projects, error } = await supabase
+//     .from("project")
+//     .select("id, project_title, cover_image_url, created_at")
+//     .not("status", "ilike", "draft")
+//     .order("created_at", { ascending: false })
+//     .limit(MAX_PROJECT_SLIDES)
+//
+//   if (error || !projects?.length) return []
+//
+//   const slides: HeroSlide[] = []
+//   const missingCoverIds: string[] = []
+//
+//   for (const project of projects) {
+//     if (project.cover_image_url) {
+//       slides.push({
+//         id: project.id,
+//         image_url: project.cover_image_url,
+//         title: project.project_title,
+//         href: `/project/${project.id}`,
+//       })
+//     } else {
+//       missingCoverIds.push(project.id)
+//     }
+//   }
+//
+//   if (missingCoverIds.length > 0) {
+//     const { data: gallery } = await supabase
+//       .from("project_gallery")
+//       .select("project_id, image_url, created_at")
+//       .in("project_id", missingCoverIds)
+//       .order("created_at", { ascending: false })
+//
+//     const galleryByProject = new Map<string, string>()
+//     for (const item of gallery ?? []) {
+//       if (!galleryByProject.has(item.project_id)) {
+//         galleryByProject.set(item.project_id, item.image_url)
+//       }
+//     }
+//
+//     for (const project of projects) {
+//       if (slides.some((slide) => slide.id === project.id)) continue
+//       const imageUrl = galleryByProject.get(project.id)
+//       if (!imageUrl) continue
+//       slides.push({
+//         id: project.id,
+//         image_url: imageUrl,
+//         title: project.project_title,
+//         href: `/project/${project.id}`,
+//       })
+//     }
+//   }
+//
+//   return slides.slice(0, MAX_PROJECT_SLIDES)
+// }
+
+async function fetchCarouselSlides(supabase: ReturnType<typeof getSupabaseClient>): Promise<HeroSlide[]> {
+  const { data } = await supabase
+    .from("carousel_slides")
+    .select("id, title, image_url, display_order, auto_slide_duration")
+    .eq("is_active", true)
+    .order("display_order", { ascending: true })
+
+  return (data ?? []).map((slide) => ({
+    id: slide.id,
+    image_url: slide.image_url,
+    title: slide.title,
+    auto_slide_duration: slide.auto_slide_duration,
+  }))
 }
 
 export function VideoHeroSection() {
   const [slides, setSlides] = useState<HeroSlide[]>(FALLBACK_SLIDES)
   const [current, setCurrent] = useState(0)
-  const [title, setTitle] = useState(DEFAULT_TITLE)
+  const [title] = useState(DEFAULT_TITLE)
 
   useEffect(() => {
     const fetchHero = async () => {
       try {
         const supabase = getSupabaseClient()
-        const [carouselRes
-          // , settingsRes
-        ] = await Promise.all([
-          supabase
-            .from("carousel_slides")
-            .select("id, title, image_url, display_order, auto_slide_duration")
-            .eq("is_active", true)
-            .order("display_order", { ascending: true }),
-          // supabase
-          //   .from("hero_settings")
-          //   .select("title, subtitle")
-          //   .eq("is_active", true)
-          //   .maybeSingle(),
-        ])
 
-        // if (settingsRes.data?.title) setTitle(settingsRes.data.title.toUpperCase())
+        // Future: prefer latest project photos, then fall back to admin carousel.
+        // const projectSlides = await fetchLatestProjectSlides(supabase)
+        // if (projectSlides.length > 0) {
+        //   setSlides(projectSlides)
+        //   setCurrent(0)
+        //   return
+        // }
 
-        const carouselSlides: HeroSlide[] = (carouselRes.data ?? []).map((s) => ({
-          id: s.id,
-          image_url: s.image_url,
-          title: s.title,
-          auto_slide_duration: s.auto_slide_duration,
-        }))
-
+        const carouselSlides = await fetchCarouselSlides(supabase)
         if (carouselSlides.length > 0) {
           setSlides(carouselSlides)
           setCurrent(0)
@@ -117,7 +176,11 @@ export function VideoHeroSection() {
       <div className="absolute inset-0">
         {slides.map((slide, i) => (
           <div key={slide.id} className="absolute inset-0">
-            <HeroImage src={slide.image_url} active={i === current} />
+            <HeroImage
+              src={slide.image_url}
+              alt={slide.title ?? "Lakshyadeep hero slide"}
+              active={i === current}
+            />
           </div>
         ))}
         <div className="absolute inset-0 bg-black/55" aria-hidden />
@@ -131,11 +194,11 @@ export function VideoHeroSection() {
           {title}
         </h1>
 
-        {slideTitle && (
-          <p className="mt-4 text-xs font-semibold uppercase tracking-[0.25em] text-brand sm:text-sm">
-            {/* {slideTitle} */}
+        {slideTitle ? (
+          <p className="mt-4 text-xs font-semibold uppercase  text-brand sm:text-sm">
+            {slideTitle}
           </p>
-        )}
+        ) : null}
 
         <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center">
           <Link
@@ -160,9 +223,8 @@ export function VideoHeroSection() {
                 type="button"
                 aria-label={`Go to slide ${i + 1}`}
                 onClick={() => setCurrent(i)}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  i === current ? "w-8 bg-brand" : "w-2 bg-white/50 hover:bg-white/75"
-                }`}
+                className={`h-2 rounded-full transition-all duration-300 ${i === current ? "w-8 bg-brand" : "w-2 bg-white/50 hover:bg-white/75"
+                  }`}
               />
             ))}
           </div>

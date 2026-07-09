@@ -173,7 +173,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                             emptyMessage="No description provided."
                         />
 
-                        <div className="space-y-6">
+                        <div className="space-y-6 lg:sticky lg:top-24 lg:self-start">
                             <DetailFactsSidebar facts={facts} />
                             <RelatedItemsList
                                 title="Other events"

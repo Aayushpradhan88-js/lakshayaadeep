@@ -27,9 +27,6 @@ type Blog = {
   slug?: string;
 };
 
-// ─── Categories for filter tabs ───────────────────────────────────────────────
-const CATEGORIES = ["All", "Health", "Education", "Nutrition", "Community"];
-
 // ─── Skeleton card ────────────────────────────────────────────────────────────
 const BlogSkeleton = () => (
   <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 animate-pulse">
@@ -125,9 +122,6 @@ const BlogCard = ({ blog }: { blog: Blog }) => {
 // ─── Main page ────────────────────────────────────────────────────────────────
 export default function BlogPage() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
-  const [filtered, setFiltered] = useState<Blog[]>([]);
-  const [activeCategory, setActiveCategory] = useState("All");
-  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -146,36 +140,12 @@ export default function BlogPage() {
         console.error(error);
       } else {
         setBlogs(data ?? []);
-        setFiltered(data ?? []);
       }
       setLoading(false);
     };
 
     fetchBlogs();
   }, []);
-
-  // Filter by category + search
-  useEffect(() => {
-    let result = blogs;
-
-    if (activeCategory !== "All") {
-      result = result.filter(
-        (b) => b.category?.toLowerCase() === activeCategory.toLowerCase()
-      );
-    }
-
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      result = result.filter(
-        (b) =>
-          b.title?.toLowerCase().includes(q) ||
-          b.content?.toLowerCase().includes(q) ||
-          b.author?.toLowerCase().includes(q)
-      );
-    }
-
-    setFiltered(result);
-  }, [activeCategory, search, blogs]);
 
   return (
 
@@ -186,47 +156,10 @@ export default function BlogPage() {
 
         <div className="max-w-5xl mx-auto px-4 py-8">
 
-          {/* ── Search + filter row ── */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-
-            {/* Category tabs */}
-            <div className="flex flex-wrap gap-2">
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`text-xs font-medium px-4 py-1.5 rounded-full border transition-all duration-200 ${activeCategory === cat
-                    ? "bg-teal-500 text-white border-teal-500"
-                    : "bg-white text-black border-gray-200 hover:border-teal-300 hover:text-teal-600"
-                    }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-
-            {/* Search input */}
-            <div className="relative w-full sm:w-56">
-              <svg
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-black"
-                fill="none" viewBox="0 0 24 24" stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <input
-                type="text"
-                placeholder="Search blogs..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-8 pr-3 py-1.5 text-xs rounded-full border border-gray-200 bg-white focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-100 transition"
-              />
-            </div>
-          </div>
-
           {/* ── Results count ── */}
           {!loading && (
             <p className="text-xs text-black mb-5">
-              {filtered.length} {filtered.length === 1 ? "post" : "posts"} found
+              {blogs.length} {blogs.length === 1 ? "post" : "posts"} found
             </p>
           )}
 
@@ -242,7 +175,7 @@ export default function BlogPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {[...Array(6)].map((_, i) => <BlogSkeleton key={i} />)}
             </div>
-          ) : filtered.length === 0 ? (
+          ) : blogs.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
               <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center mb-4">
                 <svg className="w-6 h-6 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -250,11 +183,10 @@ export default function BlogPage() {
                 </svg>
               </div>
               <p className="text-sm font-medium text-black">No posts found</p>
-              <p className="text-xs text-black mt-1">Try a different category or search term</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {filtered.map((blog) => (
+              {blogs.map((blog) => (
                 <BlogCard key={blog.id} blog={blog} />
               ))}
             </div>

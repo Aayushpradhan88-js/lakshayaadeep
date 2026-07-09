@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { getSupabaseClient } from "@/lib/supabase/supabase";
+import { FastLoading } from "@/components/shared-component/fast-loading";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 export interface DonationPayload {
@@ -47,8 +48,7 @@ function PaymentStep({
   if (submitted && isSubmitting) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500 mb-4"></div>
-        <p className="text-sm font-medium text-black">Processing your donation...</p>
+        <FastLoading size="lg" />
       </div>
     );
   }
@@ -155,7 +155,7 @@ function PaymentStep({
           disabled={!screenshot || isSubmitting}
           className="w-full rounded-xl bg-cyan-400 py-3.5 text-sm font-bold text-white shadow-lg shadow-cyan-100 transition hover:bg-cyan-500 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          {isSubmitting ? "Processing..." : "Confirm Payment"}
+          {isSubmitting ? <FastLoading size="sm" variant="light" /> : "Confirm Payment"}
         </button>
         <button
           onClick={onBack}
@@ -287,8 +287,7 @@ function DonateSection() {
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{
-              backgroundImage:
-                "url('https://images.unsplash.com/photo-1593113598332-cd288d649433?w=1400&q=80')",
+              backgroundImage: "url('/donation-img.jpg')",
             }}
           />
           <div className="absolute inset-0 bg-black/55" />

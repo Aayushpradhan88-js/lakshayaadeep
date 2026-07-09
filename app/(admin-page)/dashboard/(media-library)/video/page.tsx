@@ -30,6 +30,7 @@ import {
   DashboardTh,
 } from '@/components/shared-component/admin-dashboard-ui'
 import { useAdminFeedback } from '@/components/shared-component/admin-feedback'
+import { FastLoading } from '@/components/shared-component/fast-loading'
 
 interface HeroSettings {
   id: string
@@ -477,7 +478,7 @@ export default function HeroVideoManagementPage() {
                   disabled={isSubmitting || uploading !== null}
                   className="flex-1 rounded-2xl bg-emerald-600 py-4 text-sm font-bold text-white hover:bg-emerald-700 shadow-lg hover:shadow-emerald-200 transition-all disabled:opacity-50"
                 >
-                  {isSubmitting ? 'Saving Changes...' : 'Save Hero Settings'}
+                  {isSubmitting ? <FastLoading size="sm" variant="light" /> : 'Save Hero Settings'}
                 </button>
               </div>
             </form>

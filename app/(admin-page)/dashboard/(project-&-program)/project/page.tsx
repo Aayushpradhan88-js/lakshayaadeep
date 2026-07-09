@@ -14,43 +14,20 @@ import {
   FaCheckCircle,
 } from "react-icons/fa"
 import { getSupabaseClient } from "@/lib/supabase/supabase"
-import Link from "next/link"
 import { useAdminFeedback } from "@/components/shared-component/admin-feedback"
-
-interface Project {
-  id: string
-  project_title: string
-  title?: string
-  description: string
-  category: string
-  location: string
-  project_location?: {
-    province: string
-    district: string
-    municipality: string
-  }
-  start_date: string
-  end_date: string
-  target_budget: number
-  actual_budget: number
-  target_beneficiaries: number
-  project_organizer: string
-  cover_image_url: string
-  created_at: string
-  updated_at: string
-  status?: string
-}
+import { AdminDetailModal } from "@/components/shared-component/admin-detail-modal"
+import { ProjectCreateForm } from "@/components/shared-component/project-create-form"
+import { ProjectDetailEditModal, type ProjectRecord } from "@/components/shared-component/project-detail-edit-modal"
 
 export default function ProjectPage() {
-  const [projects, setProjects] = useState<Project[]>([])
+  const [projects, setProjects] = useState<ProjectRecord[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState<string>("all")
   const [categoryFilter, setCategoryFilter] = useState<string>("all")
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [selectedProject, setSelectedProject] = useState<ProjectRecord | null>(null)
   const [showDetailModal, setShowDetailModal] = useState(false)
-  const [projectImages, setProjectImages] = useState<string[]>([])
-  const [fetchingImages, setFetchingImages] = useState(false)
+  const [showCreateModal, setShowCreateModal] = useState(false)
   const { showToast, askConfirm } = useAdminFeedback()
 
   useEffect(() => {
@@ -158,25 +135,6 @@ export default function ProjectPage() {
     }
   }
 
-  const fetchProjectImages = async (projectId: string) => {
-    setFetchingImages(true)
-    try {
-      const supabase = getSupabaseClient()
-      const { data, error } = await supabase
-        .from('project_gallery')
-        .select('image_url')
-        .eq('project_id', projectId)
-
-      if (error) throw error
-      setProjectImages(data?.map(img => img.image_url) || [])
-    } catch (error) {
-      console.error('Error fetching project images:', error)
-      setProjectImages([])
-    } finally {
-      setFetchingImages(false)
-    }
-  }
-
   const categories = [...new Set(projects.map(project => project.category).filter(Boolean))]
 
   return (
@@ -189,9 +147,14 @@ export default function ProjectPage() {
             <p className="text-black">Manage and publish projects for your audience</p>
           </div>
           <div className="flex items-center space-x-3">
-            <button className="cursor-pointer bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-4 py-2 rounded-lg hover:from-emerald-600 hover:to-emerald-700 flex items-center gap-2 shadow-lg">
+            {/* Previous: <Link href="/dashboard/project/post"> redirected to a new page */}
+            <button
+              type="button"
+              onClick={() => setShowCreateModal(true)}
+              className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-gradient-to-r from-emerald-500 to-emerald-600 px-4 py-2 text-white shadow-lg hover:from-emerald-600 hover:to-emerald-700"
+            >
               <FaPlus className="h-4 w-4" />
-              <Link href="/dashboard/project/post">Create</Link>
+              Create
             </button>
           </div>
         </div>
@@ -367,7 +330,6 @@ export default function ProjectPage() {
                           onClick={() => {
                             setSelectedProject(project)
                             setShowDetailModal(true)
-                            fetchProjectImages(project.id)
                           }}
                           className="text-emerald-600 hover:text-emerald-800 text-sm font-medium flex items-center gap-1 px-2 py-1 rounded hover:bg-emerald-50 transition-colors"
                         >
@@ -402,113 +364,28 @@ export default function ProjectPage() {
         )}
       </div>
 
-      {/* Project Detail Modal */}
       {showDetailModal && selectedProject && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-2xl">
-            <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 px-6 py-4 rounded-t-2xl">
-              <div className="flex justify-between items-center">
-                <h2 className="text-xl font-bold text-white">Project Details</h2>
-                <button
-                  onClick={() => setShowDetailModal(false)}
-                  className="text-white/80 hover:text-white transition-colors"
-                >
-                  <div className="bg-white/20 p-1 rounded-lg">
-                    ×
-                  </div>
-                </button>
-              </div>
-            </div>
-
-            <div className="p-6 space-y-4">
-              <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-black uppercase tracking-wider">Title</label>
-                <h3 className="text-lg font-bold text-slate-900 mt-1">{selectedProject.title || selectedProject.project_title}</h3>
-              </div>
-
-              <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-black uppercase tracking-wider">Description</label>
-                <p className="text-slate-900 font-medium mt-1">{selectedProject.description || 'No description'}</p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Organizer</label>
-                  <p className="text-slate-900 font-medium mt-1">{selectedProject.project_organizer || 'N/A'}</p>
-                </div>
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Category</label>
-                  <p className="text-slate-900 font-medium mt-1">{selectedProject.category || 'N/A'}</p>
-                </div>
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Location</label>
-                  <p className="text-slate-900 font-medium mt-1">
-                    {selectedProject.project_location ? (
-                      `${selectedProject.project_location.municipality}, ${selectedProject.project_location.district}, ${selectedProject.project_location.province}`
-                    ) : selectedProject.location || 'N/A'}
-                  </p>
-                </div>
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Target Beneficiaries</label>
-                  <p className="text-slate-900 font-medium mt-1">{selectedProject.target_beneficiaries || 'N/A'}</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Start Date</label>
-                  <p className="text-slate-900 font-medium mt-1">
-                    {selectedProject.start_date ? new Date(selectedProject.start_date).toLocaleDateString() : 'N/A'}
-                  </p>
-                </div>
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-black uppercase tracking-wider">End Date</label>
-                  <p className="text-slate-900 font-medium mt-1">
-                    {selectedProject.end_date ? new Date(selectedProject.end_date).toLocaleDateString() : 'N/A'}
-                  </p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Target Budget</label>
-                  <p className="text-slate-900 font-medium mt-1">रू {selectedProject.target_budget || '0'}</p>
-                </div>
-                <div className="bg-slate-50 p-4 rounded-lg">
-                  <label className="text-xs font-semibold text-black uppercase tracking-wider">Actual Budget</label>
-                  <p className="text-slate-900 font-medium mt-1">रू {selectedProject.actual_budget || '0'}</p>
-                </div>
-              </div>
-
-              {/* Project Images Section */}
-              <div className="bg-slate-50 p-4 rounded-lg">
-                <label className="text-xs font-semibold text-black uppercase tracking-wider block mb-3">Project Images</label>
-                {fetchingImages ? (
-                  <div className="py-4 text-center text-slate-500 text-sm">Loading images...</div>
-                ) : projectImages.length > 0 ? (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    {projectImages.map((url, i) => (
-                      <div key={i} className="aspect-square rounded-lg overflow-hidden border border-slate-200">
-                        <img src={url} alt={`Project image ${i + 1}`} className="w-full h-full object-cover" />
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="py-4 text-center text-slate-500 text-sm bg-white/50 rounded-lg">No images found for this project</div>
-                )}
-              </div>
-
-              <div className="flex gap-3 pt-4">
-                <button
-                  onClick={() => setShowDetailModal(false)}
-                  className="flex-1 bg-slate-200 text-slate-800 px-4 py-3 rounded-lg hover:bg-slate-300 font-medium"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ProjectDetailEditModal
+          project={selectedProject}
+          onClose={() => setShowDetailModal(false)}
+          onSaved={(updated) => {
+            setProjects((prev) => prev.map((item) => (item.id === updated.id ? updated : item)))
+            setSelectedProject(updated)
+          }}
+          showToast={showToast}
+        />
+      )}
+      {showCreateModal && (
+        <AdminDetailModal title="Create Project" onClose={() => setShowCreateModal(false)} size="xl">
+          <ProjectCreateForm
+            onCancel={() => setShowCreateModal(false)}
+            showToast={showToast}
+            onSuccess={(project) => {
+              setProjects((prev) => [project, ...prev])
+              setShowCreateModal(false)
+            }}
+          />
+        </AdminDetailModal>
       )}
     </div>
   )

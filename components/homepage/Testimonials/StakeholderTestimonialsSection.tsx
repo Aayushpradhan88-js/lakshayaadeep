@@ -5,9 +5,10 @@ export default function StakeholderTestimonialsSection() {
   return (
     <TestimonialsCarousel
       id="testimonials"
+      variant="speakers"
+      overline="Voices from the field"
       title="Testimony from"
       titleAccent="Stakeholders"
-      subtitle="Community leaders, partners, and volunteers share how Lakshyadeep shows up in their lives."
       items={STAKEHOLDER_TESTIMONIALS}
     />
   )

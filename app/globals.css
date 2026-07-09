@@ -11,11 +11,11 @@
   --brand-primary: #fc8703;
   --brand-primary-hover: #e07802;
   --brand-primary-light: #fff5eb;
-  --brand-accent: #038ac3;
-  --brand-accent-hover: #0274ad;
-  --brand-accent-light: #e6f4fb;
+  --brand-accent: #3dbfd7;
+  --brand-accent-hover: #2eb0c8;
+  --brand-accent-light: #e8f9fc;
   --brand-dark: #0a2540;
-  --brand-header: #038ac3;
+  --brand-header: #3dbfd7;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -164,7 +164,7 @@
 }
 
 .aux-auth-card p a {
-  color: #0369a1;
+  color: #3dbfd7;
   font-weight: 600;
 }
 
@@ -260,7 +260,7 @@
   }
 
   .text-overline {
-    @apply text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground;
+    @apply text-xs font-semibold uppercase  text-muted-foreground;
   }
 
   .text-label {
