@@ -135,27 +135,28 @@ export default function TestimonialsCarousel({
       id={id}
       className={
         isSpeakers
-          ? "w-full bg-brand-dark px-4 py-20 md:px-8 md:py-28"
-          : "w-full bg-slate-50 px-4 py-20 md:px-8 md:py-28"
+          ? "w-full bg-brand-dark px-4 py-16 md:px-8 md:py-20"
+          : "w-full bg-slate-50 px-4 py-16 md:px-8 md:py-20"
       }
     >
       <div className="mx-auto max-w-7xl">
-        <div className="mb-14 text-center md:mb-16">
+        <div className={`text-center ${isSpeakers ? "mb-5 md:mb-6" : "mb-6 md:mb-8"}`}>
           {isSpeakers && (overline || subtitle) ? (
-            <p className="mb-3 text-sm font-semibold uppercase  text-brand md:text-base">
+            <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-brand md:text-base">
               {overline ?? subtitle}
             </p>
           ) : null}
           <h2
             className={
               isSpeakers
-                ? "text-3xl font-bold uppercase tracking-[0.12em] text-white sm:text-4xl md:text-5xl"
+                ? "text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl"
                 : "text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl"
             }
           >
             {isSpeakers ? (
               <>
-                {title} {titleAccent}
+                {/* {title} {titleAccent} */}
+                Testimony from Stakeholders
               </>
             ) : (
               <>
@@ -253,10 +254,10 @@ export default function TestimonialsCarousel({
               aria-label={`Go to slide ${i + 1}`}
               onClick={() => goToDot(i)}
               className={`h-2 rounded-full transition-all duration-300 ${i === activeDotClamped
-                  ? "w-8 bg-brand"
-                  : isSpeakers
-                    ? "w-2 bg-white/35 hover:bg-white/55"
-                    : "w-2 bg-gray-300 hover:bg-gray-400"
+                ? "w-8 bg-brand"
+                : isSpeakers
+                  ? "w-2 bg-white/35 hover:bg-white/55"
+                  : "w-2 bg-gray-300 hover:bg-gray-400"
                 }`}
             />
           ))}

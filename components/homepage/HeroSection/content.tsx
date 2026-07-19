@@ -216,7 +216,7 @@ export function VideoHeroSection() {
 
       <div className="relative z-10 mx-auto flex h-full max-w-5xl flex-col items-center justify-end px-4 pb-20 pt-20 text-center sm:px-6 sm:pb-24 sm:pt-24">
         <h1
-          className={`${bodyFont.className} max-w-4xl text-3xl font-bold uppercase leading-tight tracking-[0.12em] text-white sm:text-5xl md:text-6xl lg:text-7xl`}
+          className={`${bodyFont.className} max-w-4xl text-3xl font-bold uppercase leading-tight  text-white sm:text-5xl md:text-6xl lg:text-7xl`}
         >
           {title}
         </h1>

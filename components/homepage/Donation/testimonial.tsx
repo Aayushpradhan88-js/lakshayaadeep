@@ -108,10 +108,10 @@ export default function DonorTestimonialsSection() {
                 <p className="font-serif text-base leading-relaxed text-gray-900 md:text-lg lg:text-xl">
                   &ldquo;{active.quote}&rdquo;
                 </p>
-                <p className="mt-8 text-sm font-bold uppercase tracking-[0.12em] text-brand md:text-base">
+                <p className="mt-8 text-sm font-bold uppercase  text-brand md:text-base">
                   {active.name}
                 </p>
-                <p className="mt-2 text-sm font-bold uppercase tracking-[0.12em] text-brand-dark md:text-base">
+                <p className="mt-2 text-sm font-bold uppercase  text-brand-dark md:text-base">
                   {active.role}
                 </p>
               </div>

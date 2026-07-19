@@ -78,48 +78,39 @@ async function filterAccessibleImages(images: GalleryCandidate[]): Promise<Galle
   }))
 }
 
+async function fetchGallerySource(
+  table: "project_gallery" | "event_gallery",
+  prefix: "project" | "event",
+  alt: string
+): Promise<GalleryCandidate[]> {
+  const supabase = getSupabaseClient()
+  const { data, error } = await supabase
+    .from(table)
+    .select("id, image_url, created_at")
+    .order("created_at", { ascending: false })
+
+  if (error) throw error
+
+  return ((data as GalleryRow[] | null) ?? []).map((item) => ({
+    id: `${prefix}-${item.id}`,
+    url: item.image_url,
+    alt,
+    created_at: item.created_at,
+  }))
+}
+
 export async function fetchProgramGalleryImages(
   options: FetchProgramGalleryOptions = {}
 ): Promise<GalleryImage[]> {
   const { limit, source = "all" } = options
-  const supabase = getSupabaseClient()
-
   const requests: Promise<GalleryCandidate[]>[] = []
 
   if (source === "all" || source === "project") {
-    requests.push(
-      supabase
-        .from("project_gallery")
-        .select("id, image_url, created_at")
-        .order("created_at", { ascending: false })
-        .then(({ data, error }) => {
-          if (error) throw error
-          return (data as GalleryRow[] | null)?.map((item) => ({
-            id: `project-${item.id}`,
-            url: item.image_url,
-            alt: "Project gallery image",
-            created_at: item.created_at,
-          })) ?? []
-        })
-    )
+    requests.push(fetchGallerySource("project_gallery", "project", "Project gallery image"))
   }
 
   if (source === "all" || source === "event") {
-    requests.push(
-      supabase
-        .from("event_gallery")
-        .select("id, image_url, created_at")
-        .order("created_at", { ascending: false })
-        .then(({ data, error }) => {
-          if (error) throw error
-          return (data as GalleryRow[] | null)?.map((item) => ({
-            id: `event-${item.id}`,
-            url: item.image_url,
-            alt: "Event gallery image",
-            created_at: item.created_at,
-          })) ?? []
-        })
-    )
+    requests.push(fetchGallerySource("event_gallery", "event", "Event gallery image"))
   }
 
   const results = await Promise.all(requests)
