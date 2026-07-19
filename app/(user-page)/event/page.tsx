@@ -7,7 +7,7 @@ import Header from "@/components/homepage/Header/header";
 import PageImageHeroSection from "@/components/shared-component/page-image-hero-section";
 import { PAGE_HERO_CONTENT } from "@/components/shared-component/page-hero-content";
 import UpcomingEvents from "@/components/homepage/Event/UpCommingEvents";
-import OngoingEvents from "@/components/homepage/Event/Events";
+// import OngoingEvents from "@/components/homepage/Event/Events";
 import CompletedEvents from "@/components/homepage/Event/CompletedEvents";
 import TestimonialsCarousel from "@/components/shared-component/testimonials-carousel";
 import ProgramGallerySection, { type GalleryImage } from "@/components/shared-component/program-gallery-section";
@@ -41,7 +41,7 @@ export default function EventsPage() {
         <PageImageHeroSection {...PAGE_HERO_CONTENT.events} />
 
         <div className="mx-auto max-w-7xl space-y-20 px-4 py-12 sm:px-6 md:space-y-24 md:py-16 lg:px-8">
-          <OngoingEvents />
+          {/* <OngoingEvents /> */}
           <UpcomingEvents />
           <CompletedEvents />
         </div>

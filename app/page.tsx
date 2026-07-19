@@ -16,7 +16,7 @@ import OngoingProjects from "@/components/homepage/Project/Project"
 import UpcomingProjects from "@/components/homepage/Project/UpCommingProjects"
 import OngoingEvents from "@/components/homepage/Event/Events"
 import UpcomingEvents from "@/components/homepage/Event/UpCommingEvents"
-import ProjectLogosSection from "@/components/homepage/Partners/ProjectLogosSection"
+// import ProjectLogosSection from "@/components/homepage/Partners/ProjectLogosSection"
 
 export default function Home() {
   return (
@@ -61,9 +61,9 @@ export default function Home() {
         <SupportingInstitutionsSection />
       </div>
 
-      <div className="animate-reveal-up">
+      {/* <div className="animate-reveal-up">
         <ProjectLogosSection />
-      </div>
+      </div> */}
 
       {/* <section className="animate-reveal-up bg-gradient-to-b from-white to-slate-50/50 py-20">
         <div className="mx-auto max-w-6xl px-4">

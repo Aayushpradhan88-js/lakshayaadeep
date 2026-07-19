@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/supabase";
 import { FastLoading } from "@/components/shared-component/fast-loading";
+import { BrandLogo } from "@/components/shared-component/brand-logo";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -45,10 +46,11 @@ export default function ForgotPasswordPage() {
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-100 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <img
-            src="/logo.png"
-            alt="Lakshyadeep Logo"
-            className="mx-auto h-16 w-auto max-w-xs"
+          <BrandLogo
+            href="/"
+            priority
+            className="mx-auto"
+            imageClassName="h-16 w-auto max-w-xs"
           />
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
             Forgot your password?

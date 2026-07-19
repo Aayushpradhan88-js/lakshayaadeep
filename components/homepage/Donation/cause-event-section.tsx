@@ -117,6 +117,7 @@ export default function CauseEventsSection() {
                       alt={event.event_title}
                       fill
                       style={{ objectFit: "cover", objectPosition: "center" }}
+                      sizes="280px"
                       unoptimized
                     />
                   ) : (

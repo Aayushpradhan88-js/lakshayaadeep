@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import { getSupabaseClient } from "@/lib/supabase/supabase"
 import { bodyFont } from "@/lib/site-fonts"
 
@@ -14,11 +15,11 @@ type HeroSlide = {
   auto_slide_duration?: number | null
 }
 
-const DEFAULT_SLIDE_DURATION_SEC = 4
+const DEFAULT_SLIDE_DURATION_SEC = 7
 
 const FALLBACK_SLIDES: HeroSlide[] = [
-  { id: "fallback-1", image_url: "/hero.jpg" },
-  { id: "fallback-2", image_url: "/ourteam.jpg" },
+  { id: "fallback-1", image_url: "/banner/About/about-img.jpg" },
+  { id: "fallback-2", image_url: "/banner/Our-team/main.jpg" },
 ]
 
 const DEFAULT_TITLE = "LAKSHYADEEP"
@@ -34,7 +35,7 @@ function HeroImage({ src, alt, active }: { src: string; alt: string; active: boo
         fill
         priority={active}
         sizes="100vw"
-        className={`object-cover object-center transition-opacity duration-700 ${active ? "opacity-100" : "opacity-0"}`}
+        className={`object-cover object-center transition-opacity duration-[1200ms] ease-in-out ${active ? "opacity-100" : "opacity-0"}`}
       />
     )
   }
@@ -44,7 +45,7 @@ function HeroImage({ src, alt, active }: { src: string; alt: string; active: boo
     <img
       src={src}
       alt={alt}
-      className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-700 ${active ? "opacity-100" : "opacity-0"}`}
+      className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-[1200ms] ease-in-out ${active ? "opacity-100" : "opacity-0"}`}
     />
   )
 }
@@ -158,6 +159,10 @@ export function VideoHeroSection() {
     setCurrent((c) => (c + 1) % slides.length)
   }, [slides.length])
 
+  const goPrev = useCallback(() => {
+    setCurrent((c) => (c - 1 + slides.length) % slides.length)
+  }, [slides.length])
+
   useEffect(() => {
     if (slides.length <= 1) return
     const durationSec = slides[current]?.auto_slide_duration ?? DEFAULT_SLIDE_DURATION_SEC
@@ -166,11 +171,12 @@ export function VideoHeroSection() {
   }, [current, slides, advance])
 
   const slideTitle = slides[current]?.title
+  const showNav = slides.length > 1
 
   return (
     <section
       id="hero"
-      className="hero-bottom-angle relative h-[100dvh] min-h-[600px] w-full overflow-hidden bg-black"
+      className="relative h-[100dvh] min-h-[600px] w-full overflow-hidden bg-black"
       aria-label="Homepage hero"
     >
       <div className="absolute inset-0">
@@ -187,7 +193,28 @@ export function VideoHeroSection() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/35 to-black/55" aria-hidden />
       </div>
 
-      <div className="relative z-10 mx-auto flex h-full max-w-5xl flex-col items-center justify-end px-4 pb-[14vh] pt-20 text-center sm:px-6 sm:pb-[16vh] sm:pt-24">
+      {showNav ? (
+        <>
+          <button
+            type="button"
+            aria-label="Previous slide"
+            onClick={goPrev}
+            className="absolute left-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-brand-accent shadow-lg transition hover:bg-white/95 sm:left-6 sm:h-12 sm:w-12 md:left-8 md:h-14 md:w-14"
+          >
+            <ChevronLeft className="h-7 w-7 stroke-[2.5] sm:h-8 sm:w-8 md:h-10 md:w-10" />
+          </button>
+          <button
+            type="button"
+            aria-label="Next slide"
+            onClick={advance}
+            className="absolute right-3 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-brand-accent shadow-lg transition hover:bg-white/95 sm:right-6 sm:h-12 sm:w-12 md:right-8 md:h-14 md:w-14"
+          >
+            <ChevronRight className="h-7 w-7 stroke-[2.5] sm:h-8 sm:w-8 md:h-10 md:w-10" />
+          </button>
+        </>
+      ) : null}
+
+      <div className="relative z-10 mx-auto flex h-full max-w-5xl flex-col items-center justify-end px-4 pb-20 pt-20 text-center sm:px-6 sm:pb-24 sm:pt-24">
         <h1
           className={`${bodyFont.className} max-w-4xl text-3xl font-bold uppercase leading-tight tracking-[0.12em] text-white sm:text-5xl md:text-6xl lg:text-7xl`}
         >
@@ -215,15 +242,15 @@ export function VideoHeroSection() {
           </Link>
         </div>
 
-        {slides.length > 1 && (
-          <div className="absolute bottom-[8vh] left-0 right-0 flex justify-center gap-2 sm:bottom-[7vh]">
+        {showNav && (
+          <div className="mt-10 flex justify-center gap-2">
             {slides.map((s, i) => (
               <button
                 key={s.id}
                 type="button"
                 aria-label={`Go to slide ${i + 1}`}
                 onClick={() => setCurrent(i)}
-                className={`h-2 rounded-full transition-all duration-300 ${i === current ? "w-8 bg-brand" : "w-2 bg-white/50 hover:bg-white/75"
+                className={`h-2 rounded-full transition-all duration-500 ease-in-out ${i === current ? "w-8 bg-brand" : "w-2 bg-white/50 hover:bg-white/75"
                   }`}
               />
             ))}

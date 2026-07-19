@@ -289,7 +289,14 @@ export function EventDetailEditModal({ event, onClose, onSaved, showToast }: Eve
         </label>
         {coverUrl ? (
           <div className="relative mb-2 h-32 w-full overflow-hidden rounded-lg border border-slate-200">
-            <Image src={coverUrl} alt="Cover" fill className="object-cover" unoptimized />
+            <Image
+              src={coverUrl}
+              alt="Cover"
+              fill
+              className="object-cover"
+              sizes="100vw"
+              unoptimized
+            />
           </div>
         ) : (
           <p className="mb-2 text-xs text-slate-500">No cover image</p>
@@ -413,7 +420,14 @@ export function EventDetailEditModal({ event, onClose, onSaved, showToast }: Eve
               <div className="mb-2 grid grid-cols-4 gap-1.5">
                 {visibleGallery.map((item) => (
                   <div key={item.id} className="group relative aspect-square overflow-hidden rounded-md border border-slate-200">
-                    <Image src={item.image_url} alt="Gallery" fill className="object-cover" unoptimized />
+                    <Image
+                      src={item.image_url}
+                      alt="Gallery"
+                      fill
+                      className="object-cover"
+                      sizes="25vw"
+                      unoptimized
+                    />
                     <button
                       type="button"
                       onClick={() => removeExistingGalleryImage(item.id)}

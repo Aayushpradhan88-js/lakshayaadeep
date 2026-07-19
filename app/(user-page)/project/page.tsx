@@ -8,7 +8,7 @@ import PageImageHeroSection from "@/components/shared-component/page-image-hero-
 import { PAGE_HERO_CONTENT } from "@/components/shared-component/page-hero-content";
 import UpcomingProjects from "@/components/homepage/Project/UpCommingProjects";
 import CompletedProjects from "@/components/homepage/Project/CompletedProjects";
-import OngoingProjects from "@/components/homepage/Project/Project";
+// import OngoingProjects from "@/components/homepage/Project/Project";
 import TestimonialsCarousel from "@/components/shared-component/testimonials-carousel";
 import ProgramGallerySection, { type GalleryImage } from "@/components/shared-component/program-gallery-section";
 import { PROJECT_TESTIMONIALS } from "@/components/homepage/programs-content";
@@ -41,7 +41,7 @@ export default function ProjectPage() {
         <PageImageHeroSection {...PAGE_HERO_CONTENT.projects} />
 
         <div className="mx-auto max-w-7xl space-y-20 px-4 py-12 sm:px-6 md:space-y-24 md:py-16 lg:px-8">
-          <OngoingProjects />
+          {/* <OngoingProjects /> */}
           <UpcomingProjects />
           <CompletedProjects />
         </div>

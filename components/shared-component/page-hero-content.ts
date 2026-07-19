@@ -18,7 +18,7 @@ export type PageHeroContent = {
 
 export const PAGE_HERO_CONTENT = {
   about: {
-    images: ["/team3.jpg"],
+    images: ["/banner/About/about-img.jpg"],
     titlePrefix: "About ",
     titleAccent: "Lakshyadeep",
     headlineAccent: "We Are Here",

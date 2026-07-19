@@ -12,6 +12,10 @@ export default function GallerySection() {
   const [images, setImages] = useState<GalleryImage[]>([])
   const [loading, setLoading] = useState(true)
 
+  const handleImageError = (id: string) => {
+    setImages((current) => current.filter((img) => img.id !== id))
+  }
+
   useEffect(() => {
     const loadGallery = async () => {
       try {
@@ -52,6 +56,7 @@ export default function GallerySection() {
                 fill
                 sizes="(max-width: 768px) 50vw, 25vw"
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
+                onError={() => handleImageError(img.id)}
               />
             </div>
           ))}

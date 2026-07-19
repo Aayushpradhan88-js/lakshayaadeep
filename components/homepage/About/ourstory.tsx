@@ -84,17 +84,41 @@ function OurStorySection() {
 
         <div className="grid grid-cols-2 grid-rows-2 gap-3">
           <div className="relative row-span-2 min-h-[280px] overflow-hidden rounded-2xl">
-            <Image src={photos[0].src} alt={photos[0].alt} fill className="object-cover" />
+            <Image
+              src={photos[0].src}
+              alt={photos[0].alt}
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 50vw, 25vw"
+            />
           </div>
           <div className="relative h-[134px] overflow-hidden rounded-2xl">
-            <Image src={photos[1].src} alt={photos[1].alt} fill className="object-cover" />
+            <Image
+              src={photos[1].src}
+              alt={photos[1].alt}
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 50vw, 25vw"
+            />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="relative h-[134px] overflow-hidden rounded-2xl">
-              <Image src={photos[2].src} alt={photos[2].alt} fill className="object-cover" />
+              <Image
+                src={photos[2].src}
+                alt={photos[2].alt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 25vw, 12vw"
+              />
             </div>
             <div className="relative h-[134px] overflow-hidden rounded-2xl">
-              <Image src={photos[3].src} alt={photos[3].alt} fill className="object-cover" />
+              <Image
+                src={photos[3].src}
+                alt={photos[3].alt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 25vw, 12vw"
+              />
             </div>
           </div>
         </div>

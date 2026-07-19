@@ -122,3 +122,11 @@ cd lakshaydeep
 npm install
 npm run dev
 ```
+
+
+
+Colors
+
+BUTTON / PRIMARY - #fa8e05
+HEADER / ACCENT BLUE - #3dbfd7
+DARK BLUE (hover) - #038ac3

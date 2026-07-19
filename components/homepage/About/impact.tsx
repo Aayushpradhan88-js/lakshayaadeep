@@ -69,6 +69,7 @@ function OurImpactSection() {
             alt="Community impact"
             fill
             className="object-cover object-center"
+            sizes="(max-width: 1024px) 100vw, 33vw"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
           <div className="absolute bottom-0 left-0 p-6 text-white">
@@ -85,7 +86,13 @@ function OurImpactSection() {
               className="overflow-hidden rounded-2xl border border-gray-100 bg-gray-50 shadow-sm"
             >
               <div className="relative h-32 w-full">
-                <Image src={item.image} alt={item.label} fill className="object-cover object-center" />
+                <Image
+                  src={item.image}
+                  alt={item.label}
+                  fill
+                  className="object-cover object-center"
+                  sizes="(max-width: 1024px) 100vw, 33vw"
+                />
                 <span className="absolute left-3 top-3 rounded-full bg-white/95 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-gray-700 shadow-sm">
                   {item.tag}
                 </span>

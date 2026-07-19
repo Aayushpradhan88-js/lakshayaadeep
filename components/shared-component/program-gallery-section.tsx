@@ -38,10 +38,20 @@ export default function ProgramGallerySection({
 }: ProgramGallerySectionProps) {
   const [activeImage, setActiveImage] = useState<GalleryImage | null>(null)
   const [mounted, setMounted] = useState(false)
+  const [visibleImages, setVisibleImages] = useState<GalleryImage[]>(images)
+
+  useEffect(() => {
+    setVisibleImages(images)
+  }, [images])
 
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  const handleImageError = (id: string) => {
+    setVisibleImages((current) => current.filter((img) => img.id !== id))
+    setActiveImage((current) => (current?.id === id ? null : current))
+  }
 
   useEffect(() => {
     if (!activeImage) return
@@ -83,13 +93,13 @@ export default function ProgramGallerySection({
           <div className="flex h-64 items-center justify-center">
             <FastLoading size="md" />
           </div>
-        ) : images.length === 0 ? (
+        ) : visibleImages.length === 0 ? (
           <div className="rounded-2xl border border-gray-100 bg-slate-50 px-6 py-16 text-center text-black">
             {emptyMessage}
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {images.map((img) => (
+            {visibleImages.map((img) => (
               <button
                 key={img.id}
                 type="button"
@@ -102,6 +112,7 @@ export default function ProgramGallerySection({
                   fill
                   sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
                   className="object-cover transition duration-500 group-hover:scale-105"
+                  onError={() => handleImageError(img.id)}
                 />
                 <div className="absolute inset-0 bg-black/0 transition group-hover:bg-black/10" />
               </button>
@@ -109,7 +120,7 @@ export default function ProgramGallerySection({
           </div>
         )}
 
-        {viewAllHref && images.length > 0 ? (
+        {viewAllHref && visibleImages.length > 0 ? (
           <div className="mt-10 text-center">
             <Link
               href={viewAllHref}
@@ -147,6 +158,7 @@ export default function ProgramGallerySection({
                     className="object-contain"
                     sizes="100vw"
                     draggable={false}
+                    onError={() => handleImageError(activeImage.id)}
                   />
                 </div>
               </div>

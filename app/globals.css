@@ -8,11 +8,11 @@
   --device-shell-width: 100%;
   --device-shell-min-height: 100dvh;
   /* Lakshyadeep brand palette */
-  --brand-primary: #fc8703;
-  --brand-primary-hover: #e07802;
+  --brand-primary: #fa8e05;
+  --brand-primary-hover: #e07f04;
   --brand-primary-light: #fff5eb;
   --brand-accent: #3dbfd7;
-  --brand-accent-hover: #2eb0c8;
+  --brand-accent-hover: #038ac3;
   --brand-accent-light: #e8f9fc;
   --brand-dark: #0a2540;
   --brand-header: #3dbfd7;
@@ -281,17 +281,6 @@
   .animate-reveal-up {
     opacity: 0;
     animation: reveal-up 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-  }
-
-  /* NEO-style inverted V — sides sit higher, center dips into white section below */
-  .hero-bottom-angle {
-    clip-path: polygon(0 0, 100% 0, 100% 90%, 50% 100%, 0 90%);
-  }
-
-  @media (min-width: 768px) {
-    .hero-bottom-angle {
-      clip-path: polygon(0 0, 100% 0, 100% 88%, 50% 100%, 0 88%);
-    }
   }
 
   .animate-delay-100 {

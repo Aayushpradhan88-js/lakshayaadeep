@@ -12,7 +12,7 @@ export default function ImpactStatsSection() {
     <section id="impact" className="relative w-full min-h-[85vh] overflow-hidden bg-black">
       <div className="absolute inset-0">
         <Image
-          src="/lakshaydeepimg1.jpeg"
+          src="/banner/About/about-img.jpg"
           alt="Community background"
           fill
           className="object-cover object-center"

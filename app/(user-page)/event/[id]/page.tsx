@@ -153,6 +153,8 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                             alt={event.event_title}
                             fill
                             className="object-cover"
+                            sizes="100vw"
+                            priority
                         />
                     ) : (
                         <div className="absolute inset-0 flex items-center justify-center bg-slate-100 text-slate-400">

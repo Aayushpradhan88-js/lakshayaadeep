@@ -17,7 +17,7 @@ const VolunteerHero = () => {
                     {/* Left Image */}
                     <div className="relative">
                         <Image
-                            src="/images/volunteer-hero.jpg"
+                            src="/banner/Our-team/main.jpg"
                             alt="Volunteers working together"
                             width={600}
                             height={400}

@@ -22,7 +22,7 @@ const FALLBACK: CarouselSlide = {
   title: "Together We Build ",
   subtitle:
     "Lakshyadeep exists to uplift humanity through education, compassion, and action—one community, one project, one life at a time.",
-  image_url: "/hero.jpg",
+  image_url: "/banner/About/about-img.jpg",
   display_order: 1,
   auto_slide_duration: 5,
 };

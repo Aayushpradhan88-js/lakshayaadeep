@@ -27,7 +27,7 @@ const testimonials = [
       "What impressed me most was seeing the impact firsthand. After contributing to their education initiative, I visited the school and met students who now have desks, books, and a brighter future. Lakshyadeep doesn't just ask for support — they show you the change.",
     name: "Rajesh Karki",
     role: "School Coordinator & Donor",
-    image: "/forest.jpg",
+    image: "/banner/project/project-card.jpg",
   },
   {
     id: 4,
@@ -35,7 +35,7 @@ const testimonials = [
       "Their reforestation project transformed barren land in our ward into a green belt. As a donor, I received regular updates and was invited to the plantation drive. It felt like being part of something bigger than a transaction — a real community movement.",
     name: "Sunita Sharma",
     role: "Community Leader, Sunsari",
-    image: "/mountain.jpg",
+    image: "/banner/About/about-img.jpg",
   },
 ];
 

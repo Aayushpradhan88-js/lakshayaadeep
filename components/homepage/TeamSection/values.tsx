@@ -69,18 +69,20 @@ export default function ValuesSection() {
           <div className="mt-10 flex gap-4">
             <div className="relative h-52 w-1/2 overflow-hidden rounded-2xl">
               <Image
-                src="/ourteams.png"
+                src="/banner/Our-team/main.jpg"
                 alt="Team working"
                 fill
                 className="object-cover object-center"
+                sizes="(min-width: 768px) 25vw, 50vw"
               />
             </div>
             <div className="relative h-52 w-1/2 overflow-hidden rounded-2xl">
               <Image
-                src="/team3.jpg"
+                src="/banner/About/about-img.jpg"
                 alt="Team together"
                 fill
                 className="object-cover object-center"
+                sizes="(min-width: 768px) 25vw, 50vw"
               />
             </div>
           </div>

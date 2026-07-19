@@ -47,7 +47,7 @@ const MissionSection = () => {
                     {/* Right: Image */}
                     <div className="relative">
                         <img
-                            src="/ourteam.jpg"
+                            src="/banner/Our-team/main.jpg"
                             alt="Mission Team"
                             width={600}
                             height={400}

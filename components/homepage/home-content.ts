@@ -22,7 +22,7 @@ export const THEMATIC_AREAS = [
     title: "Environment & Reforestation",
     // description:
       // "Tree plantation drives, clean-up campaigns, and ecosystem restoration across communities in Nepal.",
-    image: "/lakshaydeepimg1.jpeg",
+    image: "/banner/project/project-img.JPG",
     link: "/project",
     priority: true,
   },
@@ -31,7 +31,7 @@ export const THEMATIC_AREAS = [
     title: "Education & Youth",
     // description:
       // "Scholarships, school support, and workshops that equip young people with skills for a sustainable future.",
-    image: "/team3.jpg",
+    image: "/banner/Our-team/main.jpg",
     link: "/event",
     priority: true,
   },
@@ -40,7 +40,7 @@ export const THEMATIC_AREAS = [
     title: "Community Development",
     // description:
       // "Local partnerships, volunteer mobilization, and grassroots programs that build long-term resilience.",
-    image: "/lakshaydeepimg2.jpeg",
+    image: "/banner/event/event-img.jpg",
     link: "/project",
     priority: true,
   },
@@ -69,7 +69,7 @@ export const STAKEHOLDER_TESTIMONIALS = [
       "Lakshyadeep's tree plantation program brought our ward together. Volunteers, schools, and local leaders worked side by side — the impact is visible every season.",
     name: "Sunita Sharma",
     role: "Community Leader, Sunsari",
-    image: "/mountain.jpg",
+    image: "/banner/About/about-img.jpg",
   },
   {
     id: 2,
@@ -77,7 +77,7 @@ export const STAKEHOLDER_TESTIMONIALS = [
       "As a partner school, we have seen how their education initiatives create real opportunity. Students receive support, mentorship, and a clearer path forward.",
     name: "Rajesh Karki",
     role: "School Coordinator",
-    image: "/forest.jpg",
+    image: "/banner/project/project-card.jpg",
   },
   {
     id: 3,
@@ -85,7 +85,7 @@ export const STAKEHOLDER_TESTIMONIALS = [
       "Their transparency and local-first approach made collaboration easy. We trust Lakshyadeep to deliver programs that communities actually need.",
     name: "Ankita Shrestha",
     role: "Volunteer & Donor",
-    image: "/mountain.jpg",
+    image: "/banner/event/event-card.jpg",
   },
   {
     id: 4,
@@ -93,7 +93,7 @@ export const STAKEHOLDER_TESTIMONIALS = [
       "The health camp organized in our village reached families who had never seen a doctor. Lakshyadeep listens first and delivers what people actually need.",
     name: "Bikash Rai",
     role: "Ward Representative, Morang",
-    image: "/ourteam.jpg",
+    image: "/banner/Our-team/main.jpg",
   },
   {
     id: 5,
@@ -101,7 +101,7 @@ export const STAKEHOLDER_TESTIMONIALS = [
       "Our students received scholarships and mentorship that changed their outlook on education. Lakshyadeep invests in young people with genuine care.",
     name: "Priya Gurung",
     role: "Principal, Partner School",
-    image: "/team3.jpg",
+    image: "/banner/blog/blog-img.jpg",
   },
   {
     id: 6,
@@ -109,7 +109,7 @@ export const STAKEHOLDER_TESTIMONIALS = [
       "From tree plantation to community clean-up drives, every initiative brings neighbors together. The impact stays long after the event ends.",
     name: "Deepak Thapa",
     role: "Local Volunteer Coordinator",
-    image: "/forest.jpg",
+    image: "/banner/article/article-img.jpg",
   },
 ] as const
 

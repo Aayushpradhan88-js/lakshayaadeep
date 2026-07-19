@@ -6,14 +6,14 @@ const CARDS = [
         description:
             "Health camps, workshops, fundraising galas, and community gatherings — see what's happening and how to get involved.",
         linkHref: "event",
-        linkImage: "/mountain.jpg",
+        linkImage: "/banner/event/event-img.jpg",
     },
     {
         title: "Our Projects",
         description:
             "Schools, clean water systems, health clinics — explore our signature projects transforming communities worldwide.",
         linkHref: "project",
-        linkImage: "/forest.jpg",
+        linkImage: "/banner/project/project-img.JPG",
     },
 ];
 

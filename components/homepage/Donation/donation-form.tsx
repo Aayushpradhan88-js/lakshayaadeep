@@ -176,7 +176,7 @@ const CATEGORIES = ["Education", "Clean Water", "Healthcare", "Where Needed Most
 
 // ─── Main Donate Section ──────────────────────────────────────────────────────
 function DonateSection() {
-  const [frequency, setFrequency] = useState<"once" | "monthly">("once");
+  const frequency = "once" as const;
   const [selectedAmount, setSelectedAmount] = useState<number | null>(2500);
   const [customAmount, setCustomAmount] = useState("");
   const [category, setCategory] = useState("Education");
@@ -335,22 +335,6 @@ function DonateSection() {
               ) : null}
               {step === "form" ? (
                 <div className="animate-in fade-in slide-in-from-left-4 duration-300">
-                  {/* Tabs */}
-                  <div className="mb-6 flex overflow-hidden rounded-2xl bg-gray-100 p-1">
-                    {(["once", "monthly"] as const).map((f) => (
-                      <button
-                        key={f}
-                        onClick={() => setFrequency(f)}
-                        className={`flex-1 py-2.5 text-sm font-bold rounded-xl transition cursor-pointer ${frequency === f
-                          ? "bg-white text-orange-600 shadow-sm"
-                          : "text-black hover:text-gray-700"
-                          }`}
-                      >
-                        Give {f === "once" ? "Once" : "Monthly"}
-                      </button>
-                    ))}
-                  </div>
-
                   <div className="space-y-5">
                     {/* Amount */}
                     <div>

@@ -215,7 +215,13 @@ export default function TestimonialsCarousel({
                       </p>
                       <div className="mt-8 flex items-center gap-4 border-t border-gray-100 pt-6">
                         <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full ring-2 ring-brand-light md:h-20 md:w-20">
-                          <Image src={item.image} alt={item.name} fill className="object-cover" />
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            fill
+                            className="object-cover"
+                            sizes="80px"
+                          />
                         </div>
                         <div>
                           <p className="text-base font-bold text-gray-900 md:text-lg">{item.name}</p>

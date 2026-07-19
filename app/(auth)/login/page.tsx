@@ -6,6 +6,7 @@ import Link from "next/link"
 import { isAdminEmail } from "@/features/auth/lib/seed-admin"
 import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/supabase"
 import { FiEye, FiEyeOff, FiArrowLeft, FiMail, FiLock } from "react-icons/fi"
+import { BrandLogo } from "@/components/shared-component/brand-logo"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -61,7 +62,7 @@ export default function LoginPage() {
       {/* ── Left panel (decorative) ── */}
       <div
         className="hidden lg:flex lg:w-1/2 flex-col items-center justify-center relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg, #fc8703 0%, #f59e0b 100%)" }}
+        style={{ background: "linear-gradient(135deg, #3dbfd7 0%, #038ac3 100%)" }}
       >
         <style>{`
           @keyframes slideUp {
@@ -87,10 +88,11 @@ export default function LoginPage() {
 
         {/* Logo + tagline */}
         <div className="relative z-10 text-center px-12">
-          <img
-            src="/logo.png"
-            alt="Lakshyadeep Logo"
-            className="mx-auto h-20 w-auto mb-6 drop-shadow-lg slide-up delay-100"
+          <BrandLogo
+            href={null}
+            priority
+            className="mx-auto mb-6 slide-up delay-100"
+            imageClassName="h-20 w-auto max-w-[220px] drop-shadow-lg rounded-xl bg-white/95 p-2"
           />
           <h1 className="text-4xl font-extrabold text-white leading-tight mb-4 slide-up delay-200">
             Lakshyadeep
@@ -135,7 +137,7 @@ export default function LoginPage() {
           <div className="mb-8">
             <h2 className="text-3xl font-extrabold text-gray-900">Enter Your Admin Credentials</h2>
             {/* <p className="mt-2 text-sm text-black">Welcome back — enter your credentials below.</p>
-            <div className="mt-3 h-1 w-12 rounded-full" style={{ backgroundColor: "#fc8703" }} /> */}
+            <div className="mt-3 h-1 w-12 rounded-full" style={{ backgroundColor: "#3dbfd7" }} /> */}
           </div>
 
           {/* Card */}
@@ -168,7 +170,7 @@ export default function LoginPage() {
                     value={formData.email}
                     onChange={handleInputChange}
                     placeholder="Enter your email address"
-                    className="w-full pl-9 pr-4 py-3 border border-gray-200 rounded-xl text-sm placeholder-gray-400 outline-none focus:border-brand focus:ring-2 focus:ring-orange-100 transition"
+                    className="w-full pl-9 pr-4 py-3 border border-gray-200 rounded-xl text-sm placeholder-gray-400 outline-none focus:border-brand focus:ring-2 focus:ring-brand-light transition"
                   />
                 </div>
               </div>
@@ -192,7 +194,7 @@ export default function LoginPage() {
                     value={formData.password}
                     onChange={handleInputChange}
                     placeholder="Enter your password"
-                    className="w-full pl-9 pr-10 py-3 border border-gray-200 rounded-xl text-sm placeholder-gray-400 outline-none focus:border-brand focus:ring-2 focus:ring-orange-100 transition"
+                    className="w-full pl-9 pr-10 py-3 border border-gray-200 rounded-xl text-sm placeholder-gray-400 outline-none focus:border-brand focus:ring-2 focus:ring-brand-light transition"
                   />
                   <button
                     type="button"
@@ -220,7 +222,7 @@ export default function LoginPage() {
                 </label>
                 <Link
                   href="/forgot-password"
-                  className="text-sm font-semibold text-brand hover:text-orange-600 transition-colors"
+                  className="text-sm font-semibold text-brand hover:text-brand-hover transition-colors"
                 >
                   Forgot Password?
                 </Link>
@@ -230,8 +232,8 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-70 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-orange-200 active:scale-[0.98] relative"
-                style={{ background: "linear-gradient(135deg, #fc8703, #f59e0b)" }}
+                className="w-full py-3 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-70 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-cyan-200 active:scale-[0.98] relative"
+                style={{ background: "linear-gradient(135deg, #3dbfd7, #038ac3)" }}
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center gap-1.5 py-1">

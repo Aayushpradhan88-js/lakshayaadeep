@@ -61,7 +61,7 @@ export function VolunteerLanding() {
       <section className="relative overflow-hidden">
         <div className="relative min-h-[min(70vh,720px)]">
           <Image
-            src="/hero.jpg"
+            src="/banner/About/about-img.jpg"
             alt=""
             fill
             priority
@@ -161,7 +161,7 @@ export function VolunteerLanding() {
           </div>
           <div className="space-y-4">
             <div className="relative aspect-4/5 overflow-hidden rounded-[18px] bg-slate-200">
-              <Image src="/hero.jpg" alt="" fill className="object-cover" sizes="(min-width: 1024px) 40vw, 100vw" />
+              <Image src="/banner/Our-team/main.jpg" alt="" fill className="object-cover" sizes="(min-width: 1024px) 40vw, 100vw" />
             </div>
           </div>
         </div>
