@@ -132,3 +132,27 @@ export async function fetchProgramGalleryImages(
 
   return typeof limit === "number" ? accessibleImages.slice(0, limit) : accessibleImages
 }
+
+const IMPACT_FALLBACK_URLS = [
+  "/banner/About/about-img.jpg",
+  "/banner/event/event-img.jpg",
+  "/banner/project/project-img.JPG",
+  "/banner/Our-team/main.jpg",
+  "/clearn-forest.jpg",
+  "/health-welbearing.jpg",
+]
+
+/** Pick `count` URLs from gallery (random order), cycling fallbacks when needed. */
+export function pickRandomGalleryUrls(
+  images: GalleryImage[],
+  count: number,
+  fallbacks: string[] = IMPACT_FALLBACK_URLS,
+): string[] {
+  const pool =
+    images.length > 0
+      ? images.map((img) => img.url)
+      : [...fallbacks]
+
+  const shuffled = [...pool].sort(() => Math.random() - 0.5)
+  return Array.from({ length: count }, (_, i) => shuffled[i % shuffled.length])
+}

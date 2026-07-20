@@ -1,14 +1,35 @@
 "use client";
 
-import Image from "next/image";
-import { BookOpen, Globe2, HandHeart, Users } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Globe2, HandHeart, Users } from "lucide-react";
+import {
+  ImageFadeCarousel,
+  type ImageFadeCarouselSlide,
+} from "@/components/shared-component/image-fade-carousel";
+import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/supabase";
 import { typography } from "@/lib/typography";
 
-const photos = [
-  { src: "https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&q=80", alt: "Aid work", className: "row-span-2" },
-  { src: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=600&q=80", alt: "Community hands" },
-  { src: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=80", alt: "Healthcare" },
-  { src: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&q=80", alt: "Volunteers" },
+const FALLBACK_STORY_SLIDES: ImageFadeCarouselSlide[] = [
+  {
+    id: "about-fellowship",
+    src: "/banner/About/about-img.jpg",
+    alt: "Lakshyadeep fellowship and welcome program",
+  },
+  {
+    id: "our-team",
+    src: "/banner/Our-team/main.jpg",
+    alt: "Lakshyadeep team members",
+  },
+  {
+    id: "community-event",
+    src: "/banner/event/event-img.jpg",
+    alt: "Community event and outreach",
+  },
+  {
+    id: "project-impact",
+    src: "/banner/project/project-img.JPG",
+    alt: "Project work in the community",
+  },
 ];
 
 const milestones = [
@@ -36,13 +57,50 @@ const highlights = [
 ];
 
 function OurStorySection() {
+  const [slides, setSlides] = useState<ImageFadeCarouselSlide[]>(FALLBACK_STORY_SLIDES);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured()) return;
+
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const supabase = getSupabaseClient();
+        const { data, error } = await supabase
+          .from("story_images")
+          .select("id, image_url, alt_text, display_order")
+          .eq("is_active", true)
+          .order("display_order", { ascending: true });
+
+        if (cancelled || error || !data?.length) return;
+
+        setSlides(
+          data.map((slide) => ({
+            id: slide.id,
+            src: slide.image_url,
+            alt: slide.alt_text ?? "Lakshyadeep story",
+          })),
+        );
+      } catch (err) {
+        console.error("Error fetching our story slides:", err);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <section className="w-full bg-white px-6 py-16">
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 lg:grid-cols-2">
         <div>
-          <p className={`mb-4 ${typography.overline} text-brand-accent`}>Our Story</p>
+          <h2 className="mb-6 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
+            Our <span className="font-light text-brand">Story</span>
+          </h2>
 
-          <p className={`mb-6 ${typography.body} text-black`}>
+          <p className={`mb-6 ${typography.body} text-text-body`}>
             Lakshyadeep was born from a simple conviction — that every person deserves dignity,
             opportunity, and the chance to flourish.
           </p>
@@ -54,7 +112,7 @@ function OurStorySection() {
                 className="rounded-2xl border border-brand-accent/15 bg-brand-accent-light/40 px-3 py-4 text-center"
               >
                 <p className="text-xl font-bold text-brand-accent sm:text-2xl">{item.value}</p>
-                <p className={`mt-1 ${typography.caption} text-black`}>{item.label}</p>
+                <p className={`mt-1 ${typography.caption} text-text-body`}>{item.label}</p>
               </div>
             ))}
           </div>
@@ -69,59 +127,20 @@ function OurStorySection() {
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-gray-900">{item.title}</p>
-                    <p className={`mt-0.5 ${typography.bodySm} text-black`}>{item.text}</p>
+                    <p className={`mt-0.5 ${typography.bodySm} text-text-body`}>{item.text}</p>
                   </div>
                 </li>
               );
             })}
           </ul>
 
-          <button className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-6 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-50">
-            <BookOpen className="h-4 w-4" aria-hidden />
-            Read Our Story
-          </button>
         </div>
 
-        <div className="grid grid-cols-2 grid-rows-2 gap-3">
-          <div className="relative row-span-2 min-h-[280px] overflow-hidden rounded-2xl">
-            <Image
-              src={photos[0].src}
-              alt={photos[0].alt}
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 50vw, 25vw"
-            />
-          </div>
-          <div className="relative h-[134px] overflow-hidden rounded-2xl">
-            <Image
-              src={photos[1].src}
-              alt={photos[1].alt}
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 50vw, 25vw"
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="relative h-[134px] overflow-hidden rounded-2xl">
-              <Image
-                src={photos[2].src}
-                alt={photos[2].alt}
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 25vw, 12vw"
-              />
-            </div>
-            <div className="relative h-[134px] overflow-hidden rounded-2xl">
-              <Image
-                src={photos[3].src}
-                alt={photos[3].alt}
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 25vw, 12vw"
-              />
-            </div>
-          </div>
-        </div>
+        <ImageFadeCarousel
+          slides={slides}
+          autoPlaySec={5}
+          className="mx-auto aspect-[4/3] w-full min-h-[320px] rounded-2xl border border-gray-100 bg-white shadow-lg sm:min-h-[400px] lg:ml-auto lg:min-h-[520px] lg:max-w-none"
+        />
       </div>
     </section>
   );

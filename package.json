@@ -10,6 +10,8 @@
     "db:create:test-table": "node --env-file=.env.local scripts/create-test-table.mjs",
     "db:setup": "node --env-file=.env.local scripts/setup-database.js",
     "db:seed": "node --env-file=.env.local scripts/seed-database.js",
+    "db:story-images": "node scripts/create_story_images_table.js",
+    "db:impact-cards": "node scripts/create_impact_cards_table.js",
     "db:cleanup": "node --env-file=.env.local scripts/cleanup-default-tables.js",
     "auth:seed-admin": "node scripts/seed-admin-user.js"
   },

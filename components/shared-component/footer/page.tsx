@@ -63,7 +63,7 @@ const Footer = ({ showCommunityCta = true }: FooterProps) => {
             </div>
 
             <div>
-              <h3 className="mb-6 text-[20px] font-medium text-black">Get involved</h3>
+              <h3 className="mb-6 text-[20px] font-medium text-black">Support us</h3>
               <ul className="space-y-4">
                 {FOOTER_GET_INVOLVED_LINKS.map((link) => (
                   <li key={link.href}>

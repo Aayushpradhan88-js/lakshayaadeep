@@ -20,7 +20,7 @@ export const PAGE_HERO_CONTENT = {
   about: {
     images: ["/banner/About/about-img.jpg"],
     titlePrefix: "About ",
-    titleAccent: "Lakshyadeep",
+    titleAccent: "Lakshaydeep",
     headlineAccent: "We Are Here",
     headlineRest: "to Make a Difference",
     description:
@@ -28,7 +28,6 @@ export const PAGE_HERO_CONTENT = {
   },
   projects: {
     images: ["/banner/project/project-card.jpg"],
-    overline: "Get Involved",
     titlePrefix: "Lakshyadeep ",
     titleAccent: "Projects",
     headlineAccent: "Building Hope",
@@ -38,7 +37,6 @@ export const PAGE_HERO_CONTENT = {
   },
   events: {
     images: ["/banner/event/event-card.jpg"],
-    overline: "Get Involved",
     titlePrefix: "Lakshyadeep ",
     titleAccent: "Events",
     headlineAccent: "Bringing People",
@@ -48,7 +46,6 @@ export const PAGE_HERO_CONTENT = {
   },
   projectsEvents: {
     images: ["/banner/project/project-img.JPG"],
-    overline: "Get Involved",
     titlePrefix: "Projects ",
     titleAccent: "& Events",
     headlineAccent: "Engage With",

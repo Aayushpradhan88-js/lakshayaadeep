@@ -4,7 +4,7 @@ const CARDS = [
     {
         title: "Events",
         description:
-            "Health camps, workshops, fundraising galas, and community gatherings — see what's happening and how to get involved.",
+            "Health camps, workshops, fundraising galas, and community gatherings — see what's happening and join us.",
         linkHref: "event",
         linkImage: "/banner/event/event-img.jpg",
     },

@@ -36,7 +36,7 @@ import Link from "next/link";
 import { getSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/supabase";
 import { isAdminEmail } from "@/features/auth/lib/seed-admin";
 import type { User } from "@supabase/supabase-js";
-import { FaBook, FaRegNewspaper, FaSliders } from "react-icons/fa6";
+import { FaBook, FaRegNewspaper, FaSliders, FaBookOpen, FaChartLine } from "react-icons/fa6";
 import { AdminFeedbackProvider } from "@/components/shared-component/admin-feedback";
 import { FastLoading } from "@/components/shared-component/fast-loading";
 import { BrandLogo } from "@/components/shared-component/brand-logo";
@@ -71,8 +71,9 @@ const SIDEBAR_ITEMS: SidebarItem[] = [
     expandable: true,
     children: [
       { id: "blog", label: "Blog", icon: <FaBook size={14} /> },
-      { id: "article", label: "Article", icon: <FaRegNewspaper size={14} /> }
-      // { id: "news", label: "News", icon: <FaBlog size={14} /> },
+      { id: "article", label: "Article", icon: <FaRegNewspaper size={14} /> },
+      { id: "story", label: "Story", icon: <FaBookOpen size={14} /> },
+      { id: "impact", label: "Our Impact", icon: <FaChartLine size={14} /> },
     ]
   },
   {
@@ -134,8 +135,12 @@ export default function DashboardLayout({
 
   useEffect(() => {
     const mediaRoutes = ["gallery", "notice", "carousel", "video"];
+    const contentRoutes = ["blog", "article", "story", "impact"];
     if (mediaRoutes.includes(activeItemId)) {
       setExpandedItems((prev) => (prev.includes("gallery") ? prev : [...prev, "gallery"]));
+    }
+    if (contentRoutes.includes(activeItemId)) {
+      setExpandedItems((prev) => (prev.includes("content") ? prev : [...prev, "content"]));
     }
   }, [activeItemId]);
 
