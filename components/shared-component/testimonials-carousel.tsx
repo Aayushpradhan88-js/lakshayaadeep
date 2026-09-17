@@ -145,7 +145,7 @@ export default function TestimonialsCarousel({
             <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-brand md:text-base">
               {overline ?? subtitle}
             </p>
-          ) : null}
+          ) : nukill}
           <h2
             className={
               isSpeakers
